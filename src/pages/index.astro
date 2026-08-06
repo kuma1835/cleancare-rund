@@ -1,0 +1,488 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Ablauf from '../components/Ablauf.astro';
+import Stimmen from '../components/Stimmen.astro';
+import ContactBand from '../components/ContactBand.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { site, stimmen } from '../data/site';
+import { leistungen } from '../data/leistungen';
+import { standorte } from '../data/standorte';
+import held from '../assets/img/nastuh-abootalebi-rspmla5rita-unsplash.webp';
+import haus from '../assets/img/redd-f-ptrzqc_h1r4-unsplash.webp';
+
+const beschreibung =
+  'Ganzheitliche Unterhaltsreinigung für gewerbliche Objekte in Seevetal, im Landkreis Harburg, in Hamburg und in Norddeutschland. Familienunternehmen seit 2009 — Angebot nach Besichtigung.';
+
+const bilder = import.meta.glob<{ default: ImageMetadata }>('../assets/img/*.webp', { eager: true });
+const bildVon = (datei?: string) =>
+  datei ? bilder[`../assets/img/${datei}`]?.default : undefined;
+
+const gezeigt = leistungen.slice(0, 6);
+
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${site.url}/#unternehmen`,
+    name: site.name,
+    description: beschreibung,
+    url: site.url,
+    telephone: site.telefon,
+    email: site.email,
+    foundingDate: String(site.gruendung),
+    founder: { '@type': 'Person', name: site.geschaeftsfuehrung },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: site.strasse,
+      postalCode: site.plz,
+      addressLocality: site.ort,
+      addressCountry: site.land,
+    },
+    areaServed: site.gebiet.map((g) => ({ '@type': 'Place', name: g })),
+    sameAs: [site.linkedin, site.provenexpert],
+    knowsLanguage: 'de-DE',
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Leistungen',
+      itemListElement: leistungen.map((l) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: l.name, url: `${site.url}/leistungen/${l.slug}` },
+      })),
+    },
+    review: stimmen.map((s) => ({
+      '@type': 'Review',
+      reviewBody: s.text,
+      author: { '@type': 'Person', name: s.name },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: site.url,
+    name: site.name,
+    inLanguage: 'de-DE',
+    publisher: { '@id': `${site.url}/#unternehmen` },
+  },
+];
+---
+
+<Base
+  title="Gebäudereinigung Seevetal & Hamburg | CleanCare"
+  description={beschreibung}
+  bare={true}
+>
+  <JsonLd slot="head" daten={ld} />
+
+  <section class="auftakt">
+    <div class="wrap">
+      <div class="auftakt-raster">
+        <div class="wort">
+          <h1>Saubere Objekte, ohne dass Sie sich kümmern müssen.</h1>
+          <p class="lead">
+            Ganzheitliche Unterhaltsreinigung für Büros, Praxen, Kanzleien und Wohnanlagen in
+            Seevetal, im Landkreis Harburg und in Hamburg. Familienunternehmen in zweiter
+            Generation seit {site.gruendung}.
+          </p>
+
+          <div class="aktionen">
+            <a class="btn" href="/anfrage">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+                <path d="M8 3v4M16 3v4M3.5 10h17" />
+              </svg>
+              Angebot anfordern
+            </a>
+            <a class="btn btn-2" href={`tel:${site.telefonLink}`}>
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z" />
+              </svg>
+              {site.telefon}
+            </a>
+          </div>
+        </div>
+
+        <figure class="heldbild">
+          <Image
+            src={held}
+            alt="Heller, aufgeräumter Büroraum mit Sitzgruppe und großen Fensterflächen"
+            widths={[560, 900, 1400]}
+            sizes="(max-width: 64rem) 100vw, 46rem"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <figcaption class="chip">
+            <span class="punkt" aria-hidden="true"></span>
+            Objekte in laufender Betreuung seit {site.gruendung}
+          </figcaption>
+        </figure>
+      </div>
+
+      <ul class="kenner">
+        <li>
+          <span class="kenner-zahl">{site.gruendung}</span>
+          <span class="kenner-text">gegründet, in zweiter Generation geführt</span>
+        </li>
+        <li>
+          <span class="kenner-zahl">8</span>
+          <span class="kenner-text">Leistungen von Unterhalt bis Solarreinigung</span>
+        </li>
+        <li>
+          <span class="kenner-zahl">3</span>
+          <span class="kenner-text">Regionen: Seevetal, Landkreis Harburg, Hamburg</span>
+        </li>
+        <li>
+          <span class="kenner-zahl">0 €</span>
+          <span class="kenner-text">kostenloses Angebot, unverbindlich</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap">
+      <div class="panel leistungspanel">
+        <div class="panel-kopf">
+          <div>
+            <h2>Was wir übernehmen</h2>
+            <p class="lead">
+              Von der täglichen Unterhaltsreinigung bis zur Fassade. Alles aus einer Hand, mit
+              festen Teams und einem Rhythmus, der zu Ihrem Betrieb passt.
+            </p>
+          </div>
+          <a class="btn btn-3" href="/leistungen">Alle Leistungen</a>
+        </div>
+
+        <ul class="leistungsraster">
+          {gezeigt.map((l) => {
+            const bild = bildVon(l.bild);
+            return (
+              <li>
+                <a href={`/leistungen/${l.slug}`}>
+                  <div class="karte-kopf">
+                    <h3>{l.name}</h3>
+                    <span class="icon-feld" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 18 18 6M10 6h8v8" />
+                      </svg>
+                    </span>
+                  </div>
+                  <p>{l.kurz}</p>
+                  <div class="karte-medium">
+                    {bild ? (
+                      <Image
+                        src={bild}
+                        alt={l.bildAlt ?? ''}
+                        widths={[320, 560, 800]}
+                        sizes="(max-width: 52rem) 100vw, 22rem"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span class="ersatz">
+                        <span class="label">Üblicher Takt</span>
+                        <span class="takt">{l.takt}</span>
+                      </span>
+                    )}
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <Ablauf />
+
+  <section class="abschnitt">
+    <div class="wrap">
+      <div class="panel haus-panel">
+        <figure class="haus-bild">
+          <Image
+            src={haus}
+            alt="Arbeitsplatz in einem hellen Büro mit Schreibtisch und Fenster"
+            widths={[480, 800, 1100]}
+            sizes="(max-width: 60rem) 100vw, 32rem"
+            loading="lazy"
+          />
+        </figure>
+        <div class="haus-wort">
+          <p class="label">Über CleanCare</p>
+          <h2>Ein Familienbetrieb, der seine Objekte kennt</h2>
+          <p>
+            Wir sind ein seit {site.gruendung} tätiges Familienunternehmen in zweiter Generation,
+            spezialisiert auf die ganzheitliche Unterhaltsreinigung gewerblich genutzter
+            Immobilien.
+          </p>
+          <p>
+            Traditionelle Werte, verbunden mit modernem Innovationsgeist: Wir verknüpfen die
+            Erfahrung aus fast 15 Jahren mit Digitalisierung und Nachhaltigkeit — damit Sie sich
+            ganz auf Ihr Kerngeschäft konzentrieren können.
+          </p>
+          <p class="signatur">{site.geschaeftsfuehrung}, Geschäftsführerin</p>
+          <a class="btn btn-3" href="/ueber-uns">Mehr über uns</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Stimmen />
+
+  <section class="abschnitt">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="label">Einsatzgebiet</p>
+        <h2>Wo wir unterwegs sind</h2>
+        <p class="lead">
+          Der Sitz ist Seevetal. Von dort betreuen wir Objekte im Landkreis Harburg und in Hamburg,
+          darüber hinaus in Niedersachsen und Schleswig-Holstein.
+        </p>
+      </div>
+      <ul class="orte">
+        {standorte.map((s) => (
+          <li>
+            <a href={`/einsatzgebiet/${s.slug}`}>
+              <h3>{s.ort}</h3>
+              <p>{s.intro}</p>
+              <span class="weiter">
+                Ansehen
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h13M13 6l6 6-6 6" />
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <ContactBand />
+</Base>
+
+<style>
+  /* ---------- Auftakt ---------- */
+  .auftakt { padding-top: 0; }
+
+  .auftakt-raster {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    align-items: center;
+  }
+
+  .wort h1 {
+    margin-bottom: var(--s-5);
+    /* Keine Silbentrennung: „Objek-te" im Titel liest sich wie ein Fehler. */
+    hyphens: manual;
+    font-size: clamp(2.25rem, 1.5rem + 2.9vw, 4rem);
+    max-width: 15ch;
+  }
+  .wort .lead { margin-bottom: var(--s-6); }
+
+  .aktionen { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+
+  .heldbild {
+    position: relative;
+    margin: 0;
+    border-radius: var(--r-panel);
+    overflow: hidden;
+    box-shadow: var(--schwebe-3);
+  }
+  .heldbild :global(img) {
+    width: 100%;
+    height: clamp(20rem, 15rem + 22vw, 34rem);
+    object-fit: cover;
+  }
+
+  .chip {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5625rem 0.9375rem;
+    background: oklch(100% 0 0 / 0.92);
+    backdrop-filter: blur(10px);
+    border-radius: var(--r-pill);
+    font-family: var(--font);
+    font-size: 0.8125rem;
+    font-weight: 520;
+    color: var(--ink);
+    box-shadow: var(--schwebe-1);
+  }
+  .punkt {
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: var(--r-pill);
+    background: var(--ok);
+    flex: none;
+  }
+
+  .kenner {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--s-5);
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+    padding-top: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+    border-top: 1px solid var(--linie);
+  }
+  .kenner li { display: grid; gap: 0.25rem; align-content: start; }
+  .kenner-zahl {
+    font-family: var(--font);
+    font-size: 1.75rem;
+    font-weight: 620;
+    letter-spacing: -0.035em;
+    color: var(--blau);
+    font-variant-numeric: tabular-nums;
+  }
+  .kenner-text { font-size: 0.875rem; color: var(--ink-2); line-height: 1.45; }
+
+  /* ---------- Leistungen ---------- */
+  .panel-kopf {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--s-5);
+    margin-bottom: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+  }
+  .panel-kopf h2 { margin-bottom: var(--s-4); }
+  .panel-kopf .btn { flex: none; }
+
+  .leistungsraster {
+    list-style: none;
+    display: grid;
+    /* Drei Spalten, damit die sechs Karten zwei volle Reihen ergeben. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+  @media (max-width: 68rem) {
+    .leistungsraster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 40rem) {
+    .leistungsraster { grid-template-columns: 1fr; }
+  }
+  .leistungsraster a {
+    display: grid;
+    align-content: start;
+    gap: var(--s-3);
+    height: 100%;
+    padding: var(--s-5);
+    background: var(--panel-2);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    text-decoration: none;
+    transition: background 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+  .leistungsraster a:hover {
+    background: var(--panel);
+    border-color: var(--linie-2);
+    box-shadow: var(--schwebe-2);
+    transform: translateY(-3px);
+  }
+  .karte-kopf {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: var(--s-3);
+  }
+  .karte-kopf h3 { margin: 0; }
+  .leistungsraster p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
+  /* Bild oder Ersatzfläche — gleiche Höhe, damit die Reihen ruhig bleiben */
+  .karte-medium {
+    margin-top: auto;
+    padding-top: var(--s-2);
+    height: 11rem;
+  }
+  .karte-medium :global(img) {
+    width: 100%;
+    height: 9.5rem;
+    object-fit: cover;
+    border-radius: var(--r-klein);
+  }
+  .ersatz {
+    display: grid;
+    align-content: center;
+    gap: 0.375rem;
+    height: 9.5rem;
+    padding: var(--s-4);
+    background: var(--blau-nebel);
+    border-radius: var(--r-klein);
+  }
+  .ersatz .takt {
+    font-family: var(--font);
+    font-size: 1.0625rem;
+    font-weight: 560;
+    color: var(--blau);
+  }
+
+  /* ---------- Haus ---------- */
+  .haus-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    align-items: center;
+  }
+  .haus-bild { margin: 0; }
+  .haus-bild :global(img) {
+    width: 100%;
+    height: clamp(16rem, 12rem + 16vw, 24rem);
+    object-fit: cover;
+    border-radius: var(--r-karte);
+  }
+  .haus-wort .label { display: block; margin-bottom: var(--s-3); }
+  .haus-wort h2 { margin-bottom: var(--s-4); }
+  .haus-wort p { color: var(--ink-2); }
+  .signatur {
+    font-family: var(--font);
+    font-weight: 540;
+    color: var(--ink);
+    margin-top: var(--s-5);
+  }
+  .haus-wort .btn { margin-top: var(--s-5); }
+
+  /* ---------- Orte ---------- */
+  .kopf .label { display: block; margin-bottom: var(--s-3); }
+
+  .orte {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--s-4);
+  }
+  .orte a {
+    display: grid;
+    gap: var(--s-3);
+    align-content: start;
+    height: 100%;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    background: var(--panel);
+    border-radius: var(--r-karte);
+    text-decoration: none;
+    box-shadow: var(--schwebe-1);
+    transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+  .orte a:hover { box-shadow: var(--schwebe-2); transform: translateY(-3px); }
+  .orte h3 { margin: 0; }
+  .orte p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
+  .weiter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--blau);
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    font-weight: 540;
+  }
+
+  @media (max-width: 64rem) {
+    .auftakt-raster { grid-template-columns: 1fr; }
+    .haus-panel { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 48rem) {
+    .panel-kopf { flex-direction: column; align-items: start; }
+  }
+</style>

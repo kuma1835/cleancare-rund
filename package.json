@@ -1,0 +1,22 @@
+{
+  "name": "cleancare-neu",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 3009",
+    "start": "astro dev --port 3009",
+    "build": "astro build",
+    "preview": "astro preview --port 3009",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@fontsource-variable/archivo": "^5.1.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/martian-mono": "^5.1.0",
+    "astro": "^5.1.1",
+    "sharp": "^0.33.5"
+  }
+}

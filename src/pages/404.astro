@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import { leistungen } from '../data/leistungen';
+---
+
+<Base
+  title="Seite nicht gefunden"
+  description="Diese Seite gibt es nicht mehr. Hier geht es weiter zu Leistungen, Anfrage und Kontakt."
+  noindex={true}
+>
+  <section class="verirrt">
+    <div class="wrap">
+      <p class="feld">Fehler 404</p>
+      <h1>Diese Fläche steht nicht im Plan.</h1>
+      <p class="lead">
+        Die Seite gibt es nicht — oder nicht mehr. Von hier kommen Sie überall hin, wo es etwas zu
+        sehen gibt.
+      </p>
+
+      <div class="aktionen">
+        <a class="btn" href="/">Zur Startseite <span class="pfeil" aria-hidden="true">→</span></a>
+        <a class="btn btn-2" href="/anfrage">Anfrage stellen</a>
+      </div>
+
+      <div class="wege">
+        <div>
+          <h2 class="feld">Leistungen</h2>
+          <ul>
+            {leistungen.slice(0, 5).map((l) => (
+              <li><a href={`/leistungen/${l.slug}`}>{l.name}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2 class="feld">Direkt</h2>
+          <ul>
+            <li><a href={`tel:${site.telefonLink}`} class="mass">{site.telefon}</a></li>
+            <li><a href={`mailto:${site.email}`} class="mass">{site.email}</a></li>
+            <li><a href="/kontakt">Kontaktseite</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .verirrt { padding-block: clamp(3rem, 2rem + 5vw, 6rem); }
+  .verirrt h1 { margin: var(--s-3) 0 var(--s-4); max-width: 16ch; }
+  .aktionen { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
+
+  .wege {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--s-6);
+    margin-top: clamp(2.5rem, 2rem + 3vw, 4rem);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--linie);
+    max-width: 44rem;
+  }
+  .wege h2 { margin-bottom: var(--s-3); }
+  .wege ul { list-style: none; display: grid; gap: 0.5rem; }
+  .wege a { color: var(--ink-2); text-decoration: none; font-size: 0.9375rem; }
+  .wege a:hover { color: var(--blau); text-decoration: underline; }
+</style>

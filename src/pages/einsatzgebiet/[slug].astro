@@ -1,0 +1,172 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactBand from '../../components/ContactBand.astro';
+import Stimmen from '../../components/Stimmen.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { site } from '../../data/site';
+import { standorte } from '../../data/standorte';
+import { leistungen } from '../../data/leistungen';
+
+export function getStaticPaths() {
+  return standorte.map((s) => ({ params: { slug: s.slug }, props: { standort: s } }));
+}
+
+const { standort } = Astro.props;
+const passende = leistungen.filter((l) => standort.schwerpunkte.some((s) => l.name.includes(s.split(' ')[0])));
+const zeige = passende.length ? passende : leistungen.slice(0, 3);
+
+const beschreibung = `${standort.titel}: ${standort.intro} Unterhaltsreinigung, Treppenhaus, Glas und mehr — Angebot nach Besichtigung.`;
+
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `Gebäudereinigung ${standort.ort}`,
+    description: standort.text,
+    provider: { '@id': `${site.url}/#unternehmen` },
+    areaServed: { '@type': 'Place', name: standort.ort },
+    url: `${site.url}/einsatzgebiet/${standort.slug}`,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Startseite', item: site.url },
+      { '@type': 'ListItem', position: 2, name: 'Einsatzgebiet', item: `${site.url}/einsatzgebiet` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: standort.ort,
+        item: `${site.url}/einsatzgebiet/${standort.slug}`,
+      },
+    ],
+  },
+];
+---
+
+<Base title={standort.titel} description={beschreibung} bare={false}>
+  <JsonLd slot="head" daten={ld} />
+
+  <nav class="pfad" aria-label="Brotkrumen">
+    <div class="wrap">
+      <ol>
+        <li><a href="/">Start</a></li>
+        <li><a href="/einsatzgebiet">Einsatzgebiet</a></li>
+        <li aria-current="page">{standort.ort}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="kopfteil">
+    <div class="wrap">
+      <h1>{standort.titel}</h1>
+      <p class="lead">{standort.intro}</p>
+      <div class="aktionen">
+        <a class="btn" href="/anfrage">Anfrage stellen <span class="pfeil" aria-hidden="true">→</span></a>
+        <a class="btn btn-2" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap inhalt">
+      <div class="text">
+        <p class="einstieg">{standort.text}</p>
+        <h2>Wie ein Angebot zustande kommt</h2>
+        <p>
+          Wir sehen uns das Objekt vor Ort an, nehmen Flächen, Nutzung und gewünschten Rhythmus auf
+          und rechnen daraus. Das dauert einen Termin und erspart beiden Seiten Korrekturen im
+          laufenden Vertrag.
+        </p>
+      </div>
+
+      <aside class="schwerpunktblatt">
+        <h2 class="feld">Häufig gefragt in {standort.ort}</h2>
+        <ul>
+          {zeige.map((l) => (
+            <li class={`n-${l.nutzung}`}>
+              <a href={`/leistungen/${l.slug}`}>
+                <span class="marke-farbe" aria-hidden="true"></span>
+                <span class="benennung">{l.name}</span>
+                <span class="mass takt">{l.takt}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a class="weiter" href="/leistungen">Alle Leistungen <span aria-hidden="true">→</span></a>
+      </aside>
+    </div>
+  </section>
+
+  <Stimmen />
+  <ContactBand titel={`Ein Objekt in ${standort.ort}?`} />
+</Base>
+
+<style>
+  .pfad { }
+  .pfad ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-block: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+  }
+  .pfad li + li::before { content: '/'; margin-right: 0.5rem; color: var(--linie-2); }
+  .pfad a { color: var(--ink-2); text-decoration: none; }
+  .pfad a:hover { text-decoration: underline; }
+
+  .kopfteil {
+    padding-block: 0;
+  }
+  .kopfteil h1 { margin-bottom: var(--s-4); max-width: 18ch; }
+  .aktionen { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
+
+  .inhalt {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+    align-items: start;
+  }
+  .einstieg { font-size: 1.125rem; line-height: 1.6; }
+  .text h2 { font-size: 1.375rem; margin: var(--s-7) 0 var(--s-4); }
+  .text p { color: var(--ink-2); }
+  .text .einstieg { color: var(--ink); }
+
+  .schwerpunktblatt {
+    padding: var(--s-5);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    box-shadow: var(--schwebe-1);
+  }
+  .schwerpunktblatt h2 { margin-bottom: var(--s-4); }
+  .schwerpunktblatt ul { list-style: none; display: grid; gap: 1px; background: var(--linie); border: 1px solid var(--linie); border-radius: var(--r-klein); overflow: hidden; margin-bottom: var(--s-4); }
+  .schwerpunktblatt a {
+    display: grid;
+    grid-template-columns: 0.5rem 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.6875rem 0.8125rem;
+    background: var(--panel);
+    text-decoration: none;
+    transition: background 0.15s var(--ease);
+  }
+  .schwerpunktblatt li a:hover { background: var(--grund); }
+  .marke-farbe { width: 0.5rem; height: 1.75rem; border-radius: 2px; background: var(--linie-2); }
+  .n-buero .marke-farbe { background: var(--nutz-buero); }
+  .n-verkehr .marke-farbe { background: var(--nutz-verkehr); }
+  .n-sanitaer .marke-farbe { background: var(--nutz-sanitaer); }
+  .n-glas .marke-farbe { background: var(--nutz-glas); }
+  .n-technik .marke-farbe { background: var(--nutz-technik); }
+  .benennung { font-size: 0.9375rem; font-variation-settings: 'wght' 560; }
+  .takt { color: var(--ink-3); }
+
+  .weiter { color: var(--blau); font-size: 0.9375rem; font-variation-settings: 'wght' 580; text-decoration: none; }
+  .weiter:hover { text-decoration: underline; }
+
+  @media (max-width: 62rem) {
+    .inhalt { grid-template-columns: 1fr; }
+  }
+</style>

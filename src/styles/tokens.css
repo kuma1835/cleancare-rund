@@ -1,0 +1,85 @@
+/*
+  CleanCare — Panelfläche in Markenblau
+
+  Übernommen als Bauweise: heller Grund, große weiße Panels mit weitem Radius,
+  Pill-Aktionen, Fotos in gerundeten Karten, kleine gesperrte Labels, viel Luft.
+  Nicht übernommen: die monochrome Schwarz-Weiß-Welt. Farbe kommt aus dem
+  CleanCare-Logo — Navy #16283f und Mittelblau #2f6fb2.
+*/
+
+:root {
+  /* Grund und Flächen — kühles Papier, leicht blau unterlegt */
+  --grund: oklch(97.2% 0.006 245);
+  --panel: oklch(100% 0 0);
+  --panel-2: oklch(98.4% 0.005 245);
+  --feld: oklch(95.8% 0.008 245);
+  --feld-2: oklch(93% 0.012 245);
+
+  /* Tinte — Navy aus dem Logo (#16283f) */
+  --ink: oklch(28.5% 0.045 253);
+  --ink-2: oklch(46% 0.03 253);
+  --ink-3: oklch(60% 0.022 253);
+  --ink-4: oklch(72% 0.016 253);
+
+  /* Marke — Mittelblau aus dem Logo (#2f6fb2) */
+  --blau: oklch(53% 0.115 254);
+  --blau-tief: oklch(45% 0.115 254);
+  --blau-hell: oklch(72% 0.085 250);
+  --blau-sanft: oklch(94.5% 0.025 250);
+  --blau-nebel: oklch(97% 0.014 250);
+
+  /* Linien */
+  --linie: oklch(92.5% 0.008 245);
+  --linie-2: oklch(86% 0.012 245);
+
+  /* Zustände */
+  --ok: oklch(58% 0.13 158);
+  --warn: oklch(60% 0.14 62);
+  --fehler: oklch(52% 0.19 25);
+  --fehler-sanft: oklch(96% 0.025 25);
+
+  /* Schrift */
+  --font: 'Geist Variable', system-ui, -apple-system, sans-serif;
+  --font-text: 'Inter Variable', system-ui, -apple-system, sans-serif;
+
+  /* Radien */
+  --r-panel: 30px;
+  --r-karte: 20px;
+  --r-klein: 12px;
+  --r-pill: 999px;
+
+  /* Abstände */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 8rem;
+
+  --mass: 68ch;
+  --seite: 84rem;
+
+  /* Eine Textachse für die ganze Seite: derselbe Wert dient als Innenabstand der
+     Panels und als Einzug für Text, der direkt auf dem Grund liegt. Dadurch
+     beginnt jeder Text auf derselben Linie wie der Text in der Fußzeile. */
+  --einzug: clamp(1.5rem, 1rem + 2.6vw, 3.5rem);
+
+  /* Der eine Abstand zwischen zwei Blöcken — vom Seitenkopf bis zur Fußzeile. */
+  --reihe: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+
+  /* Der Luftraum links und rechts vom Inhaltsrahmen. Gilt für alles, was in
+     .wrap liegt — Kopfleiste, Panels, Fußzeile — damit die Seite als ein Block
+     auf dem Grund schwebt (aura.build „Lala": viel Rand, große Flächen). */
+  --rand: clamp(0.75rem, 0.4rem + 3.2vw, 4.5rem);
+
+  /* Tiefe — weich, mit Versatz, aus dem Navy gefärbt */
+  --schwebe-1: 0 1px 2px oklch(28.5% 0.045 253 / 0.06), 0 4px 14px oklch(28.5% 0.045 253 / 0.07);
+  --schwebe-2: 0 2px 6px oklch(28.5% 0.045 253 / 0.06), 0 14px 34px oklch(28.5% 0.045 253 / 0.10);
+  --schwebe-3: 0 8px 18px oklch(28.5% 0.045 253 / 0.08), 0 30px 64px oklch(28.5% 0.045 253 / 0.13);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}

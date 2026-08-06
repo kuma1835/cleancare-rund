@@ -1,0 +1,99 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactBand from '../../components/ContactBand.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { site } from '../../data/site';
+import { standorte } from '../../data/standorte';
+
+const beschreibung =
+  'Einsatzgebiet der CleanCare Gebäudeservice GmbH: Seevetal, Landkreis Harburg, Hamburg sowie Niedersachsen und Schleswig-Holstein.';
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Startseite', item: site.url },
+    { '@type': 'ListItem', position: 2, name: 'Einsatzgebiet', item: `${site.url}/einsatzgebiet` },
+  ],
+};
+---
+
+<Base title="Einsatzgebiet" description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <section class="kopfteil">
+    <div class="wrap">
+      <h1>Wo wir arbeiten</h1>
+      <p class="lead">
+        Der Sitz ist Seevetal. Von dort betreuen wir Objekte im Landkreis Harburg und in Hamburg,
+        darüber hinaus in Niedersachsen und Schleswig-Holstein.
+      </p>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap">
+      <ul class="orte">
+        {standorte.map((s) => (
+          <li>
+            <a href={`/einsatzgebiet/${s.slug}`}>
+              <span class="feld">{s.entfernung ?? 'Einsatzgebiet'}</span>
+              <h2>{s.ort}</h2>
+              <p>{s.intro}</p>
+              <span class="weiter">Ansehen <span aria-hidden="true">→</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="rand">
+        <h2>Ihr Ort ist nicht dabei?</h2>
+        <p>
+          Das Gebiet reicht über die drei genannten Regionen hinaus — bis nach Niedersachsen und
+          Schleswig-Holstein. Ob Ihr Objekt dazugehört, klärt ein kurzer Anruf:
+          <a href={`tel:${site.telefonLink}`} class="mass">{site.telefon}</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <ContactBand />
+</Base>
+
+<style>
+  .kopfteil {
+    padding-block: 0;
+  }
+  .kopfteil h1 { margin-bottom: var(--s-4); }
+
+  .orte {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: var(--s-4);
+  }
+  .orte a {
+    display: grid;
+    gap: var(--s-3);
+    align-content: start;
+    height: 100%;
+    padding: var(--s-5);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: border-color 0.15s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .orte a:hover { border-color: var(--linie-2); box-shadow: var(--schwebe-2); transform: translateY(-2px); }
+  .orte h2 { font-size: 1.5rem; }
+  .orte p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
+  .weiter { color: var(--blau); font-size: 0.9375rem; font-variation-settings: 'wght' 580; }
+
+  .rand {
+    margin-top: clamp(2.5rem, 2rem + 3vw, 4rem);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--linie);
+  }
+  .rand h2 { font-size: 1.25rem; margin-bottom: var(--s-3); }
+  .rand a { color: var(--blau); }
+</style>

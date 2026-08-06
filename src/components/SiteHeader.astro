@@ -1,0 +1,206 @@
+---
+import { site, nav } from '../data/site';
+
+const pfad = Astro.url.pathname;
+const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
+---
+
+<header class="kopfleiste">
+  <div class="wrap">
+    <div class="pille">
+      <a href="/" class="marke" aria-label={`${site.name} — zur Startseite`}>
+        <img class="zeichen" src="/cc-zeichen.svg" alt="" width="107" height="85" />
+        <img class="schrift" src="/cc-schrift.svg" alt="" width="507" height="70" />
+      </a>
+
+      <nav class="haupt" aria-label="Hauptnavigation">
+        <ul>
+          {nav.map((n) => (
+            <li>
+              <a href={n.href} aria-current={aktiv(n.href) ? 'page' : undefined}>{n.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="rechts">
+        <a class="ruf" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+        <a class="btn" href="/anfrage">Angebot anfordern</a>
+        <button class="schalter" type="button" aria-expanded="false" aria-controls="mobilmenue" aria-label="Menü öffnen">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobilmenue" id="mobilmenue" hidden>
+      <ul>
+        {nav.map((n) => <li><a href={n.href}>{n.text}</a></li>)}
+        <li><a href="/kontakt">Kontakt</a></li>
+      </ul>
+      <div class="mobilaktion">
+        <a class="btn" href="/anfrage">Angebot anfordern</a>
+        <a class="btn btn-2" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="rufleiste">
+  <a href={`tel:${site.telefonLink}`}>
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z" />
+    </svg>
+    Anrufen
+  </a>
+  <a href="/anfrage" class="haupt-aktion">Angebot anfordern</a>
+</div>
+
+<style>
+  .kopfleiste {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding-top: 0.875rem;
+    /* Kein unterer Abstand: der Abstand zum ersten Block kommt allein aus --reihe. */
+    padding-bottom: 0;
+  }
+
+  .pille {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    margin-inline: calc(var(--einzug) * -1);
+    /* Die Bildmarke sitzt linksbündig in der Pille, knapp hinter der Rundung. */
+    padding: 0.5rem 0.625rem 0.5rem 1.25rem;
+    background: oklch(100% 0 0 / 0.86);
+    backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid oklch(100% 0 0 / 0.9);
+    border-radius: var(--r-pill);
+    box-shadow: var(--schwebe-2);
+  }
+
+  /* Lockup: plastisches Zeichen, daneben der Schriftzug. Beide über die Höhe
+     skaliert, damit sie bei jeder Breite zueinander passen. */
+  .marke { display: flex; align-items: center; gap: 0.625rem; flex: none; line-height: 0; }
+  .marke .zeichen { width: auto; height: 42px; }
+  .marke .schrift { width: auto; height: 25px; }
+
+  .haupt { margin-inline: auto; }
+  .haupt ul { display: flex; align-items: center; gap: 0.125rem; list-style: none; }
+  .haupt a {
+    display: block;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--r-pill);
+    font-size: 0.9375rem;
+    font-weight: 480;
+    text-decoration: none;
+    color: var(--ink-2);
+    transition: color 0.15s var(--ease), background 0.15s var(--ease);
+  }
+  .haupt a:hover { color: var(--ink); background: var(--feld); }
+  .haupt a[aria-current='page'] { color: var(--blau); background: var(--blau-sanft); font-weight: 560; }
+
+  .rechts { display: flex; align-items: center; gap: var(--s-3); flex: none; }
+
+  .ruf {
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0.5rem 0.25rem;
+    white-space: nowrap;
+  }
+  .ruf:hover { color: var(--blau); }
+
+  .schalter {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    padding: 0 11px;
+    background: var(--feld);
+    border: 0;
+    border-radius: var(--r-pill);
+    cursor: pointer;
+  }
+  .schalter span {
+    display: block;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.25s var(--ease);
+  }
+  .schalter[aria-expanded='true'] span:nth-child(1) { transform: translateY(3.25px) rotate(45deg); }
+  .schalter[aria-expanded='true'] span:nth-child(2) { transform: translateY(-3.25px) rotate(-45deg); }
+
+  .mobilmenue {
+    margin-top: 0.5rem;
+    margin-inline: calc(var(--einzug) * -1);
+    padding: var(--s-4) var(--s-5) var(--s-5);
+    background: var(--panel);
+    border-radius: var(--r-karte);
+    box-shadow: var(--schwebe-2);
+  }
+  .mobilmenue[hidden] { display: none; }
+  .mobilmenue ul { list-style: none; }
+  .mobilmenue li + li { border-top: 1px solid var(--linie); }
+  .mobilmenue a {
+    display: block;
+    padding: 0.875rem 0.25rem;
+    font-family: var(--font);
+    font-size: 1.0625rem;
+    font-weight: 520;
+    text-decoration: none;
+  }
+  .mobilaktion { display: grid; gap: var(--s-2); margin-top: var(--s-4); }
+  .mobilaktion .btn { justify-content: center; }
+
+  .rufleiste {
+    display: none;
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 60;
+    padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom));
+    gap: 0.5rem;
+    background: oklch(100% 0 0 / 0.93);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--linie);
+  }
+  .rufleiste a {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8125rem;
+    border-radius: var(--r-pill);
+    background: var(--feld);
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    font-weight: 560;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .rufleiste .haupt-aktion { background: var(--blau); color: #fff; }
+
+  @media (max-width: 64rem) {
+    .haupt, .ruf, .rechts .btn { display: none; }
+    .schalter { display: flex; }
+    .rechts { margin-inline-start: auto; }
+    .rufleiste { display: flex; }
+    body { padding-bottom: 4.5rem; }
+  }
+</style>
+
+<script>
+  const schalter = document.querySelector<HTMLButtonElement>('.schalter');
+  const menue = document.getElementById('mobilmenue');
+  schalter?.addEventListener('click', () => {
+    const offen = schalter.getAttribute('aria-expanded') === 'true';
+    schalter.setAttribute('aria-expanded', String(!offen));
+    schalter.setAttribute('aria-label', offen ? 'Menü öffnen' : 'Menü schließen');
+    if (menue) menue.hidden = offen;
+  });
+</script>

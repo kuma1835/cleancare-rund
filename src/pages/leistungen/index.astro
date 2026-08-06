@@ -1,0 +1,157 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactBand from '../../components/ContactBand.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { site, nutzungen } from '../../data/site';
+import { leistungen } from '../../data/leistungen';
+
+const beschreibung =
+  'Unterhaltsreinigung, Treppenhaus, Glas und Fenster, Grundreinigung, Hygieneartikel, Fassade, Dach und Solar — acht Leistungen für gewerbliche Objekte in Seevetal, Hamburg und Norddeutschland.';
+
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Startseite', item: site.url },
+      { '@type': 'ListItem', position: 2, name: 'Leistungen', item: `${site.url}/leistungen` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Leistungen der CleanCare Gebäudeservice GmbH',
+    itemListElement: leistungen.map((l, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: l.name,
+      url: `${site.url}/leistungen/${l.slug}`,
+    })),
+  },
+];
+---
+
+<Base title="Leistungen" description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <section class="kopfteil">
+    <div class="wrap">
+      <h1>Acht Leistungen, ein Konzept</h1>
+      <p class="lead">
+        Sortiert nach der Fläche, auf der sie stattfinden. Denn die Nutzungsart entscheidet über
+        Verfahren, Mittel und Takt — nicht der Name der Leistung.
+      </p>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap">
+      {nutzungen.map((n) => {
+        const gruppe = leistungen.filter((l) => l.nutzung === n.id);
+        if (!gruppe.length) return null;
+        return (
+          <div class={`gruppe n-${n.id}`}>
+            <h2 class="gruppentitel">
+              <span class="marke-farbe" aria-hidden="true"></span>
+              {n.name}
+            </h2>
+            <ul class="karten">
+              {gruppe.map((l) => (
+                <li>
+                  <a href={`/leistungen/${l.slug}`}>
+                    <h3>{l.name}</h3>
+                    <p class="kurz">{l.kurz}</p>
+                    <p class="takt mass">{l.takt}</p>
+                    <span class="weiter">Zur Leistung <span aria-hidden="true">→</span></span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+
+      <div class="nachfrage">
+        <h2>Leistung nicht dabei?</h2>
+        <p>
+          Kommen Sie gerne auf uns zu, sollte eine von Ihnen gewünschte Leistung nicht aufgeführt
+          sein. Gerne bieten wir Ihnen individuelle Leistungen auf Wunsch an.
+        </p>
+        <a class="btn" href="/anfrage">Anfrage stellen <span class="pfeil" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <ContactBand />
+</Base>
+
+<style>
+  .kopfteil {
+    padding-block: 0;
+  }
+  .kopfteil h1 { margin-bottom: var(--s-4); max-width: 14ch; }
+
+  .gruppe + .gruppe { margin-top: clamp(2.5rem, 2rem + 3vw, 4rem); }
+
+  .gruppentitel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.125rem;
+    font-variation-settings: 'wght' 620;
+    letter-spacing: -0.01em;
+    padding-bottom: var(--s-3);
+    margin-bottom: var(--s-5);
+    border-bottom: 1px solid var(--linie);
+  }
+  .marke-farbe {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 2px;
+    background: var(--linie-2);
+    flex: none;
+  }
+  .n-buero .marke-farbe { background: var(--nutz-buero); }
+  .n-verkehr .marke-farbe { background: var(--nutz-verkehr); }
+  .n-sanitaer .marke-farbe { background: var(--nutz-sanitaer); }
+  .n-glas .marke-farbe { background: var(--nutz-glas); }
+  .n-technik .marke-farbe { background: var(--nutz-technik); }
+
+  .karten {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: var(--s-4);
+  }
+  .karten a {
+    display: grid;
+    align-content: start;
+    gap: var(--s-3);
+    height: 100%;
+    padding: var(--s-5);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: border-color 0.15s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .karten a:hover {
+    border-color: var(--linie-2);
+    box-shadow: var(--schwebe-2);
+    transform: translateY(-2px);
+  }
+  .karten h3 { margin: 0; }
+  .kurz { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
+  .takt { margin: 0; color: var(--ink-3); }
+  .weiter { color: var(--blau); font-size: 0.9375rem; font-variation-settings: 'wght' 580; }
+
+  .nachfrage {
+    margin-top: clamp(3rem, 2rem + 4vw, 5rem);
+    padding: clamp(1.75rem, 1.5rem + 2vw, 3rem);
+    background: var(--panel-2);
+    border: 1px solid var(--linie);
+    border-radius: 6px;
+  }
+  .nachfrage h2 { margin-bottom: var(--s-3); }
+  .nachfrage p { margin-bottom: var(--s-5); }
+</style>

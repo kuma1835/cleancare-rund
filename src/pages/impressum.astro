@@ -1,0 +1,86 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Impressum"
+  description="Impressum der CleanCare Gebäudeservice GmbH, Eddelsener Str. 48, 21218 Seevetal."
+  noindex={true}
+>
+  <section class="rechtstext">
+    <div class="wrap">
+      <h1>Impressum</h1>
+
+      <div class="entwurf">
+        <p class="feld">Redaktionshinweis</p>
+        <p>
+          Diese Seite trägt die belegten Angaben aus dem bestehenden Auftritt. Handelsregister,
+          Umsatzsteuer-Identifikationsnummer und die Aufsichtsbehörde müssen vor Livegang aus dem
+          gültigen Impressum übernommen werden — sie werden hier bewusst nicht erfunden.
+        </p>
+      </div>
+
+      <h2>Angaben gemäß § 5 DDG</h2>
+      <p>
+        {site.name}<br />
+        {site.strasse}<br />
+        {site.plz} {site.ort}
+      </p>
+
+      <h2>Vertreten durch</h2>
+      <p>{site.geschaeftsfuehrung}, Geschäftsführerin</p>
+
+      <h2>Kontakt</h2>
+      <p>
+        Telefon: <a href={`tel:${site.telefonLink}`}>{site.telefon}</a><br />
+        E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+
+      <h2>Registereintrag</h2>
+      <p class="offen">Registergericht und Registernummer: zu ergänzen</p>
+
+      <h2>Umsatzsteuer-Identifikationsnummer</h2>
+      <p class="offen">USt-IdNr. gemäß § 27 a UStG: zu ergänzen</p>
+
+      <h2>Verantwortlich für den Inhalt</h2>
+      <p>{site.geschaeftsfuehrung}, Anschrift wie oben</p>
+
+      <h2>Streitschlichtung</h2>
+      <p>
+        Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+        Verbraucherschlichtungsstelle teilzunehmen.
+      </p>
+
+      <h2>Bildnachweis</h2>
+      <p>
+        Fotografien: Unsplash (nastuh abootalebi, redd f, ron mcclenny, brooke cagle, dan farrell,
+        garin chadwick, priscilla du preez, ridwan d esk, microsoft 365). Diese Aufnahmen stammen
+        aus dem bestehenden Auftritt und sind vor Livegang durch eigene Objektfotos zu ersetzen.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rechtstext { padding-block: 0; }
+  .rechtstext h1 { margin-bottom: var(--s-6); }
+  .rechtstext h2 {
+    font-size: 1.125rem;
+    font-variation-settings: 'wght' 640;
+    margin: var(--s-6) 0 var(--s-3);
+  }
+  .rechtstext p { color: var(--ink-2); line-height: 1.65; }
+  .rechtstext a { color: var(--blau); }
+  .offen { color: var(--warn); font-family: var(--font); font-size: 0.875rem; }
+
+  .entwurf {
+    padding: var(--s-4) var(--s-5);
+    background: var(--panel-2);
+    border: 1px dashed var(--linie-2);
+    border-radius: var(--r-karte);
+    margin-bottom: var(--s-6);
+  }
+  .entwurf .feld { margin-bottom: 0.5rem; color: var(--warn); }
+  .entwurf p { margin: 0; font-size: 0.9375rem; }
+</style>

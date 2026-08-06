@@ -1,0 +1,439 @@
+---
+import Base from '../layouts/Base.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { site } from '../data/site';
+
+const beschreibung =
+  'Jobs bei CleanCare in Seevetal: Glasreiniger und Fensterputzer (m/w/d) als Minijob, in Teilzeit oder Vollzeit, 18 €/Std., unbefristet, 30 Tage Urlaub. Initiativbewerbungen willkommen.';
+
+const stelle = {
+  titel: 'GlasreinigerIn / FensterputzerIn (m/w/d)',
+  lohn: 18,
+  arten: ['Minijob', 'Teilzeit', 'Vollzeit'],
+  einleitung:
+    'Du bist Gebäudereiniger oder Glasreiniger und suchst deinen Traumjob? Perfekt! Wir suchen Glasreiniger (m/w/d) in Teilzeit, Vollzeit oder als Minijob für unterschiedliche Objekte in Seevetal, Landkreis Harburg und Umgebung.',
+  bieten: [
+    'Unbefristeter Arbeitsvertrag',
+    'Übertarifliche Bezahlung (Stundenlohn: 18 €/Std.)',
+    '30 Tage Urlaub im Jahr',
+    'Ein junges Team mit flachen Hierarchien',
+    'Aufstiegsmöglichkeiten (z. B. zum Vorarbeiter oder Teamleiter)',
+  ],
+  aufgaben: [
+    'Du sorgst für Sauberkeit und reinigst Glasflächen und -rahmen im Innen- und Außenbereich',
+  ],
+  profil: [
+    'Du bist idealerweise Gebäudereiniger (m/w/d) oder hast Berufserfahrung in der Gebäudereinigung',
+    'Führerschein Klasse B',
+  ],
+};
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'JobPosting',
+  title: stelle.titel,
+  description: `${stelle.einleitung} Wir bieten: ${stelle.bieten.join('; ')}. Aufgaben: ${stelle.aufgaben.join('; ')}. Profil: ${stelle.profil.join('; ')}.`,
+  employmentType: ['FULL_TIME', 'PART_TIME'],
+  hiringOrganization: { '@id': `${site.url}/#unternehmen` },
+  jobLocation: {
+    '@type': 'Place',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: site.strasse,
+      postalCode: site.plz,
+      addressLocality: site.ort,
+      addressCountry: site.land,
+    },
+  },
+  baseSalary: {
+    '@type': 'MonetaryAmount',
+    currency: 'EUR',
+    value: { '@type': 'QuantitativeValue', value: stelle.lohn, unitText: 'HOUR' },
+  },
+  directApply: true,
+  url: `${site.url}/jobs`,
+};
+---
+
+<Base title="Jobs" description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <section class="kopfteil">
+    <div class="wrap">
+      <h1>Arbeiten bei CleanCare</h1>
+      <p class="lead">
+        Wir suchen immer wieder motivierte Reinigungskräfte in der Unterhaltsreinigung (m/w/d).
+        Eröffne dir und uns neue Möglichkeiten und arbeite gemeinsam mit uns an unserer Vision.
+        Gerne nehmen wir deine Initiativbewerbung an.
+      </p>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap stellenblatt">
+      <header class="stellenkopf">
+        <div>
+          <h2>{stelle.titel}</h2>
+          <p class="orte mass">Seevetal · Landkreis Harburg · Umgebung</p>
+        </div>
+        <dl class="konditionen">
+          <div>
+            <dt class="feld">Stundenlohn</dt>
+            <dd class="mass gross">{stelle.lohn},00 €</dd>
+          </div>
+          <div>
+            <dt class="feld">Umfang</dt>
+            <dd class="mass">{stelle.arten.join(' · ')}</dd>
+          </div>
+          <div>
+            <dt class="feld">Vertrag</dt>
+            <dd class="mass">Unbefristet</dd>
+          </div>
+        </dl>
+      </header>
+
+      <p class="einstieg">{stelle.einleitung}</p>
+
+      <div class="spalten">
+        <div>
+          <h3>Was wir dir bieten</h3>
+          <ul class="haken">{stelle.bieten.map((b) => <li>{b}</li>)}</ul>
+        </div>
+        <div>
+          <h3>Deine Aufgaben</h3>
+          <ul class="haken">{stelle.aufgaben.map((a) => <li>{a}</li>)}</ul>
+          <h3 class="zweit">Was dich ausmacht</h3>
+          <ul class="haken">{stelle.profil.map((p) => <li>{p}</li>)}</ul>
+        </div>
+      </div>
+
+      <a class="btn" href="#bewerbung">Auf diese Stelle bewerben <span class="pfeil" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="abschnitt bewerbung" id="bewerbung">
+    <div class="wrap">
+      <div class="formraster">
+        <div class="einleitung">
+          <h2>Bewirb dich direkt</h2>
+          <p>
+            Kurz reicht: Name, wie wir dich erreichen, und worum es geht. Zeugnisse kannst du
+            später nachreichen — oder du rufst einfach an.
+          </p>
+
+          <aside class="direktweg">
+            <h3>Lieber direkt?</h3>
+            <p>Ein Anruf genügt, wir melden uns zurück.</p>
+            <a class="grossruf" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+            <a class="mailruf" href={`mailto:${site.email}?subject=Bewerbung`}>{site.email}</a>
+          </aside>
+        </div>
+
+        <form id="bewerben" novalidate>
+          <div class="feldpaar">
+            <label class="eingabe">
+              <span class="etikett">Name</span>
+              <input type="text" name="name" autocomplete="name" required />
+            </label>
+            <label class="eingabe">
+              <span class="etikett">Telefon</span>
+              <input type="tel" name="telefon" autocomplete="tel" required />
+            </label>
+          </div>
+
+          <div class="feldpaar">
+            <label class="eingabe">
+              <span class="etikett">E-Mail</span>
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+            <label class="eingabe">
+              <span class="etikett">Worauf bewirbst du dich?</span>
+              <select name="stelle" required>
+                <option value="Glasreiniger (m/w/d)">Glasreiniger / Fensterputzer</option>
+                <option value="Unterhaltsreinigung">Unterhaltsreinigung</option>
+                <option value="Initiativbewerbung">Initiativbewerbung</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="eingabe">
+            <span class="etikett">Deine Nachricht <span class="zusatz">optional</span></span>
+            <textarea name="nachricht" rows="4" placeholder="Erfahrung, gewünschter Umfang, ab wann du kannst"></textarea>
+          </label>
+
+          <label class="zustimmung">
+            <input type="checkbox" name="einwilligung" required />
+            <span>
+              Ich bin damit einverstanden, dass CleanCare mich zu meiner Bewerbung per E-Mail oder
+              Telefon kontaktiert. Näheres in der <a href="/datenschutz">Datenschutzerklärung</a>.
+            </span>
+          </label>
+
+          <div class="honig" aria-hidden="true">
+            <label>Bitte frei lassen<input type="text" name="webseite" tabindex="-1" autocomplete="off" /></label>
+          </div>
+
+          <button class="btn" type="submit">
+            <span class="text">Bewerbung senden</span>
+            <span class="pfeil" aria-hidden="true">→</span>
+          </button>
+          <p class="fehler" id="bewerbfehler" role="alert" hidden></p>
+        </form>
+      </div>
+
+      <div class="quittung" id="bewerbquittung" hidden tabindex="-1">
+        <h2>Danke für deine Bewerbung.</h2>
+        <p>Wir melden uns schnellstmöglich bei dir.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kopfteil {
+    padding-block: 0;
+  }
+  .kopfteil h1 { margin-bottom: var(--s-4); }
+
+  .stellenblatt {
+    max-width: 56rem;
+    padding: clamp(1.5rem, 1.2rem + 2vw, 2.75rem);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    box-shadow: var(--schwebe-1);
+  }
+
+  .stellenkopf {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--s-5);
+    align-items: start;
+    padding-bottom: var(--s-5);
+    border-bottom: 1px solid var(--linie);
+    margin-bottom: var(--s-5);
+  }
+  .stellenkopf h2 { font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.125rem); }
+  .orte { margin: var(--s-3) 0 0; color: var(--ink-3); }
+
+  .konditionen { display: grid; gap: var(--s-4); margin: 0; text-align: right; }
+  .konditionen dt { margin-bottom: 0.1875rem; }
+  .konditionen dd { margin: 0; color: var(--ink); }
+  .gross { font-size: 1.25rem; font-variation-settings: 'wght' 600; }
+
+  .einstieg { font-size: 1.0625rem; margin-bottom: var(--s-6); }
+
+  .spalten {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--s-6);
+    margin-bottom: var(--s-6);
+  }
+  .spalten h3 { margin-bottom: var(--s-4); }
+  .zweit { margin-top: var(--s-6); }
+
+  .haken { list-style: none; display: grid; gap: 0.625rem; }
+  .haken li {
+    display: grid;
+    grid-template-columns: 1.125rem 1fr;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .haken li::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.42rem;
+    border: 1.5px solid var(--nutz-buero);
+    border-radius: 1px;
+  }
+
+  .bewerbung { background: var(--panel-2); }
+
+  /* Links Text und blauer Kasten untereinander, rechts das Formular. */
+  .formraster {
+    display: grid;
+    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    align-items: start;
+  }
+
+  .einleitung { display: grid; gap: var(--s-4); align-content: start; }
+  .einleitung h2 { font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem); }
+  .einleitung > p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); line-height: 1.6; }
+
+  form {
+    padding: clamp(1.25rem, 1rem + 1.2vw, 1.75rem);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+  }
+
+  .feldpaar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: var(--s-3);
+    margin-bottom: var(--s-3);
+  }
+  .eingabe { display: grid; gap: 0.3125rem; margin-bottom: var(--s-3); }
+  .feldpaar .eingabe { margin-bottom: 0; }
+  .etikett { font-size: 0.875rem; font-variation-settings: 'wght' 580; }
+  .zusatz { font-variation-settings: 'wght' 420; color: var(--ink-3); font-size: 0.8125rem; }
+
+  input[type='text'], input[type='email'], input[type='tel'], select, textarea {
+    width: 100%;
+    padding: 0.6875rem 0.75rem;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--grund);
+    border: 1px solid var(--linie-2);
+    border-radius: 10px;
+    transition: border-color 0.15s var(--ease), background 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  }
+  textarea { resize: vertical; }
+  input:hover, select:hover, textarea:hover { border-color: var(--ink-3); }
+  input:focus, select:focus, textarea:focus {
+    background: var(--panel);
+    border-color: var(--blau);
+    box-shadow: 0 0 0 3px var(--blau-sanft);
+    outline: none;
+  }
+  [aria-invalid='true'] { border-color: var(--fehler); background: var(--fehler-sanft); }
+
+  .zustimmung {
+    display: grid;
+    grid-template-columns: 1.125rem 1fr;
+    gap: 0.625rem;
+    align-items: start;
+    margin: var(--s-4) 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .zustimmung input { margin-top: 0.2rem; width: 1.125rem; height: 1.125rem; accent-color: var(--blau); }
+  .zustimmung a { color: var(--blau); }
+
+  .honig { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .fehler {
+    margin: var(--s-4) 0 0;
+    padding: 0.6875rem 0.8125rem;
+    background: var(--fehler-sanft);
+    color: var(--fehler);
+    border-radius: 10px;
+    font-size: 0.875rem;
+  }
+  .fehler[hidden] { display: none; }
+
+  .direktweg {
+    margin-top: var(--s-2);
+    padding: var(--s-4) var(--s-5) var(--s-5);
+    background: var(--ink);
+    color: oklch(91% 0.015 250);
+    border-radius: var(--r-karte);
+    display: grid;
+    gap: 0.375rem;
+    align-content: start;
+  }
+  .direktweg h3 { color: var(--panel); font-size: 1.0625rem; margin-bottom: 0.125rem; }
+  .direktweg p { margin: 0 0 var(--s-3); font-size: 0.875rem; color: oklch(85% 0.018 250); }
+  .grossruf {
+    font-family: var(--font);
+    font-size: 1.125rem;
+    font-weight: 560;
+    font-variant-numeric: tabular-nums;
+    color: var(--panel);
+    text-decoration: none;
+  }
+  .grossruf:hover { text-decoration: underline; }
+  .mailruf {
+    font-size: 0.8125rem;
+    color: oklch(84% 0.02 250);
+    text-decoration: none;
+  }
+  .mailruf:hover { color: var(--panel); text-decoration: underline; }
+
+  .quittung {
+    margin-top: var(--s-5);
+    padding: clamp(1.75rem, 1.5rem + 2vw, 3rem);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+  }
+  .quittung[hidden] { display: none; }
+  .quittung h2 { margin-bottom: var(--s-3); }
+
+  @media (max-width: 56rem) {
+    .stellenkopf { grid-template-columns: 1fr; }
+    .konditionen { text-align: left; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+    .formraster { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('bewerben') as HTMLFormElement | null;
+  if (form) {
+    const fehler = document.getElementById('bewerbfehler') as HTMLParagraphElement;
+    const quittung = document.getElementById('bewerbquittung') as HTMLElement;
+    const knopf = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const endpoint = import.meta.env.PUBLIC_BEWERBUNG_ENDPOINT ?? '';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      fehler.hidden = true;
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+
+      const fehlend = Array.from(form.querySelectorAll<HTMLInputElement>('[required]')).filter(
+        (el) => !el.checkValidity(),
+      );
+      if (fehlend.length) {
+        fehlend.forEach((el) => el.setAttribute('aria-invalid', 'true'));
+        fehler.textContent = 'Bitte fülle die markierten Felder aus.';
+        fehler.hidden = false;
+        fehlend[0].focus();
+        return;
+      }
+
+      if ((form.elements.namedItem('webseite') as HTMLInputElement)?.value) return;
+
+      const daten = Object.fromEntries(new FormData(form).entries());
+      knopf.disabled = true;
+      knopf.querySelector('.text')!.textContent = 'Wird gesendet';
+
+      try {
+        if (endpoint) {
+          const antwort = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(daten),
+          });
+          if (!antwort.ok) throw new Error(String(antwort.status));
+        } else {
+          const zeilen = [
+            `Name: ${daten.name}`,
+            `Telefon: ${daten.telefon}`,
+            `E-Mail: ${daten.email}`,
+            `Stelle: ${daten.stelle}`,
+            '',
+            String(daten.nachricht || ''),
+          ].join('\n');
+          window.location.href = `mailto:hallo@cleancare-service.de?subject=${encodeURIComponent(
+            `Bewerbung: ${daten.stelle}`,
+          )}&body=${encodeURIComponent(zeilen)}`;
+        }
+        form.hidden = true;
+        quittung.hidden = false;
+        quittung.focus();
+      } catch {
+        fehler.textContent =
+          'Das Senden hat nicht geklappt. Bitte ruf uns an: +49 1575 329 63 53.';
+        fehler.hidden = false;
+      } finally {
+        knopf.disabled = false;
+        knopf.querySelector('.text')!.textContent = 'Bewerbung senden';
+      }
+    });
+  }
+</script>

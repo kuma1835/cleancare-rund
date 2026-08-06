@@ -1,0 +1,18 @@
+# Abhängigkeiten
+node_modules/
+
+# Build-Ausgabe
+dist/
+.astro/
+
+# Umgebung
+.env
+.env.*
+
+# System
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

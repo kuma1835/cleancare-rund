@@ -1,0 +1,521 @@
+---
+/**
+ * Die Anfrage als Raumbuch: Objekt, Flächen, Takt, Leistungen.
+ * Genau die Angaben, die CleanCare für ein Angebot ohnehin erheben muss —
+ * hier einmal strukturiert, statt in drei Mails hin und her.
+ *
+ * Versand: PUBLIC_ANFRAGE_ENDPOINT (JSON-POST). Ist keiner gesetzt, öffnet das
+ * Formular als Rückfallebene eine vorbereitete E-Mail. Siehe REDAKTION.md.
+ */
+import { site } from '../data/site';
+import { leistungen } from '../data/leistungen';
+
+const objektarten = [
+  'Büro- oder Verwaltungsgebäude',
+  'Praxis',
+  'Kanzlei',
+  'Wohnanlage / Treppenhaus',
+  'Lager oder Halle',
+  'Hotel oder Gastronomie',
+  'Kita oder Schule',
+  'Anderes Objekt',
+];
+
+const takte = [
+  { wert: 'taeglich', text: 'Täglich' },
+  { wert: '5-woche', text: '5× pro Woche' },
+  { wert: '3-woche', text: '3× pro Woche' },
+  { wert: '1-woche', text: '1× pro Woche' },
+  { wert: '14-taegig', text: '14-täglich' },
+  { wert: 'monatlich', text: 'Monatlich' },
+  { wert: 'einmalig', text: 'Einmalig' },
+  { wert: 'offen', text: 'Noch offen' },
+];
+---
+
+<div class="raumbuch">
+  <form id="anfrage" novalidate>
+    <div class="blaetter">
+      <fieldset class="blatt-teil">
+        <legend><span class="pos">01</span> Objekt</legend>
+
+        <div class="feldpaar">
+          <label class="eingabe">
+            <span class="etikett">Objektart</span>
+            <select name="objektart" required>
+              <option value="">Bitte wählen</option>
+              {objektarten.map((o) => <option value={o}>{o}</option>)}
+            </select>
+          </label>
+
+          <label class="eingabe">
+            <span class="etikett">Ort oder Postleitzahl</span>
+            <input type="text" name="ort" autocomplete="address-level2" placeholder="z. B. 21218 Seevetal" required />
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="blatt-teil">
+        <legend><span class="pos">02</span> Flächen und Takt</legend>
+
+        <div class="feldpaar">
+          <label class="eingabe">
+            <span class="etikett">Fläche gesamt <span class="zusatz">in m², geschätzt genügt</span></span>
+            <input type="number" name="flaeche" min="1" max="200000" inputmode="numeric" placeholder="z. B. 340" required />
+          </label>
+
+          <label class="eingabe">
+            <span class="etikett">Gewünschter Rhythmus</span>
+            <select name="takt" required>
+              {takte.map((t) => <option value={t.wert}>{t.text}</option>)}
+            </select>
+          </label>
+        </div>
+
+        <fieldset class="unterfeld">
+          <legend class="etikett">Welche Flächen kommen vor?</legend>
+          <div class="marken">
+            <label class="marke n-buero"><input type="checkbox" name="flaechenart" value="Büro und Aufenthalt" /><span>Büro und Aufenthalt</span></label>
+            <label class="marke n-verkehr"><input type="checkbox" name="flaechenart" value="Verkehrsflächen und Treppenhaus" /><span>Verkehrsflächen, Treppenhaus</span></label>
+            <label class="marke n-sanitaer"><input type="checkbox" name="flaechenart" value="Sanitär" /><span>Sanitär</span></label>
+            <label class="marke n-glas"><input type="checkbox" name="flaechenart" value="Glas und Fensterfront" /><span>Glas, Fensterfront</span></label>
+            <label class="marke n-technik"><input type="checkbox" name="flaechenart" value="Technik und Lager" /><span>Technik, Lager</span></label>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      <fieldset class="blatt-teil">
+        <legend><span class="pos">03</span> Leistungen</legend>
+        <div class="marken">
+          {leistungen.map((l) => (
+            <label class="marke"><input type="checkbox" name="leistung" value={l.name} /><span>{l.name}</span></label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset class="blatt-teil">
+        <legend><span class="pos">04</span> Kontakt</legend>
+
+        <div class="feldpaar">
+          <label class="eingabe">
+            <span class="etikett">Name</span>
+            <input type="text" name="name" autocomplete="name" required />
+          </label>
+          <label class="eingabe">
+            <span class="etikett">Firma <span class="zusatz">optional</span></span>
+            <input type="text" name="firma" autocomplete="organization" />
+          </label>
+          <label class="eingabe">
+            <span class="etikett">E-Mail</span>
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label class="eingabe">
+            <span class="etikett">Telefon <span class="zusatz">für Rückfragen</span></span>
+            <input type="tel" name="telefon" autocomplete="tel" />
+          </label>
+        </div>
+
+        <label class="eingabe">
+          <span class="etikett">Was sollten wir vorher wissen? <span class="zusatz">optional</span></span>
+          <textarea name="nachricht" rows="4" placeholder="Besonderheiten, Zugang, Wunschtermin für die Besichtigung"></textarea>
+        </label>
+
+        <label class="zustimmung">
+          <input type="checkbox" name="einwilligung" required />
+          <span>
+            Ich bin damit einverstanden, dass CleanCare mich zu dieser Anfrage per E-Mail oder
+            Telefon kontaktiert. Wie wir mit den Daten umgehen, steht in der
+            <a href="/datenschutz">Datenschutzerklärung</a>.
+          </span>
+        </label>
+
+        <div class="honig" aria-hidden="true">
+          <label>Bitte nicht ausfüllen<input type="text" name="webseite" tabindex="-1" autocomplete="off" /></label>
+        </div>
+      </fieldset>
+    </div>
+
+    <aside class="zusammenfassung" aria-live="polite">
+      <p class="feld kopfzeile">Ihr Raumbuch</p>
+      <dl id="uebersicht">
+        <div><dt>Objekt</dt><dd data-feld="objektart">—</dd></div>
+        <div><dt>Ort</dt><dd data-feld="ort">—</dd></div>
+        <div><dt>Fläche</dt><dd data-feld="flaeche">—</dd></div>
+        <div><dt>Takt</dt><dd data-feld="takt">—</dd></div>
+        <div><dt>Flächenarten</dt><dd data-feld="flaechenart">—</dd></div>
+        <div><dt>Leistungen</dt><dd data-feld="leistung">—</dd></div>
+      </dl>
+
+      <p class="notiz">
+        Ein Preis entsteht erst nach der Besichtigung — diese Angaben sorgen dafür, dass der
+        Termin gleich der richtige ist.
+      </p>
+
+      <button class="btn absenden" type="submit" form="anfrage">
+        <span class="text">Anfrage senden</span>
+        <span class="pfeil" aria-hidden="true">→</span>
+      </button>
+
+      <p class="fehler" id="formfehler" role="alert" hidden></p>
+
+      <p class="direkt">
+        Lieber direkt sprechen?
+        <a href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+      </p>
+    </aside>
+  </form>
+
+  <div class="quittung" id="quittung" hidden tabindex="-1">
+    <h2>Ihr Raumbuch ist unterwegs.</h2>
+    <p>
+      Vielen Dank für Ihre Anfrage. Wir melden uns, um einen Besichtigungstermin abzustimmen —
+      mit Ihren Angaben wissen wir schon, worum es geht.
+    </p>
+    <p class="direkt">
+      Wenn es eilt: <a href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  .raumbuch { container-type: inline-size; }
+
+  form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    align-items: start;
+  }
+
+  .blaetter { display: grid; gap: var(--s-5); min-width: 0; }
+
+  .blatt-teil {
+    margin: 0;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    background: var(--panel);
+    box-shadow: var(--schwebe-1);
+  }
+
+  .blatt-teil > legend {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    padding: 0;
+    margin-bottom: var(--s-4);
+    font-size: 1.25rem;
+    font-variation-settings: 'wght' 660;
+    letter-spacing: -0.02em;
+  }
+  .pos {
+    font-family: var(--font);
+    font-size: 0.6875rem;
+    font-variation-settings: 'wght' 600;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+  }
+
+  .feldpaar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--s-4);
+  }
+
+  .eingabe { display: grid; gap: 0.4375rem; margin-bottom: var(--s-4); }
+  .feldpaar .eingabe { margin-bottom: 0; }
+  .eingabe:last-child { margin-bottom: 0; }
+
+  .etikett {
+    font-size: 0.875rem;
+    font-variation-settings: 'wght' 580;
+    color: var(--ink);
+  }
+  .zusatz {
+    font-variation-settings: 'wght' 420;
+    color: var(--ink-3);
+    font-size: 0.8125rem;
+  }
+
+  input[type='text'], input[type='email'], input[type='tel'], input[type='number'], select, textarea {
+    width: 100%;
+    padding: 0.6875rem 0.75rem;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--grund);
+    border: 1px solid var(--linie-2);
+    border-radius: 10px;
+    transition: border-color 0.15s var(--ease), background 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  }
+  textarea { resize: vertical; min-height: 6rem; }
+  select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--ink-2) 50%), linear-gradient(135deg, var(--ink-2) 50%, transparent 50%); background-position: right 1rem center, right 0.7rem center; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 2.25rem; }
+
+  input::placeholder, textarea::placeholder { color: var(--ink-3); }
+
+  input:hover, select:hover, textarea:hover { border-color: var(--ink-3); }
+  input:focus, select:focus, textarea:focus {
+    background: var(--panel);
+    border-color: var(--blau);
+    box-shadow: 0 0 0 3px var(--blau-sanft);
+    outline: none;
+  }
+  [aria-invalid='true'] {
+    border-color: var(--fehler);
+    background: var(--fehler-sanft);
+  }
+
+  .unterfeld { margin: var(--s-4) 0 0; padding: 0; border: 0; }
+  .unterfeld > legend { padding: 0; margin-bottom: 0.5rem; }
+
+  .marken { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .marke {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.8125rem;
+    border: 1px solid var(--linie-2);
+    border-radius: var(--r-pill);
+    background: var(--grund);
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: border-color 0.15s var(--ease), background 0.15s var(--ease), color 0.15s var(--ease);
+  }
+  .marke:hover { border-color: var(--ink-3); background: var(--panel); }
+  .marke input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .marke::before {
+    content: '';
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 1.5px solid var(--linie-2);
+    border-radius: 3px;
+    background: var(--panel);
+    flex: none;
+    transition: background 0.15s var(--ease), border-color 0.15s var(--ease);
+  }
+  .marke:has(input:checked) {
+    border-color: var(--ink);
+    background: var(--panel);
+    font-variation-settings: 'wght' 560;
+  }
+  .marke:has(input:checked)::before {
+    background: var(--ink);
+    border-color: var(--ink);
+    box-shadow: inset 0 0 0 2px var(--panel);
+  }
+  .marke:has(input:focus-visible) { outline: 3px solid var(--blau); outline-offset: 2px; }
+
+  .marke.n-buero:has(input:checked)::before { background: var(--nutz-buero); border-color: var(--nutz-buero); }
+  .marke.n-verkehr:has(input:checked)::before { background: var(--nutz-verkehr); border-color: var(--nutz-verkehr); }
+  .marke.n-sanitaer:has(input:checked)::before { background: var(--nutz-sanitaer); border-color: var(--nutz-sanitaer); }
+  .marke.n-glas:has(input:checked)::before { background: var(--nutz-glas); border-color: var(--nutz-glas); }
+  .marke.n-technik:has(input:checked)::before { background: var(--nutz-technik); border-color: var(--nutz-technik); }
+
+  .zustimmung {
+    display: grid;
+    grid-template-columns: 1.125rem 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    margin-top: var(--s-5);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .zustimmung input { margin-top: 0.2rem; width: 1.125rem; height: 1.125rem; accent-color: var(--blau); }
+
+  .honig { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  /* Zusammenfassung */
+  .zusammenfassung {
+    position: sticky;
+    top: 6rem;
+    padding: var(--s-5);
+    background: var(--ink);
+    color: oklch(93% 0.012 250);
+    border-radius: var(--r-karte);
+    box-shadow: var(--schwebe-3);
+    display: grid;
+    gap: var(--s-4);
+  }
+  .zusammenfassung .kopfzeile { color: oklch(74% 0.03 250); margin: 0; }
+
+  #uebersicht { margin: 0; display: grid; gap: 1px; background: oklch(38% 0.04 253); border-radius: var(--r-klein); overflow: hidden; }
+  #uebersicht > div {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: var(--s-3);
+    padding: 0.5625rem 0.75rem;
+    background: oklch(33% 0.045 253);
+  }
+  #uebersicht dt {
+    font-family: var(--font);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: oklch(74% 0.03 250);
+    align-self: center;
+  }
+  #uebersicht dd {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--panel);
+  }
+  #uebersicht dd.leer { color: oklch(64% 0.025 250); }
+
+  .notiz { margin: 0; font-size: 0.8125rem; line-height: 1.5; color: oklch(83% 0.018 250); }
+
+  .absenden { width: 100%; justify-content: center; }
+  .absenden[data-laedt='true'] { pointer-events: none; opacity: 0.75; }
+  .absenden[data-laedt='true'] .pfeil {
+    animation: puls 0.9s ease-in-out infinite;
+  }
+  @keyframes puls { 50% { opacity: 0.3; } }
+
+  .fehler {
+    margin: 0;
+    padding: 0.6875rem 0.8125rem;
+    background: var(--fehler-sanft);
+    color: var(--fehler);
+    border-radius: 10px;
+    font-size: 0.875rem;
+  }
+  .fehler[hidden] { display: none; }
+
+  .direkt { margin: 0; font-size: 0.875rem; color: oklch(83% 0.018 250); }
+  .direkt a { color: var(--panel); font-family: var(--font); font-size: 0.8125rem; }
+
+  .quittung {
+    padding: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    box-shadow: var(--schwebe-2);
+  }
+  .quittung[hidden] { display: none; }
+  .quittung h2 { margin-bottom: var(--s-4); }
+  .quittung .direkt { color: var(--ink-2); margin-top: var(--s-4); }
+  .quittung .direkt a { color: var(--blau); }
+
+  @container (max-width: 56rem) {
+    form { grid-template-columns: 1fr; }
+    .zusammenfassung { position: static; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('anfrage') as HTMLFormElement | null;
+  if (form) {
+    const uebersicht = document.getElementById('uebersicht')!;
+    const fehler = document.getElementById('formfehler') as HTMLParagraphElement;
+    const knopf = form.querySelector('.absenden') as HTMLButtonElement;
+    const quittung = document.getElementById('quittung') as HTMLElement;
+    const endpoint = import.meta.env.PUBLIC_ANFRAGE_ENDPOINT ?? '';
+
+    const taktText = (w: string) => {
+      const o = form.querySelector<HTMLOptionElement>(`select[name="takt"] option[value="${w}"]`);
+      return o?.textContent ?? w;
+    };
+
+    const sammeln = (feld: string) =>
+      Array.from(form.querySelectorAll<HTMLInputElement>(`input[name="${feld}"]:checked`)).map((i) => i.value);
+
+    const spiegeln = () => {
+      const daten = new FormData(form);
+      const setze = (feld: string, wert: string) => {
+        const el = uebersicht.querySelector<HTMLElement>(`[data-feld="${feld}"]`);
+        if (!el) return;
+        el.textContent = wert || '—';
+        el.classList.toggle('leer', !wert);
+      };
+      setze('objektart', String(daten.get('objektart') ?? ''));
+      setze('ort', String(daten.get('ort') ?? ''));
+      const fl = String(daten.get('flaeche') ?? '');
+      setze('flaeche', fl ? `${fl} m²` : '');
+      setze('takt', taktText(String(daten.get('takt') ?? '')));
+      setze('flaechenart', sammeln('flaechenart').join(', '));
+      setze('leistung', sammeln('leistung').join(', '));
+    };
+
+    form.addEventListener('input', spiegeln);
+    form.addEventListener('change', spiegeln);
+    spiegeln();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      fehler.hidden = true;
+
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+      const fehlend = Array.from(form.querySelectorAll<HTMLInputElement>('[required]')).filter(
+        (el) => !el.checkValidity(),
+      );
+      if (fehlend.length) {
+        fehlend.forEach((el) => el.setAttribute('aria-invalid', 'true'));
+        fehler.textContent =
+          fehlend.length === 1
+            ? 'Ein Feld fehlt noch — es ist markiert.'
+            : `${fehlend.length} Felder fehlen noch — sie sind markiert.`;
+        fehler.hidden = false;
+        fehlend[0].focus();
+        return;
+      }
+
+      // Spam-Falle
+      if ((form.elements.namedItem('webseite') as HTMLInputElement)?.value) return;
+
+      const daten = Object.fromEntries(new FormData(form).entries());
+      const nutzlast = {
+        ...daten,
+        flaechenart: sammeln('flaechenart'),
+        leistung: sammeln('leistung'),
+        takt: taktText(String(daten.takt ?? '')),
+      };
+
+      knopf.dataset.laedt = 'true';
+      knopf.querySelector('.text')!.textContent = 'Wird gesendet';
+
+      try {
+        if (endpoint) {
+          const antwort = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nutzlast),
+          });
+          if (!antwort.ok) throw new Error(String(antwort.status));
+        } else {
+          // Rückfallebene ohne Endpunkt: vorbereitete E-Mail
+          const zeilen = [
+            `Objektart: ${nutzlast.objektart}`,
+            `Ort: ${nutzlast.ort}`,
+            `Fläche: ${nutzlast.flaeche} m²`,
+            `Rhythmus: ${nutzlast.takt}`,
+            `Flächenarten: ${(nutzlast.flaechenart as string[]).join(', ') || '—'}`,
+            `Leistungen: ${(nutzlast.leistung as string[]).join(', ') || '—'}`,
+            '',
+            `Name: ${nutzlast.name}`,
+            `Firma: ${nutzlast.firma || '—'}`,
+            `E-Mail: ${nutzlast.email}`,
+            `Telefon: ${nutzlast.telefon || '—'}`,
+            '',
+            String(nutzlast.nachricht || ''),
+          ].join('\n');
+          window.location.href = `mailto:hallo@cleancare-service.de?subject=${encodeURIComponent(
+            `Anfrage ${nutzlast.objektart} in ${nutzlast.ort}`,
+          )}&body=${encodeURIComponent(zeilen)}`;
+        }
+
+        form.hidden = true;
+        quittung.hidden = false;
+        quittung.focus();
+        quittung.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch {
+        fehler.textContent =
+          'Das Senden hat nicht geklappt. Bitte versuchen Sie es noch einmal oder rufen Sie uns an: +49 1575 329 63 53.';
+        fehler.hidden = false;
+      } finally {
+        knopf.dataset.laedt = 'false';
+        knopf.querySelector('.text')!.textContent = 'Anfrage senden';
+      }
+    });
+  }
+</script>

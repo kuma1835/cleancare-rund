@@ -1,0 +1,295 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import ContactBand from '../../components/ContactBand.astro';
+import Stimmen from '../../components/Stimmen.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { site, nutzungen } from '../../data/site';
+import { leistungen } from '../../data/leistungen';
+
+export function getStaticPaths() {
+  return leistungen.map((l) => ({ params: { slug: l.slug }, props: { leistung: l } }));
+}
+
+const { leistung } = Astro.props;
+const bilder = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/*.{webp,png,jpg}', {
+  eager: true,
+});
+const bild = leistung.bild ? bilder[`../../assets/img/${leistung.bild}`]?.default : undefined;
+const nutzung = nutzungen.find((n) => n.id === leistung.nutzung)!;
+const andere = leistungen.filter((l) => l.slug !== leistung.slug).slice(0, 4);
+
+const beschreibung = `${leistung.name} für gewerbliche Objekte in Seevetal, im Landkreis Harburg und in Hamburg. ${leistung.kurz} Angebot nach Besichtigung.`;
+
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: leistung.name,
+    description: leistung.text,
+    serviceType: leistung.name,
+    provider: { '@id': `${site.url}/#unternehmen` },
+    areaServed: site.gebiet.map((g) => ({ '@type': 'Place', name: g })),
+    url: `${site.url}/leistungen/${leistung.slug}`,
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        description: 'Individuelles Angebot nach Besichtigung des Objekts',
+      },
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Startseite', item: site.url },
+      { '@type': 'ListItem', position: 2, name: 'Leistungen', item: `${site.url}/leistungen` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: leistung.name,
+        item: `${site.url}/leistungen/${leistung.slug}`,
+      },
+    ],
+  },
+];
+---
+
+<Base title={leistung.name} description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <nav class="pfad" aria-label="Brotkrumen">
+    <div class="wrap">
+      <ol>
+        <li><a href="/">Start</a></li>
+        <li><a href="/leistungen">Leistungen</a></li>
+        <li aria-current="page">{leistung.name}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class={`kopfteil n-${leistung.nutzung}`}>
+    <div class="wrap raster-kopf">
+      <div>
+        <p class="feld flaechenart">
+          <span class="marke-farbe" aria-hidden="true"></span>
+          {nutzung.name}
+        </p>
+        <h1>{leistung.name}</h1>
+        <p class="lead">{leistung.kurz}</p>
+        <div class="aktionen">
+          <a class="btn" href="/anfrage">Anfrage stellen <span class="pfeil" aria-hidden="true">→</span></a>
+          <a class="btn btn-2" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+        </div>
+      </div>
+      <dl class="eckdaten">
+        <div>
+          <dt class="feld">Üblicher Takt</dt>
+          <dd class="mass">{leistung.takt}</dd>
+        </div>
+        <div>
+          <dt class="feld">Flächenart</dt>
+          <dd class="mass">{nutzung.kurz}</dd>
+        </div>
+        <div>
+          <dt class="feld">Gebiet</dt>
+          <dd class="mass">Seevetal · Harburg · Hamburg</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap raster-text">
+      <div class="fliesstext">
+        <p class="einstieg">{leistung.text}</p>
+
+        <h2>Was dazugehört</h2>
+        <ul class="umfang">
+          {leistung.umfang.map((u) => <li>{u}</li>)}
+        </ul>
+
+        <h2>Für welche Objekte</h2>
+        <ul class="fuer">
+          {leistung.fuer.map((f) => <li class="mass">{f}</li>)}
+        </ul>
+
+        <h2>Wie der Preis entsteht</h2>
+        <p>
+          Aus der Fläche, ihrer Nutzung und dem Takt — und aus dem, was die Besichtigung zeigt.
+          Bodenbeläge, Zugänge und Verkehrsaufkommen verändern den Aufwand deutlich, deshalb gibt es
+          bei uns keinen Quadratmeterpreis von der Stange.
+        </p>
+      </div>
+
+      {bild && (
+        <figure class="bildblock">
+          <Image
+            src={bild}
+            alt={`Objektsituation, wie sie bei der ${leistung.name} vorkommt`}
+            widths={[400, 700, 1000]}
+            sizes="(max-width: 56rem) 100vw, 26rem"
+            loading="lazy"
+          />
+        </figure>
+      )}
+    </div>
+  </section>
+
+  <section class="abschnitt-eng weitere">
+    <div class="wrap">
+      <h2 class="feld">Weitere Leistungen</h2>
+      <ul class="liste">
+        {andere.map((l) => (
+          <li class={`n-${l.nutzung}`}>
+            <a href={`/leistungen/${l.slug}`}>
+              <span class="marke-farbe" aria-hidden="true"></span>
+              <span>{l.name}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <Stimmen />
+  <ContactBand />
+</Base>
+
+<style>
+  .pfad {
+    border-bottom: 1px solid var(--linie);
+    background: var(--panel);
+  }
+  .pfad ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-block: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+  }
+  .pfad li + li::before { content: '/'; margin-right: 0.5rem; color: var(--linie-2); }
+  .pfad a { color: var(--ink-2); text-decoration: none; }
+  .pfad a:hover { text-decoration: underline; }
+
+  .kopfteil {
+    padding-block: 0;
+    background: var(--panel);
+    border-bottom: 1px solid var(--linie);
+  }
+  .raster-kopf {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 1rem + 3vw, 4rem);
+    align-items: end;
+  }
+
+  .flaechenart {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: var(--s-4);
+  }
+  .marke-farbe {
+    width: 0.6875rem;
+    height: 0.6875rem;
+    border-radius: 2px;
+    background: var(--linie-2);
+    flex: none;
+  }
+  .n-buero .marke-farbe { background: var(--nutz-buero); }
+  .n-verkehr .marke-farbe { background: var(--nutz-verkehr); }
+  .n-sanitaer .marke-farbe { background: var(--nutz-sanitaer); }
+  .n-glas .marke-farbe { background: var(--nutz-glas); }
+  .n-technik .marke-farbe { background: var(--nutz-technik); }
+
+  .kopfteil h1 { margin-bottom: var(--s-4); }
+  .aktionen { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
+
+  .eckdaten {
+    display: grid;
+    gap: 1px;
+    margin: 0;
+    background: var(--linie);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-klein);
+    overflow: hidden;
+    min-width: 15rem;
+  }
+  .eckdaten > div { background: var(--grund); padding: 0.625rem 0.875rem; }
+  .eckdaten dt { margin-bottom: 0.1875rem; }
+  .eckdaten dd { margin: 0; color: var(--ink); }
+
+  .raster-text {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+    align-items: start;
+  }
+  .einstieg { font-size: 1.125rem; line-height: 1.6; }
+  .fliesstext h2 { font-size: 1.375rem; margin: var(--s-7) 0 var(--s-4); }
+  .fliesstext p { color: var(--ink-2); }
+  .einstieg { color: var(--ink) !important; }
+
+  .umfang { list-style: none; display: grid; gap: 0.625rem; }
+  .umfang li {
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: 0.5rem;
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+  .umfang li::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.45rem;
+    border: 1.5px solid var(--blau);
+    border-radius: 1px;
+  }
+
+  .fuer { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4375rem; }
+  .fuer li {
+    padding: 0.3125rem 0.625rem;
+    background: var(--panel-2);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-pill);
+    color: var(--ink-2);
+  }
+
+  .bildblock { margin: 0; position: sticky; top: 6rem; }
+  .bildblock :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-karte);
+    border: 1px solid var(--linie);
+    box-shadow: var(--schwebe-2);
+  }
+
+  .weitere { background: var(--panel-2); }
+  .weitere h2 { margin-bottom: var(--s-4); }
+  .liste { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .liste a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5625rem 0.875rem;
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-pill);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  }
+  .liste a:hover { border-color: var(--ink-3); box-shadow: var(--schwebe-1); }
+
+  @media (max-width: 62rem) {
+    .raster-kopf { grid-template-columns: 1fr; align-items: start; }
+    .raster-text { grid-template-columns: 1fr; }
+    .bildblock { position: static; order: -1; }
+  }
+</style>

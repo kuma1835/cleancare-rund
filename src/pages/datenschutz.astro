@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Datenschutz"
+  description="Datenschutzerklärung der CleanCare Gebäudeservice GmbH."
+  noindex={true}
+>
+  <section class="rechtstext">
+    <div class="wrap">
+      <h1>Datenschutz</h1>
+
+      <div class="entwurf">
+        <p class="feld">Redaktionshinweis</p>
+        <p>
+          Der verbindliche Text gehört in juristische Hand und wird aus der bestehenden
+          Datenschutzerklärung übernommen beziehungsweise vom Datenschutzbeauftragten angepasst.
+          Was diese Seite hier beschreibt, ist ausschließlich das, was diese Fassung technisch
+          tatsächlich tut — als Grundlage für die Prüfung.
+        </p>
+      </div>
+
+      <h2>Verantwortlich</h2>
+      <p>
+        {site.name}<br />
+        {site.strasse}, {site.plz} {site.ort}<br />
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+
+      <h2>Was diese Website technisch tut</h2>
+      <ul>
+        <li>Sie lädt keine Schriften, Karten, Videos oder Skripte von fremden Servern.</li>
+        <li>Sie setzt von sich aus keine Cookies und verwendet keine Analyse- oder Trackingdienste.</li>
+        <li>Bilder, Stile und Schriften werden vom eigenen Server ausgeliefert.</li>
+      </ul>
+
+      <h2>Formulare</h2>
+      <p>
+        Anfrage- und Bewerbungsformular übertragen die eingegebenen Angaben an CleanCare, um die
+        Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b und lit. a DSGVO. Ohne
+        Einwilligung wird nichts gesendet; die Einwilligung lässt sich jederzeit für die Zukunft
+        widerrufen.
+      </p>
+      <p class="offen">
+        Zu ergänzen: eingesetzter Versanddienst, Serverstandort, Auftragsverarbeitungsvertrag,
+        Speicherdauer und Löschfristen.
+      </p>
+
+      <h2>Ihre Rechte</h2>
+      <p>
+        Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und
+        Widerspruch. Außerdem besteht ein Beschwerderecht bei einer Aufsichtsbehörde.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rechtstext { padding-block: 0; }
+  .rechtstext h1 { margin-bottom: var(--s-6); }
+  .rechtstext h2 { font-size: 1.125rem; font-variation-settings: 'wght' 640; margin: var(--s-6) 0 var(--s-3); }
+  .rechtstext p, .rechtstext li { color: var(--ink-2); line-height: 1.65; }
+  .rechtstext ul { padding-left: 1.25rem; display: grid; gap: 0.5rem; }
+  .rechtstext a { color: var(--blau); }
+  .offen { color: var(--warn); font-family: var(--font); font-size: 0.875rem; }
+
+  .entwurf {
+    padding: var(--s-4) var(--s-5);
+    background: var(--panel-2);
+    border: 1px dashed var(--linie-2);
+    border-radius: var(--r-karte);
+    margin-bottom: var(--s-6);
+  }
+  .entwurf .feld { margin-bottom: 0.5rem; color: var(--warn); }
+  .entwurf p { margin: 0; font-size: 0.9375rem; }
+</style>

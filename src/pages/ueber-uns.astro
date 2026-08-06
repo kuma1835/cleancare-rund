@@ -1,0 +1,185 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Stimmen from '../components/Stimmen.astro';
+import ContactBand from '../components/ContactBand.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { site } from '../data/site';
+import buero from '../assets/img/ron-mcclenny-9yi8eq9mdvy-unsplash.webp';
+import team from '../assets/img/redd-f-5u_28ojjgms-unsplash.webp';
+
+const beschreibung =
+  'CleanCare Gebäudeservice GmbH: Familienunternehmen in zweiter Generation seit 2009, spezialisiert auf ganzheitliche Unterhaltsreinigung gewerblich genutzter Immobilien.';
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'Über CleanCare',
+  url: `${site.url}/ueber-uns`,
+  mainEntity: { '@id': `${site.url}/#unternehmen` },
+};
+---
+
+<Base title="Über uns" description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <section class="kopfteil">
+    <div class="wrap">
+      <h1>Ihre Reinigungsexperten</h1>
+      <p class="lead">
+        Traditionelle Werte in Verbindung mit modernem Innovationsgeist — seit {site.gruendung}, in
+        zweiter Generation.
+      </p>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap raster">
+      <div class="text">
+        <p class="einstieg">
+          Wir sind ein seit {site.gruendung} tätiges Familienunternehmen in zweiter Generation,
+          spezialisiert auf die ganzheitliche Unterhaltsreinigung gewerblich genutzter Immobilien.
+        </p>
+        <p>
+          Als solches vereinen wir traditionelle Werte mit modernem Innovationsgeist. Wir verknüpfen
+          unsere Expertise aus fast 15 Jahren Erfahrung mit Digitalisierung, Innovation und
+          Nachhaltigkeit. Dadurch erreichen wir, unsere Prozesse effektiver abzuwickeln und unseren
+          KundInnen transparente Budgetplanung, zuverlässigere Qualitätskontrollen und eine
+          verantwortungsvolle Nachhaltigkeit zu garantieren.
+        </p>
+        <p>
+          Damit Sie sich entspannt zurücklehnen und ganz auf Ihr Kerngeschäft konzentrieren können.
+        </p>
+        <p class="signatur mass">{site.geschaeftsfuehrung}, Geschäftsführerin</p>
+      </div>
+      <figure class="bild">
+        <Image
+          src={buero}
+          alt="Ruhige Büroecke mit Schreibtischstuhl, Pflanzen und Tageslicht"
+          widths={[420, 700, 1000]}
+          sizes="(max-width: 62rem) 100vw, 28rem"
+          loading="lazy"
+        />
+      </figure>
+    </div>
+  </section>
+
+  <section class="abschnitt-eng werte">
+    <div class="wrap">
+      <h2>Woran wir uns messen lassen</h2>
+      <div class="werteraster">
+        <article>
+          <h3>Individuelle Lösungen</h3>
+          <p>
+            Kein Objekt wie das andere. Das Konzept entsteht aus Ihren Flächen und Ihrem Betrieb,
+            nicht aus einem Standardpaket.
+          </p>
+        </article>
+        <article>
+          <h3>Verlässliche Qualität</h3>
+          <p>
+            Feste Teams, wiederkehrende Abläufe, kontrollierte Ergebnisse. Wer das Objekt kennt,
+            übersieht weniger.
+          </p>
+        </article>
+        <article>
+          <h3>Persönlicher Service</h3>
+          <p>
+            Kurze Wege zur Geschäftsführung statt Ticketsystem. Rückmeldungen landen dort, wo
+            entschieden wird.
+          </p>
+        </article>
+        <article>
+          <h3>Nachhaltige Vision</h3>
+          <p>
+            Digitalisierung und verantwortungsvolle Prozesse gehören für uns zusammen — sie machen
+            Reinigung planbarer und sparsamer.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt zahlen">
+    <div class="wrap raster umgekehrt">
+      <figure class="bild">
+        <Image
+          src={team}
+          alt="Besprechung an einem langen Tisch, gesehen durch eine Glaswand"
+          widths={[420, 700, 1000]}
+          sizes="(max-width: 62rem) 100vw, 28rem"
+          loading="lazy"
+        />
+      </figure>
+      <div class="text">
+        <h2>Ein Betrieb, den man erreicht</h2>
+        <p>
+          CleanCare sitzt in Seevetal, südlich von Hamburg. Von dort betreuen wir Objekte im
+          Landkreis Harburg, in Hamburg und darüber hinaus in Niedersachsen und
+          Schleswig-Holstein.
+        </p>
+        <p>
+          Der Vorteil eines Familienbetriebs zeigt sich im Alltag: kurze Entscheidungswege, feste
+          Ansprechpartner und die Bereitschaft, ein Objekt auch dann noch persönlich anzusehen,
+          wenn es längst läuft.
+        </p>
+        <p>
+          <a class="weiter" href="/einsatzgebiet">Einsatzgebiet ansehen <span aria-hidden="true">→</span></a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Stimmen />
+  <ContactBand />
+</Base>
+
+<style>
+  .kopfteil {
+    padding-block: 0;
+  }
+  .kopfteil h1 { margin-bottom: var(--s-4); }
+
+  .raster {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+    align-items: center;
+  }
+  .umgekehrt { grid-template-columns: minmax(0, 28rem) minmax(0, 1fr); }
+
+  .einstieg { font-size: 1.1875rem; line-height: 1.55; }
+  .text p { color: var(--ink-2); }
+  .text .einstieg { color: var(--ink); }
+  .text h2 { margin-bottom: var(--s-4); }
+  .signatur { color: var(--ink); margin-top: var(--s-5); }
+  .signatur::before { content: '— '; }
+
+  .bild { margin: 0; }
+  .bild :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-karte);
+    border: 1px solid var(--linie);
+    box-shadow: var(--schwebe-2);
+  }
+
+  .werte { background: var(--panel-2); }
+  .werte h2 { margin-bottom: var(--s-6); }
+  .werteraster {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--s-6) var(--s-5);
+  }
+  .werteraster article { border-top: 2px solid var(--ink); padding-top: var(--s-4); }
+  .werteraster h3 { margin-bottom: var(--s-3); }
+  .werteraster p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); line-height: 1.6; }
+
+  .weiter { color: var(--blau); font-variation-settings: 'wght' 580; text-decoration: none; }
+  .weiter:hover { text-decoration: underline; }
+
+  @media (max-width: 62rem) {
+    .raster, .umgekehrt { grid-template-columns: 1fr; }
+    .umgekehrt .bild { order: 2; }
+  }
+</style>

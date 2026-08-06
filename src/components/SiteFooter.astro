@@ -1,0 +1,142 @@
+---
+import { site } from '../data/site';
+import { leistungen } from '../data/leistungen';
+import { standorte } from '../data/standorte';
+
+const jahr = new Date().getFullYear();
+---
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="fussblatt">
+      <div class="spalten">
+        <div class="marke-block">
+          <a href="/" class="marke" aria-label={`${site.name} — zur Startseite`}>
+            <img class="zeichen" src="/cc-zeichen.svg" alt="" width="107" height="85" />
+            <img class="schrift" src="/cc-schrift.svg" alt="" width="507" height="70" />
+          </a>
+          <p class="satz">
+            Ganzheitliche Unterhaltsreinigung für gewerblich genutzte Immobilien in Seevetal, im
+            Landkreis Harburg, in Hamburg und in Norddeutschland.
+          </p>
+          <div class="kontakt">
+            <a href={`tel:${site.telefonLink}`} class="mass">{site.telefon}</a>
+            <a href={`mailto:${site.email}`} class="mass">{site.email}</a>
+            <address>
+              {site.strasse}, {site.plz} {site.ort}
+            </address>
+          </div>
+        </div>
+
+        <nav aria-label="Leistungen">
+          <h2 class="label">Leistungen</h2>
+          <ul>
+            {leistungen.map((l) => (
+              <li><a href={`/leistungen/${l.slug}`}>{l.name}</a></li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-label="Einsatzgebiet">
+          <h2 class="label">Einsatzgebiet</h2>
+          <ul>
+            {standorte.map((s) => (
+              <li><a href={`/einsatzgebiet/${s.slug}`}>{s.ort}</a></li>
+            ))}
+            <li><a href="/einsatzgebiet">Gesamtes Gebiet</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Unternehmen">
+          <h2 class="label">Unternehmen</h2>
+          <ul>
+            <li><a href="/ueber-uns">Über uns</a></li>
+            <li><a href="/faq">Häufige Fragen</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+            <li><a href="/kontakt">Kontakt</a></li>
+            <li><a href="/anfrage">Angebot anfordern</a></li>
+            <li><a href={site.linkedin} rel="noopener">LinkedIn</a></li>
+            <li><a href={site.provenexpert} rel="noopener">ProvenExpert</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="leiste">
+        <p>© {jahr} {site.name} · Familienunternehmen seit {site.gruendung}</p>
+        <ul class="recht">
+          <li><a href="/impressum">Impressum</a></li>
+          <li><a href="/datenschutz">Datenschutz</a></li>
+          <li><a href="/agb">AGB</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .fuss { padding-block: var(--reihe); }
+
+  .fussblatt {
+    background: var(--panel);
+    border-radius: var(--r-panel);
+    padding: var(--einzug);
+    box-shadow: var(--schwebe-1);
+    margin-inline: calc(var(--einzug) * -1);
+  }
+
+  .spalten {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1.4fr) repeat(3, minmax(8rem, 1fr));
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+  }
+
+  .marke { display: flex; align-items: center; gap: 0.5rem; line-height: 0; }
+  .marke .zeichen { width: auto; height: 36px; }
+  .marke .schrift { width: auto; height: 21px; }
+  .satz {
+    margin-top: var(--s-5);
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    max-width: 34ch;
+  }
+
+  .kontakt { display: grid; gap: 0.375rem; margin-top: var(--s-5); }
+  .kontakt a { color: var(--ink); text-decoration: none; }
+  .kontakt a:hover { color: var(--blau); text-decoration: underline; }
+  address {
+    font-style: normal;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    margin-top: 0.25rem;
+  }
+
+  .spalten h2 { margin-bottom: var(--s-4); }
+  .spalten ul { list-style: none; display: grid; gap: 0.5rem; }
+  .spalten nav a {
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: color 0.15s var(--ease);
+  }
+  .spalten nav a:hover { color: var(--blau); }
+
+  .leiste {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-3);
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--linie);
+  }
+  .leiste p { margin: 0; font-size: 0.8125rem; color: var(--ink-3); }
+  .recht { list-style: none; display: flex; gap: var(--s-4); }
+  .recht a { font-size: 0.8125rem; color: var(--ink-3); text-decoration: none; }
+  .recht a:hover { color: var(--blau); text-decoration: underline; }
+
+  @media (max-width: 60rem) {
+    .spalten { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .marke-block { grid-column: 1 / -1; }
+  }
+</style>

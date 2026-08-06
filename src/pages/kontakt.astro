@@ -1,0 +1,144 @@
+---
+import Base from '../layouts/Base.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { site } from '../data/site';
+
+const beschreibung =
+  'CleanCare Gebäudeservice GmbH in Seevetal: Telefon +49 1575 329 63 53, hallo@cleancare-service.de, Eddelsener Str. 48, 21218 Seevetal.';
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Kontakt',
+  url: `${site.url}/kontakt`,
+  mainEntity: { '@id': `${site.url}/#unternehmen` },
+};
+---
+
+<Base title="Kontakt" description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <section class="kopfteil">
+    <div class="wrap">
+      <h1>Kontakt</h1>
+      <p class="lead">
+        Rufen Sie an, schreiben Sie, oder stellen Sie die Anfrage gleich strukturiert — je nachdem,
+        was Ihnen lieber ist.
+      </p>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap wege">
+      <a class="weg haupt" href={`tel:${site.telefonLink}`}>
+        <span class="feld">Telefon</span>
+        <span class="wert">{site.telefon}</span>
+        <span class="dazu">Der kürzeste Weg bei konkreten Fragen</span>
+      </a>
+
+      <a class="weg" href={`mailto:${site.email}`}>
+        <span class="feld">E-Mail</span>
+        <span class="wert">{site.email}</span>
+        <span class="dazu">Für Unterlagen, Grundrisse und Rückfragen</span>
+      </a>
+
+      <a class="weg" href="/anfrage">
+        <span class="feld">Anfrage</span>
+        <span class="wert">Raumbuch ausfüllen</span>
+        <span class="dazu">Objekt, Fläche, Takt — in zwei Minuten</span>
+      </a>
+    </div>
+
+    <div class="wrap sitz">
+      <div class="adressblatt">
+        <h2 class="feld">Sitz</h2>
+        <address>
+          {site.name}<br />
+          {site.strasse}<br />
+          {site.plz} {site.ort}
+        </address>
+        <p class="hinweis">
+          Kein Ladengeschäft — bitte Termine vorher telefonisch abstimmen.
+        </p>
+      </div>
+
+      <div class="adressblatt">
+        <h2 class="feld">Unternehmen</h2>
+        <dl>
+          <div><dt>Geschäftsführung</dt><dd>{site.geschaeftsfuehrung}</dd></div>
+          <div><dt>Gegründet</dt><dd>{site.gruendung}</dd></div>
+          <div><dt>Einsatzgebiet</dt><dd>Seevetal, Landkreis Harburg, Hamburg, Niedersachsen, Schleswig-Holstein</dd></div>
+        </dl>
+      </div>
+
+      <div class="adressblatt">
+        <h2 class="feld">Profile</h2>
+        <ul>
+          <li><a href={site.linkedin} rel="noopener">LinkedIn</a></li>
+          <li><a href={site.provenexpert} rel="noopener">ProvenExpert — Bewertungen</a></li>
+        </ul>
+        <p class="hinweis">
+          Für Bewerbungen führt der kürzeste Weg über die <a href="/jobs">Jobs-Seite</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kopfteil {
+    padding-block: 0;
+  }
+  .kopfteil h1 { margin-bottom: var(--s-4); }
+
+  .wege {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--s-4);
+    margin-bottom: clamp(2.5rem, 2rem + 3vw, 4rem);
+  }
+  .weg {
+    display: grid;
+    gap: 0.375rem;
+    align-content: start;
+    padding: var(--s-5);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    text-decoration: none;
+    transition: border-color 0.15s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .weg:hover { border-color: var(--linie-2); box-shadow: var(--schwebe-2); transform: translateY(-2px); }
+  .weg.haupt { background: var(--ink); border-color: var(--ink); }
+  .weg.haupt .feld { color: oklch(74% 0.03 250); }
+  .weg.haupt .wert { color: var(--panel); }
+  .weg.haupt .dazu { color: oklch(85% 0.018 250); }
+
+  .wert {
+    font-family: var(--font);
+    font-size: 1.0625rem;
+    font-variation-settings: 'wght' 550;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .dazu { font-size: 0.875rem; color: var(--ink-2); }
+
+  .sitz {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--s-6);
+    padding-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    border-top: 1px solid var(--linie);
+  }
+  .adressblatt h2 { margin-bottom: var(--s-3); }
+  address { font-style: normal; line-height: 1.65; }
+
+  .adressblatt dl { margin: 0; display: grid; gap: var(--s-3); }
+  .adressblatt dt { font-size: 0.8125rem; color: var(--ink-3); }
+  .adressblatt dd { margin: 0; font-size: 0.9375rem; }
+
+  .adressblatt ul { list-style: none; display: grid; gap: 0.5rem; }
+  .adressblatt a { color: var(--blau); }
+
+  .hinweis { margin-top: var(--s-4); font-size: 0.875rem; color: var(--ink-3); }
+</style>

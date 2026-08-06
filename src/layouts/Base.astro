@@ -1,0 +1,77 @@
+---
+import '@fontsource-variable/geist';
+import '@fontsource-variable/inter';
+import '../styles/base.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Ohne Suffix, wenn der Titel schon vollständig ist */
+  bare?: boolean;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description, bare = false, ogImage = '/og.png', noindex = false } = Astro.props;
+const seiteTitel = bare ? title : `${title} — ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href.replace(/(.+)\/$/, '$1');
+const ogUrl = new URL(ogImage, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="de-DE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{seiteTitel}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={seiteTitel} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={seiteTitel} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    <meta name="theme-color" content="#101c5e" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <slot name="head" />
+  </head>
+  <body>
+    <!--
+      RICHTUNG — CleanCare, ruhige Panelfläche in Markenblau
+      THESIS: Ein Dienstleister, dem man das Objekt anvertraut, muss aufgeräumt wirken, nicht
+      laut. Große weiße Panels auf hellem Grund, viel Luft, eine einzige Aktionsfarbe.
+      Abgelehnt: die Reinigungsbranchen-Vorlage aus Glanzblau, Wischmopp-Fotos und Icon-Kacheln.
+      OWN-WORLD: Kühles Papierweiß als Grund, weiße Panels mit 30px-Radius und sehr weichem
+      Versatzschatten, Pill-Aktionen, Fotos in gerundeten Karten, kleine gesperrte Labels.
+      Farbe kommt aus dem Logo: Navy #16283f als Tinte, Mittelblau #2f6fb2 als einzige Aktion.
+      STORY: Die Besucherin sieht in einem Blick, was CleanCare übernimmt, wie der Weg zum
+      Angebot aussieht und wem sie es anvertraut — und fordert das Angebot an.
+      FIRST VIEWPORT: Schwebende Pill-Navigation, links die Zusage als große Headline mit zwei
+      Aktionen, rechts ein großes Objektfoto mit überlagertem Status-Chip, darunter vier Kennzahlen.
+      FORM: Panel-Layout nach der vom Nutzer gesetzten Referenz; Farbwelt bewusst eigenständig.
+      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+    -->
+    <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+    <SiteHeader />
+    <main id="inhalt">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
