@@ -6,33 +6,33 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
 ---
 
 <header class="kopfleiste">
-  <div class="wrap">
-    <div class="pille">
-      <a href="/" class="marke" aria-label={`${site.name} — zur Startseite`}>
-        <img class="zeichen" src="/cc-zeichen.svg" alt="" width="107" height="85" />
-        <img class="schrift" src="/cc-schrift.svg" alt="" width="507" height="70" />
-      </a>
+  <div class="wrap balken">
+    <a href="/" class="marke" aria-label={`${site.name} — zur Startseite`}>
+      <img class="zeichen" src="/cc-zeichen.svg" alt="" width="107" height="85" />
+      <img class="schrift" src="/cc-schrift.svg" alt="" width="507" height="70" />
+    </a>
 
-      <nav class="haupt" aria-label="Hauptnavigation">
-        <ul>
-          {nav.map((n) => (
-            <li>
-              <a href={n.href} aria-current={aktiv(n.href) ? 'page' : undefined}>{n.text}</a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+    <nav class="haupt" aria-label="Hauptnavigation">
+      <ul>
+        {nav.map((n) => (
+          <li>
+            <a href={n.href} aria-current={aktiv(n.href) ? 'page' : undefined}>{n.text}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
 
-      <div class="rechts">
-        <a class="ruf" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
-        <a class="btn" href="/anfrage">Angebot anfordern</a>
-        <button class="schalter" type="button" aria-expanded="false" aria-controls="mobilmenue" aria-label="Menü öffnen">
-          <span></span><span></span>
-        </button>
-      </div>
+    <div class="rechts">
+      <a class="ruf" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+      <a class="btn" href="/anfrage">Angebot anfordern</a>
+      <button class="schalter" type="button" aria-expanded="false" aria-controls="mobilmenue" aria-label="Menü öffnen">
+        <span></span><span></span>
+      </button>
     </div>
+  </div>
 
-    <div class="mobilmenue" id="mobilmenue" hidden>
+  <div class="mobilmenue" id="mobilmenue" hidden>
+    <div class="wrap">
       <ul>
         {nav.map((n) => <li><a href={n.href}>{n.text}</a></li>)}
         <li><a href="/kontakt">Kontakt</a></li>
@@ -56,35 +56,36 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
 </div>
 
 <style>
+  /* Durchgehender Balken über die volle Seitenbreite. Die Fläche sitzt auf der
+     Kopfleiste selbst, der Inhalt bleibt im .wrap — dadurch stehen Bildmarke
+     und Aktionen auf derselben Achse wie der Text der Seite darunter. */
   .kopfleiste {
     position: sticky;
     top: 0;
     z-index: 50;
-    padding-top: 0.875rem;
-    /* Kein unterer Abstand: der Abstand zum ersten Block kommt allein aus --reihe. */
-    padding-bottom: 0;
+    padding-block: 0;
+    background: oklch(100% 0 0 / 0.88);
+    backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--linie);
   }
 
-  .pille {
+  .balken {
     display: flex;
     align-items: center;
     gap: var(--s-5);
-    margin-inline: calc(var(--einzug) * -1);
-    /* Die Bildmarke sitzt linksbündig in der Pille, knapp hinter der Rundung. */
-    padding: 0.5rem 0.625rem 0.5rem 1.25rem;
-    background: oklch(100% 0 0 / 0.86);
-    backdrop-filter: blur(14px) saturate(1.4);
-    border: 1px solid oklch(100% 0 0 / 0.9);
-    border-radius: var(--r-pill);
-    box-shadow: var(--schwebe-2);
+    padding-block: 0.6875rem;
   }
 
   /* Lockup: plastisches Zeichen, daneben der Schriftzug. Beide über die Höhe
      skaliert, damit sie bei jeder Breite zueinander passen. */
-  .marke { display: flex; align-items: center; gap: 0.625rem; flex: none; line-height: 0; }
-  .marke .zeichen { width: auto; height: 42px; }
-  .marke .schrift { width: auto; height: 25px; }
+  .marke { display: flex; align-items: center; gap: 0.9375rem; flex: none; line-height: 0; }
+  .marke .zeichen { width: auto; height: 38px; }
+  .marke .schrift { width: auto; height: 18px; }
 
+  /* Zentriert sich im Platz zwischen Bildmarke und Aktionen. Das ist nicht
+     exakt die Seitenmitte — die rechte Gruppe ist breiter als die Bildmarke.
+     Erzwungen gleiche Randspalten gingen bei 1280px nicht auf: dort blieben je
+     275px, die rechte Gruppe braucht mit Telefonnummer aber 319px. */
   .haupt { margin-inline: auto; }
   .haupt ul { display: flex; align-items: center; gap: 0.125rem; list-style: none; }
   .haupt a {
@@ -100,7 +101,8 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
   .haupt a:hover { color: var(--ink); background: var(--feld); }
   .haupt a[aria-current='page'] { color: var(--blau); background: var(--blau-sanft); font-weight: 560; }
 
-  .rechts { display: flex; align-items: center; gap: var(--s-3); flex: none; }
+  /* nowrap: der Knopf soll nie zweizeilig werden, wenn der Platz knapp wird. */
+  .rechts { display: flex; align-items: center; gap: var(--s-3); flex: none; white-space: nowrap; }
 
   .ruf {
     font-family: var(--font);
@@ -135,12 +137,11 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
   .schalter[aria-expanded='true'] span:nth-child(1) { transform: translateY(3.25px) rotate(45deg); }
   .schalter[aria-expanded='true'] span:nth-child(2) { transform: translateY(-3.25px) rotate(-45deg); }
 
+  /* Klappt als volle Breite unter dem Balken auf, passend zur neuen Kopfform. */
   .mobilmenue {
-    margin-top: 0.5rem;
-    margin-inline: calc(var(--einzug) * -1);
-    padding: var(--s-4) var(--s-5) var(--s-5);
+    padding-block: var(--s-4) var(--s-5);
     background: var(--panel);
-    border-radius: var(--r-karte);
+    border-top: 1px solid var(--linie);
     box-shadow: var(--schwebe-2);
   }
   .mobilmenue[hidden] { display: none; }

@@ -32,36 +32,39 @@ const ld = [
 <Base title="Häufige Fragen" description={beschreibung}>
   <JsonLd slot="head" daten={ld} />
 
-  <section class="kopfteil">
-    <div class="wrap">
-      <h1>Fragen, die vor jedem Angebot kommen</h1>
-      <p class="lead">
-        Wir beantworten sie hier, damit im Gespräch Zeit für Ihr Objekt bleibt.
-      </p>
-    </div>
-  </section>
-
   <section class="abschnitt">
-    <div class="wrap fragen">
-      {faq.map((f, i) => (
-        <details name="faq" open={i === 0}>
-          <summary>
-            <span class="mass nr">{String(i + 1).padStart(2, '0')}</span>
-            <span class="frage">{f.frage}</span>
-            <span class="kreuz" aria-hidden="true"></span>
-          </summary>
-          <div class="antwort">
-            <p>{f.antwort}</p>
-          </div>
-        </details>
-      ))}
+    <div class="wrap">
+      <div class="panel fragen-panel">
+        <div class="fragen-kopf">
+          <p class="label">Häufige Fragen</p>
+          <h1>Fragen, die vor jedem Angebot kommen</h1>
+          <p class="lead">
+            Wir beantworten sie hier, damit im Gespräch Zeit für Ihr Objekt bleibt.
+          </p>
 
-      <div class="offen">
-        <h2>Etwas anderes im Kopf?</h2>
-        <p>
-          Rufen Sie an unter <a href={`tel:${site.telefonLink}`} class="mass">{site.telefon}</a> —
-          oder schreiben Sie an <a href={`mailto:${site.email}`} class="mass">{site.email}</a>.
-        </p>
+          <div class="offen">
+            <h2>Etwas anderes im Kopf?</h2>
+            <p>
+              Rufen Sie an unter <a href={`tel:${site.telefonLink}`} class="mass">{site.telefon}</a>
+              — oder schreiben Sie an <a href={`mailto:${site.email}`} class="mass">{site.email}</a>.
+            </p>
+          </div>
+        </div>
+
+        <div class="fragen">
+          {faq.map((f, i) => (
+            <details name="faq" open={i === 0}>
+              <summary>
+                <span class="mass nr">{String(i + 1).padStart(2, '0')}</span>
+                <span class="frage">{f.frage}</span>
+                <span class="kreuz" aria-hidden="true"></span>
+              </summary>
+              <div class="antwort">
+                <p>{f.antwort}</p>
+              </div>
+            </details>
+          ))}
+        </div>
       </div>
     </div>
   </section>
@@ -73,21 +76,30 @@ const ld = [
 </Base>
 
 <style>
-  .kopfteil {
-    padding-block: 0;
+  /* Ein Block: links der Text, rechts die Fragen — wie in den übrigen Panels. */
+  .fragen-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 4rem);
+    align-items: start;
   }
-  .kopfteil h1 { margin-bottom: var(--s-4); max-width: 20ch; }
 
-  .fragen { max-width: 52rem; }
+  .fragen-kopf .label { display: block; margin-bottom: var(--s-3); }
+  .fragen-kopf h1 {
+    font-size: clamp(1.9rem, 1.35rem + 2.1vw, 3.1rem);
+    margin-bottom: var(--s-4);
+    max-width: 16ch;
+  }
+
+  .fragen { display: grid; gap: var(--s-3); }
 
   details {
-    background: var(--panel);
+    background: var(--panel-2);
     border: 1px solid var(--linie);
     border-radius: var(--r-karte);
-    margin-bottom: var(--s-3);
     transition: border-color 0.15s var(--ease), box-shadow 0.2s var(--ease);
   }
-  details[open] { border-color: var(--linie-2); box-shadow: var(--schwebe-1); }
+  details[open] { background: var(--panel); border-color: var(--linie-2); box-shadow: var(--schwebe-1); }
   details:hover { border-color: var(--linie-2); }
 
   summary {
@@ -133,12 +145,19 @@ const ld = [
   .antwort p { margin: 0; color: var(--ink-2); }
 
   .offen {
-    margin-top: var(--s-7);
+    margin-top: var(--s-6);
     padding-top: var(--s-5);
     border-top: 1px solid var(--linie);
   }
-  .offen h2 { font-size: 1.25rem; margin-bottom: var(--s-3); }
+  .offen h2 { font-size: 1.125rem; margin-bottom: var(--s-2); }
+  .offen p { font-size: 0.9375rem; color: var(--ink-2); }
   .offen a { color: var(--blau); }
+
+  @media (max-width: 56rem) {
+    .fragen-panel { grid-template-columns: 1fr; gap: var(--s-6); }
+    .fragen-kopf { position: static; }
+    .fragen-kopf h1 { max-width: 20ch; }
+  }
 
   @media (max-width: 40rem) {
     summary { grid-template-columns: 1.75rem 1fr 1rem; padding: 0.9375rem 1rem; }

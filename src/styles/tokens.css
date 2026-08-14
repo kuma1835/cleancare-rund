@@ -32,6 +32,17 @@
   --linie: oklch(92.5% 0.008 245);
   --linie-2: oklch(86% 0.012 245);
 
+  /* Flächenarten — die fünf Nutzungsarten aus data/site.ts. Sie werden in
+     LeistungKarte, Raumbuch, Leistungen und Einsatzgebiet als kleine Farbmarke
+     gezeigt; bis hierher fehlten sie und alle Marken blieben durchsichtig.
+     Bewusst gedämpft und auf gleicher Helligkeit gehalten, damit fünf Punkte
+     nebeneinander nicht bunt wirken. Hängt an der Logofarbwelt. */
+  --nutz-buero: oklch(53% 0.115 254);
+  --nutz-verkehr: oklch(56% 0.095 205);
+  --nutz-sanitaer: oklch(58% 0.095 175);
+  --nutz-glas: oklch(60% 0.1 145);
+  --nutz-technik: oklch(58% 0.075 285);
+
   /* Zustände */
   --ok: oklch(58% 0.13 158);
   --warn: oklch(60% 0.14 62);

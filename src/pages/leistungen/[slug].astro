@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ContactBand from '../../components/ContactBand.astro';
 import Stimmen from '../../components/Stimmen.astro';
+import LeistungKarte from '../../components/LeistungKarte.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { site, nutzungen } from '../../data/site';
 import { leistungen } from '../../data/leistungen';
@@ -17,7 +18,7 @@ const bilder = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/*.
 });
 const bild = leistung.bild ? bilder[`../../assets/img/${leistung.bild}`]?.default : undefined;
 const nutzung = nutzungen.find((n) => n.id === leistung.nutzung)!;
-const andere = leistungen.filter((l) => l.slug !== leistung.slug).slice(0, 4);
+const andere = leistungen.filter((l) => l.slug !== leistung.slug).slice(0, 3);
 
 const beschreibung = `${leistung.name} für gewerbliche Objekte in Seevetal, im Landkreis Harburg und in Hamburg. ${leistung.kurz} Angebot nach Besichtigung.`;
 
@@ -60,97 +61,101 @@ const ld = [
 <Base title={leistung.name} description={beschreibung}>
   <JsonLd slot="head" daten={ld} />
 
-  <nav class="pfad" aria-label="Brotkrumen">
-    <div class="wrap">
-      <ol>
-        <li><a href="/">Start</a></li>
-        <li><a href="/leistungen">Leistungen</a></li>
-        <li aria-current="page">{leistung.name}</li>
-      </ol>
-    </div>
-  </nav>
-
   <section class={`kopfteil n-${leistung.nutzung}`}>
-    <div class="wrap raster-kopf">
-      <div>
-        <p class="feld flaechenart">
-          <span class="marke-farbe" aria-hidden="true"></span>
-          {nutzung.name}
-        </p>
-        <h1>{leistung.name}</h1>
-        <p class="lead">{leistung.kurz}</p>
-        <div class="aktionen">
-          <a class="btn" href="/anfrage">Anfrage stellen <span class="pfeil" aria-hidden="true">→</span></a>
-          <a class="btn btn-2" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
-        </div>
+    <div class="wrap">
+      <p class="feld flaechenart">
+        <span class="marke-farbe" aria-hidden="true"></span>
+        {nutzung.name}
+      </p>
+      <h1>{leistung.name}</h1>
+      <p class="lead">{leistung.kurz}</p>
+      <div class="aktionen">
+        <a class="btn" href="/anfrage">Anfrage stellen <span class="pfeil" aria-hidden="true">→</span></a>
+        <a class="btn btn-2" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
       </div>
-      <dl class="eckdaten">
-        <div>
-          <dt class="feld">Üblicher Takt</dt>
-          <dd class="mass">{leistung.takt}</dd>
-        </div>
-        <div>
-          <dt class="feld">Flächenart</dt>
-          <dd class="mass">{nutzung.kurz}</dd>
-        </div>
-        <div>
-          <dt class="feld">Gebiet</dt>
-          <dd class="mass">Seevetal · Harburg · Hamburg</dd>
-        </div>
-      </dl>
     </div>
   </section>
 
   <section class="abschnitt">
-    <div class="wrap raster-text">
-      <div class="fliesstext">
-        <p class="einstieg">{leistung.text}</p>
+    <div class="wrap">
+      <div class="panel umfang-panel">
+        <div class="fliesstext">
+          <p class="einstieg">{leistung.text}</p>
 
-        <h2>Was dazugehört</h2>
-        <ul class="umfang">
-          {leistung.umfang.map((u) => <li>{u}</li>)}
-        </ul>
+          <h2>Was dazugehört</h2>
+          <ul class="umfang">
+            {leistung.umfang.map((u) => <li>{u}</li>)}
+          </ul>
+        </div>
 
-        <h2>Für welche Objekte</h2>
-        <ul class="fuer">
-          {leistung.fuer.map((f) => <li class="mass">{f}</li>)}
-        </ul>
-
-        <h2>Wie der Preis entsteht</h2>
-        <p>
-          Aus der Fläche, ihrer Nutzung und dem Takt — und aus dem, was die Besichtigung zeigt.
-          Bodenbeläge, Zugänge und Verkehrsaufkommen verändern den Aufwand deutlich, deshalb gibt es
-          bei uns keinen Quadratmeterpreis von der Stange.
-        </p>
+        <div class="beiwerk">
+          {bild && (
+            <figure class="bildblock">
+              <Image
+                src={bild}
+                alt={`Objektsituation, wie sie bei der ${leistung.name} vorkommt`}
+                widths={[400, 700, 1000]}
+                sizes="(max-width: 56rem) 100vw, 24rem"
+                loading="lazy"
+              />
+            </figure>
+          )}
+          <dl class="eckdaten">
+            <div>
+              <dt class="feld">Üblicher Takt</dt>
+              <dd class="mass">{leistung.takt}</dd>
+            </div>
+            <div>
+              <dt class="feld">Flächenart</dt>
+              <dd class="mass">{nutzung.kurz}</dd>
+            </div>
+            <div>
+              <dt class="feld">Gebiet</dt>
+              <dd class="mass">Seevetal · Harburg · Hamburg</dd>
+            </div>
+          </dl>
+        </div>
       </div>
-
-      {bild && (
-        <figure class="bildblock">
-          <Image
-            src={bild}
-            alt={`Objektsituation, wie sie bei der ${leistung.name} vorkommt`}
-            widths={[400, 700, 1000]}
-            sizes="(max-width: 56rem) 100vw, 26rem"
-            loading="lazy"
-          />
-        </figure>
-      )}
     </div>
   </section>
 
-  <section class="abschnitt-eng weitere">
+  <section class="abschnitt">
     <div class="wrap">
-      <h2 class="feld">Weitere Leistungen</h2>
-      <ul class="liste">
-        {andere.map((l) => (
-          <li class={`n-${l.nutzung}`}>
-            <a href={`/leistungen/${l.slug}`}>
-              <span class="marke-farbe" aria-hidden="true"></span>
-              <span>{l.name}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div class="panel doppel-panel">
+        <div>
+          <h2>Für welche Objekte</h2>
+          <ul class="fuer">
+            {leistung.fuer.map((f) => <li class="mass">{f}</li>)}
+          </ul>
+        </div>
+        <div>
+          <h2>Wie der Preis entsteht</h2>
+          <p>
+            Aus der Fläche, ihrer Nutzung und dem Takt — und aus dem, was die Besichtigung zeigt.
+            Bodenbeläge, Zugänge und Verkehrsaufkommen verändern den Aufwand deutlich, deshalb gibt
+            es bei uns keinen Quadratmeterpreis von der Stange.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap">
+      <div class="panel weitere">
+        <div class="panel-kopf">
+          <div>
+            <p class="label">Weitere Leistungen</p>
+            <h2>Was wir sonst noch übernehmen</h2>
+          </div>
+          <a class="btn btn-3" href="/leistungen">Alle Leistungen</a>
+        </div>
+        <ul class="leistungsraster">
+          {andere.map((l) => (
+            <LeistungKarte leistung={l} sizes="(max-width: 40rem) 100vw, (max-width: 68rem) 50vw, 22rem" />
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -159,34 +164,10 @@ const ld = [
 </Base>
 
 <style>
-  .pfad {
-    border-bottom: 1px solid var(--linie);
-    background: var(--panel);
-  }
-  .pfad ol {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding-block: 0.75rem;
-    font-size: 0.8125rem;
-    color: var(--ink-3);
-  }
-  .pfad li + li::before { content: '/'; margin-right: 0.5rem; color: var(--linie-2); }
-  .pfad a { color: var(--ink-2); text-decoration: none; }
-  .pfad a:hover { text-decoration: underline; }
-
-  .kopfteil {
-    padding-block: 0;
-    background: var(--panel);
-    border-bottom: 1px solid var(--linie);
-  }
-  .raster-kopf {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: clamp(2rem, 1rem + 3vw, 4rem);
-    align-items: end;
-  }
+  /* Kopf steht frei auf dem Seitengrund — wie bei Jobs und der Leistungsliste.
+     Der Inhalt darunter liegt in Panels, genau wie auf der Startseite. */
+  .kopfteil { padding-block: 0; }
+  .kopfteil h1 { max-width: 18ch; }
 
   .flaechenart {
     display: inline-flex;
@@ -218,22 +199,23 @@ const ld = [
     border: 1px solid var(--linie);
     border-radius: var(--r-klein);
     overflow: hidden;
-    min-width: 15rem;
   }
-  .eckdaten > div { background: var(--grund); padding: 0.625rem 0.875rem; }
+  .eckdaten > div { background: var(--panel-2); padding: 0.75rem 0.9375rem; }
   .eckdaten dt { margin-bottom: 0.1875rem; }
   .eckdaten dd { margin: 0; color: var(--ink); }
 
-  .raster-text {
+  /* Block 1 — links der Text, rechts Bild und Eckdaten. */
+  .umfang-panel {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
     gap: clamp(2rem, 1rem + 4vw, 4rem);
     align-items: start;
   }
-  .einstieg { font-size: 1.125rem; line-height: 1.6; }
+  .beiwerk { display: grid; gap: var(--s-4); }
+
+  .einstieg { font-size: 1.125rem; line-height: 1.6; color: var(--ink); }
   .fliesstext h2 { font-size: 1.375rem; margin: var(--s-7) 0 var(--s-4); }
   .fliesstext p { color: var(--ink-2); }
-  .einstieg { color: var(--ink) !important; }
 
   .umfang { list-style: none; display: grid; gap: 0.625rem; }
   .umfang li {
@@ -261,35 +243,54 @@ const ld = [
     color: var(--ink-2);
   }
 
-  .bildblock { margin: 0; position: sticky; top: 6rem; }
+  .bildblock { margin: 0; }
   .bildblock :global(img) {
     width: 100%;
-    height: auto;
+    height: clamp(13rem, 10rem + 10vw, 17rem);
+    object-fit: cover;
     border-radius: var(--r-karte);
-    border: 1px solid var(--linie);
-    box-shadow: var(--schwebe-2);
   }
 
-  .weitere { background: var(--panel-2); }
-  .weitere h2 { margin-bottom: var(--s-4); }
-  .liste { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-2); }
-  .liste a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5625rem 0.875rem;
-    background: var(--panel);
-    border: 1px solid var(--linie);
-    border-radius: var(--r-pill);
-    font-size: 0.9375rem;
-    text-decoration: none;
-    transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  /* Block 2 — zwei gleichrangige Themen nebeneinander, ohne Kasten im Kasten. */
+  .doppel-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+    align-items: start;
   }
-  .liste a:hover { border-color: var(--ink-3); box-shadow: var(--schwebe-1); }
+  .doppel-panel h2 { font-size: 1.375rem; margin-bottom: var(--s-4); }
+  .doppel-panel p { margin: 0; color: var(--ink-2); }
 
+  /* Block 3 — Kopfzeile und Kartenraster wie im Leistungsblock der Startseite. */
+  .panel-kopf {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--s-5);
+    margin-bottom: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+  }
+  .panel-kopf .label { display: block; margin-bottom: var(--s-3); }
+  .panel-kopf h2 { margin: 0; }
+  .panel-kopf .btn { flex: none; }
+
+  .leistungsraster {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+
+  @media (max-width: 68rem) {
+    .leistungsraster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   @media (max-width: 62rem) {
-    .raster-kopf { grid-template-columns: 1fr; align-items: start; }
-    .raster-text { grid-template-columns: 1fr; }
-    .bildblock { position: static; order: -1; }
+    .umfang-panel { grid-template-columns: 1fr; }
+    .doppel-panel { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 48rem) {
+    .panel-kopf { flex-direction: column; align-items: start; }
+  }
+  @media (max-width: 40rem) {
+    .leistungsraster { grid-template-columns: 1fr; }
   }
 </style>

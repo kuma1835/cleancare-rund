@@ -1,12 +1,18 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ContactBand from '../../components/ContactBand.astro';
+import LeistungKarte from '../../components/LeistungKarte.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { site, nutzungen } from '../../data/site';
 import { leistungen } from '../../data/leistungen';
 
 const beschreibung =
   'Unterhaltsreinigung, Treppenhaus, Glas und Fenster, Grundreinigung, Hygieneartikel, Fassade, Dach und Solar — acht Leistungen für gewerbliche Objekte in Seevetal, Hamburg und Norddeutschland.';
+
+/* Nach Flächenart sortiert, aber in einem durchgehenden Raster. Eigene Gruppen
+   je Nutzungsart ließen vier von fünf Reihen halb leer stehen — drei Gruppen
+   haben nur eine einzige Leistung. Die Zuordnung trägt jetzt die Karte selbst. */
+const sortiert = nutzungen.flatMap((n) => leistungen.filter((l) => l.nutzung === n.id));
 
 const ld = [
   {
@@ -46,37 +52,43 @@ const ld = [
 
   <section class="abschnitt">
     <div class="wrap">
-      {nutzungen.map((n) => {
-        const gruppe = leistungen.filter((l) => l.nutzung === n.id);
-        if (!gruppe.length) return null;
-        return (
-          <div class={`gruppe n-${n.id}`}>
-            <h2 class="gruppentitel">
-              <span class="marke-farbe" aria-hidden="true"></span>
-              {n.name}
-            </h2>
-            <ul class="karten">
-              {gruppe.map((l) => (
-                <li>
-                  <a href={`/leistungen/${l.slug}`}>
-                    <h3>{l.name}</h3>
-                    <p class="kurz">{l.kurz}</p>
-                    <p class="takt mass">{l.takt}</p>
-                    <span class="weiter">Zur Leistung <span aria-hidden="true">→</span></span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      })}
+      <div class="panel">
+        <div class="panel-kopf">
+          <h2>Alle acht im Überblick</h2>
+          <ul class="legende">
+            {nutzungen.map((n) => (
+              <li class={`n-${n.id}`}>
+                <span class="marke-farbe" aria-hidden="true"></span>
+                {n.kurz}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <div class="nachfrage">
-        <h2>Leistung nicht dabei?</h2>
-        <p>
-          Kommen Sie gerne auf uns zu, sollte eine von Ihnen gewünschte Leistung nicht aufgeführt
-          sein. Gerne bieten wir Ihnen individuelle Leistungen auf Wunsch an.
-        </p>
+        <ul class="karten">
+          {sortiert.map((l) => (
+            <LeistungKarte
+              leistung={l}
+              flaeche={true}
+              sizes="(max-width: 40rem) 100vw, (max-width: 68rem) 50vw, 22rem"
+            />
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt">
+    <div class="wrap">
+      <div class="panel nachfrage">
+        <div>
+          <p class="label">Sonderwunsch</p>
+          <h2>Leistung nicht dabei?</h2>
+          <p class="lead">
+            Kommen Sie gerne auf uns zu, sollte eine von Ihnen gewünschte Leistung nicht aufgeführt
+            sein. Gerne bieten wir Ihnen individuelle Leistungen auf Wunsch an.
+          </p>
+        </div>
         <a class="btn" href="/anfrage">Anfrage stellen <span class="pfeil" aria-hidden="true">→</span></a>
       </div>
     </div>
@@ -91,22 +103,29 @@ const ld = [
   }
   .kopfteil h1 { margin-bottom: var(--s-4); max-width: 14ch; }
 
-  .gruppe + .gruppe { margin-top: clamp(2.5rem, 2rem + 3vw, 4rem); }
-
-  .gruppentitel {
+  .panel-kopf {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 1.125rem;
-    font-variation-settings: 'wght' 620;
-    letter-spacing: -0.01em;
-    padding-bottom: var(--s-3);
-    margin-bottom: var(--s-5);
-    border-bottom: 1px solid var(--linie);
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--s-5);
+    margin-bottom: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
   }
+  .panel-kopf h2 { margin: 0; }
+
+  /* Die Farbmarken erklären sich einmal oben, statt fünfmal als Gruppentitel. */
+  .legende {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-4);
+    font-family: var(--font);
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+  }
+  .legende li { display: inline-flex; align-items: center; gap: 0.4375rem; }
   .marke-farbe {
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 0.625rem;
+    height: 0.625rem;
     border-radius: 2px;
     background: var(--linie-2);
     flex: none;
@@ -117,41 +136,33 @@ const ld = [
   .n-glas .marke-farbe { background: var(--nutz-glas); }
   .n-technik .marke-farbe { background: var(--nutz-technik); }
 
+  /* Dasselbe Raster wie die Leistungen auf der Startseite: drei Spalten, damit
+     die Karten gleich breit stehen. Die Karte selbst liegt in LeistungKarte. */
   .karten {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--s-4);
   }
-  .karten a {
-    display: grid;
-    align-content: start;
-    gap: var(--s-3);
-    height: 100%;
-    padding: var(--s-5);
-    background: var(--panel);
-    border: 1px solid var(--linie);
-    border-radius: 6px;
-    text-decoration: none;
-    transition: border-color 0.15s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+  @media (max-width: 68rem) {
+    .karten { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-  .karten a:hover {
-    border-color: var(--linie-2);
-    box-shadow: var(--schwebe-2);
-    transform: translateY(-2px);
+  @media (max-width: 40rem) {
+    .karten { grid-template-columns: 1fr; }
   }
-  .karten h3 { margin: 0; }
-  .kurz { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
-  .takt { margin: 0; color: var(--ink-3); }
-  .weiter { color: var(--blau); font-size: 0.9375rem; font-variation-settings: 'wght' 580; }
 
   .nachfrage {
-    margin-top: clamp(3rem, 2rem + 4vw, 5rem);
-    padding: clamp(1.75rem, 1.5rem + 2vw, 3rem);
-    background: var(--panel-2);
-    border: 1px solid var(--linie);
-    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
   }
-  .nachfrage h2 { margin-bottom: var(--s-3); }
-  .nachfrage p { margin-bottom: var(--s-5); }
+  .nachfrage .label { display: block; margin-bottom: var(--s-3); }
+  .nachfrage h2 { margin-bottom: var(--s-4); }
+  .nachfrage .btn { flex: none; }
+
+  @media (max-width: 48rem) {
+    .panel-kopf { flex-direction: column; align-items: start; }
+    .nachfrage { flex-direction: column; align-items: start; }
+  }
 </style>
