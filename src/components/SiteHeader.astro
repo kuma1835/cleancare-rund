@@ -100,8 +100,11 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
     color: var(--ink-2);
     transition: color 0.15s var(--ease), background 0.15s var(--ease);
   }
-  .haupt a:hover { color: var(--ink); background: var(--feld); }
-  .haupt a[aria-current='page'] { color: var(--blau); background: var(--blau-sanft); font-weight: 560; }
+  /* Kein Pillenhintergrund, weder bei Hover noch beim aktiven Punkt — die
+     Kennzeichnung läuft allein über Farbe und Schriftschnitt. Der Radius bleibt
+     stehen, damit der Tastaturfokus weiterhin rund umrandet wird. */
+  .haupt a:hover { color: var(--ink); }
+  .haupt a[aria-current='page'] { color: var(--blau); font-weight: 560; }
 
   /* nowrap: der Knopf soll nie zweizeilig werden, wenn der Platz knapp wird. */
   .rechts { display: flex; align-items: center; gap: var(--s-3); flex: none; white-space: nowrap; }
