@@ -162,6 +162,27 @@ ul, ol { margin: 0; padding: 0; }
   letter-spacing: -0.005em;
 }
 
+/* Telefonnummer und E-Mail-Adresse bleiben am Stück. Ohne das bricht der
+   Browser in „hallo@cleancare-service.de" nach dem Bindestrich um — eine
+   Adresse über zwei Zeilen liest sich schlecht und lässt sich schlechter
+   abschreiben. Die Angabe rutscht stattdessen als Ganzes in die nächste Zeile.
+   Gilt überall, die Adresse steht auf acht Seiten. */
+a[href^='mailto:'],
+a[href^='tel:'] {
+  white-space: nowrap;
+}
+
+/* Unterhalb von 360px reicht der Platz nicht: Die Adresse ist 193px breit, in
+   den Kontaktzeilen bleiben weniger übrig, und die Seite bekäme einen
+   waagerechten Balken. Dort darf sie wieder umbrechen — eine zweizeilige
+   Adresse ist das kleinere Übel als eine Seite, die seitlich wegläuft. */
+@media (max-width: 22.5rem) {
+  a[href^='mailto:'],
+  a[href^='tel:'] {
+    white-space: normal;
+  }
+}
+
 /* Vorspann — in der Referenz 18/24 direkt unter der Überschrift. */
 .lead {
   font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.125rem);
