@@ -134,13 +134,23 @@ const bild = leistung.bild ? bilder[`../assets/img/${leistung.bild}`]?.default :
   /* Vier feste Reihen: Symbol, Überschrift, Text, Verweis. Die Textreihe ist
      die dehnbare — dadurch steht „Mehr" in allen Karten einer Zeile auf
      derselben Höhe, auch wenn die Texte unterschiedlich lang sind. */
+  /*
+    Umgekehrte Flächenlogik als bei der Bildvariante, und zwar mit Absicht:
+    Die Bildkarte liegt auf der Übersicht in einem weißen Panel und braucht
+    deshalb den leicht abgetönten Grund, um sich davon abzuheben. Die kompakte
+    Karte steht auf der Startseite direkt auf `--grund` — dort ist Weiß die
+    hellere, klarer abgesetzte Fläche, wie bei den Standortkarten daneben.
+    Der Hover geht entsprechend nach unten statt nach oben.
+  */
   .v-kompakt {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto 1fr auto;
     justify-items: start;
     gap: var(--s-3);
     padding: var(--s-5);
+    background: var(--panel);
   }
+  .v-kompakt:hover { background: var(--panel-2); }
 
   /* Kleiner als die übliche h3. Grund sind die Komposita: „Solaranlagen-
      reinigung" ist ein einziges Wort ohne Umbruchstelle und braucht bei 24px
