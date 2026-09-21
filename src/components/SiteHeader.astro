@@ -1,5 +1,6 @@
 ---
 import { site, nav } from '../data/site';
+import IconTelefon from './IconTelefon.astro';
 
 const pfad = Astro.url.pathname;
 const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
@@ -23,7 +24,10 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
     </nav>
 
     <div class="rechts">
-      <a class="ruf" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+      <a class="ruf" href={`tel:${site.telefonLink}`}>
+        <IconTelefon groesse={16} />
+        {site.telefon}
+      </a>
       <a class="btn" href="/anfrage">Angebot anfordern</a>
       <button class="schalter" type="button" aria-expanded="false" aria-controls="mobilmenue" aria-label="Menü öffnen">
         <span></span><span></span>
@@ -47,9 +51,7 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
 
 <div class="rufleiste">
   <a href={`tel:${site.telefonLink}`}>
-    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z" />
-    </svg>
+    <IconTelefon />
     Anrufen
   </a>
   <a href="/anfrage" class="haupt-aktion">Angebot anfordern</a>
@@ -112,6 +114,9 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
   }
 
   .ruf {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4375rem;
     font-family: var(--font);
     font-size: 0.9375rem;
     font-weight: 500;
@@ -120,6 +125,8 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
     padding: 0.5rem 0.25rem;
     white-space: nowrap;
   }
+  /* Das Symbol tritt etwas zurück, damit die Nummer die Hauptsache bleibt. */
+  .ruf :global(svg) { color: var(--blau); flex: none; }
   .ruf:hover { color: var(--blau); }
 
   .schalter {
