@@ -140,16 +140,17 @@ const bild = leistung.bild ? bilder[`../assets/img/${leistung.bild}`]?.default :
     justify-items: start;
     gap: var(--s-3);
     padding: var(--s-5);
-    /* Hochkant statt quadratisch. Die zusätzliche Höhe fällt in die dehnbare
-       Textreihe: Text bleibt oben, „Mehr" unten. */
-    min-height: 21rem;
   }
-  .v-kompakt h3 { margin: 0; }
 
-  /* Einspaltig wäre eine hohe Karte mit zwei Zeilen Text nur leere Fläche.
-     Die Grenze entspricht der, ab der die Startseite auf eine Spalte geht. */
-  @media (max-width: 34rem) {
-    .v-kompakt { min-height: 0; }
+  /* Kleiner als die übliche h3. Grund sind die Komposita: „Solaranlagen-
+     reinigung" ist ein einziges Wort ohne Umbruchstelle und braucht bei 24px
+     rund 255px — im Kasten stehen bei vier Spalten aber nur 211px zur
+     Verfügung, das Wort lief also über den Rand hinaus. Bei 18px passt das
+     längste Wort mit Abstand zum Rand. */
+  .v-kompakt h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.25;
   }
 
   .symbol {
