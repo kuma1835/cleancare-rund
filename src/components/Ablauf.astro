@@ -1,5 +1,7 @@
 ---
 import { ablauf } from '../data/site';
+
+const nummer = (i: number) => String(i + 1).padStart(2, '0');
 ---
 
 <section class="abschnitt">
@@ -17,9 +19,12 @@ import { ablauf } from '../data/site';
       <ol class="schritte">
         {ablauf.map((s, i) => (
           <li>
-            <span class="nummer">{String(i + 1).padStart(2, '0')}</span>
+            <span class="kreis"><span class="nummer">{nummer(i)}</span></span>
+            <p class="marke">
+              Schritt {nummer(i)}{s.hinweis ? ` · ${s.hinweis}` : ''}
+            </p>
             <h3>{s.titel}</h3>
-            <p>{s.text}</p>
+            <p class="text">{s.text}</p>
           </li>
         ))}
       </ol>
@@ -28,16 +33,23 @@ import { ablauf } from '../data/site';
 </section>
 
 <style>
-  /* Marke oben mittig, die drei Schritte darunter nebeneinander — sie sind ein
-     Ablauf und werden von links nach rechts gelesen. Vorher standen sie als
-     schmale Spalte rechts neben dem Text untereinander. */
+  /* Die drei Schritte stehen offen nebeneinander, ohne eigene Kästen: der
+     umgebende .panel ist der Kasten. Die Kreise sitzen mittig über dem Text
+     und sind durch eine dünne Linie verbunden, damit sie als ein durchgehender
+     Weg gelesen werden und nicht als drei einzelne Punkte. */
   .ablauf-panel {
     display: block;
+    /* Der Abstand zwischen den Spalten wird unten für die Länge der
+       Verbindungslinie gebraucht, deshalb steht er als eigener Wert. */
+    --spalten-abstand: clamp(1.5rem, 1rem + 2vw, 3rem);
+    --kreis: clamp(4rem, 3.4rem + 2.2vw, 5.25rem);
+    /* Luft zwischen Kreisrand und Linienende. */
+    --linien-luft: 0.875rem;
   }
 
   .ablauf-kopf {
     text-align: center;
-    margin-bottom: clamp(2.25rem, 1.75rem + 2vw, 3.5rem);
+    margin-bottom: clamp(2.5rem, 2rem + 2.5vw, 4rem);
   }
   /* `p` bringt aus base.css eine Höchstbreite von 68ch mit. Ohne
      `margin-inline: auto` steht diese Box links im Container und nur ihr
@@ -50,47 +62,105 @@ import { ablauf } from '../data/site';
     list-style: none;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--s-4);
-    /* Kein `align-items: start`: die drei Karten sollen gleich hoch sein,
-       auch wenn der dritte Text kürzer ist. Der Inhalt bleibt oben. */
+    gap: var(--spalten-abstand);
+    margin: 0;
+    padding: 0;
   }
 
   .schritte li {
+    position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
     align-content: start;
+    justify-items: center;
     gap: var(--s-3);
-    padding: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
-    background: var(--panel-2);
-    border: 1px solid var(--linie);
-    border-radius: var(--r-karte);
-    transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+    text-align: center;
   }
-  .schritte li:hover { background: var(--panel); border-color: var(--linie-2); }
 
-  .nummer {
+  /* Verbindungslinie zum vorherigen Kreis. Sie beginnt am rechten Rand des
+     linken Kreises und endet am linken Rand dieses Kreises: Der Abstand
+     zwischen zwei Kreismitten ist Spaltenbreite + Spaltenabstand, davon gehen
+     ein ganzer Kreisdurchmesser und zweimal Luft ab. */
+  .schritte li + li::before {
+    content: '';
+    position: absolute;
+    top: calc(var(--kreis) / 2);
+    right: calc(50% + var(--kreis) / 2 + var(--linien-luft));
+    width: calc(100% + var(--spalten-abstand) - var(--kreis) - 2 * var(--linien-luft));
+    height: 1px;
+    background: var(--linie-2);
+  }
+
+  .kreis {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: var(--r-klein);
-    background: var(--blau-sanft);
-    color: var(--blau);
+    width: var(--kreis);
+    height: var(--kreis);
+    border-radius: var(--r-pill);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    box-shadow: var(--schwebe-1);
+    /* Über der Verbindungslinie, sonst läuft sie sichtbar durch den Kreis. */
+    position: relative;
+    z-index: 1;
+    transition:
+      transform 0.25s var(--ease),
+      background 0.25s var(--ease),
+      border-color 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+
+  .nummer {
     font-family: var(--font);
-    font-size: 0.9375rem;
-    font-weight: 600;
+    font-size: clamp(1.25rem, 1rem + 0.9vw, 1.75rem);
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    transition: color 0.25s var(--ease);
   }
 
-  .schritte h3 { margin: 0; }
-  .schritte p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); line-height: 1.55; }
+  .marke {
+    margin: 0;
+    max-width: none;
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blau);
+  }
 
-  /* Drei nebeneinander brauchen Platz. Darunter zwei, dann eine. */
+  .schritte h3 { margin: 0; max-width: 18ch; }
+  .schritte .text {
+    margin: 0;
+    max-width: 34ch;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+
+  /* Die ganze Spalte ist die Hoverfläche, nicht nur der Kreis — sonst muss man
+     das kleine Ziel genau treffen. */
+  .schritte li:hover .kreis {
+    transform: translateY(-5px);
+    background: var(--blau-sanft);
+    border-color: var(--blau-hell);
+    box-shadow: var(--schwebe-2);
+  }
+  .schritte li:hover .nummer { color: var(--blau); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kreis { transition: background 0.25s var(--ease), border-color 0.25s var(--ease); }
+    .schritte li:hover .kreis { transform: none; }
+  }
+
+  /* Untereinander ergibt die waagerechte Linie keinen Sinn mehr. Zwei Spalten
+     würden eine Linie zwischen Schritt 2 und 3 zeichnen, die es dort nicht
+     gibt — deshalb fällt sie unterhalb der dreispaltigen Ansicht ganz weg. */
   @media (max-width: 60rem) {
-    .schritte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  @media (max-width: 40rem) {
-    .schritte { grid-template-columns: 1fr; }
+    .schritte { grid-template-columns: 1fr; gap: var(--s-7); }
+    .schritte li + li::before { display: none; }
+    .schritte h3, .schritte .text { max-width: 46ch; }
   }
 </style>

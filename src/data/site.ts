@@ -44,23 +44,33 @@ export const nutzungen = [
   { id: 'technik', name: 'Technik-, Lager- und Sonderflächen', kurz: 'Technik', farbe: 'technik' },
 ] as const;
 
-export const ablauf = [
+export type AblaufSchritt = {
+  titel: string;
+  text: string;
+  /**
+   * Optionaler Zusatz in der Marke über der Überschrift, erscheint als
+   * „Schritt 01 · <hinweis>" — etwa „5 Minuten" oder „vor Ort".
+   * Nur füllen, was der Kunde bestätigt hat; keine geschätzten Zeiten.
+   * Siehe REDAKTION.md.
+   */
+  hinweis?: string;
+};
+
+/** Die Nummerierung entsteht aus der Reihenfolge, sie steht nicht in den Daten. */
+export const ablauf: readonly AblaufSchritt[] = [
   {
-    schritt: 'Schritt 1',
     titel: 'Kontaktaufnahme',
     text: 'Per Mail oder telefonisch — wir freuen uns, von Ihnen zu hören! Nehmen Sie gern Kontakt zu uns auf und beschreiben Sie kurz, worum es geht.',
   },
   {
-    schritt: 'Schritt 2',
     titel: 'Besichtigungstermin',
     text: 'Gemeinsam vereinbaren wir einen Besichtigungstermin, auf dessen Grundlage wir Ihnen ein individuelles Angebot erstellen.',
   },
   {
-    schritt: 'Schritt 3',
     titel: 'Individuelles Angebot',
     text: 'Nach der Besichtigung erstellen wir Ihnen ein individuelles Angebot und beantworten Ihnen gerne alle noch offenen Fragen.',
   },
-] as const;
+];
 
 /**
  * Wörtlich von der bestehenden Website übernommen (Quelle: ProvenExpert).
