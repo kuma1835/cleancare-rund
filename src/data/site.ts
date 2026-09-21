@@ -73,10 +73,13 @@ export const ablauf: readonly AblaufSchritt[] = [
 ];
 
 /**
- * Wörtlich von der bestehenden Website übernommen (Quelle: ProvenExpert).
- * `sterne`: Die tatsächlichen Notenwerte liegen nicht vor — 5 ist eine Annahme
- * und muss vor Livegang gegen das ProvenExpert-Profil geprüft werden.
- * Siehe REDAKTION.md.
+ * Wörtlich von der Startseite des bestehenden Auftritts übernommen, wo sie
+ * unter „Das sagen unsere KundInnen" ohne Quellenangabe stehen. Sie stammen
+ * NICHT nachweislich aus dem ProvenExpert-Profil — diese Zuschreibung stand
+ * hier früher und war eine Annahme.
+ *
+ * `sterne`: Die tatsächlichen Notenwerte liegen nicht vor, 5 ist gesetzt.
+ * Vor Livegang klären, ob die Sterne bleiben dürfen. Siehe REDAKTION.md.
  */
 export const stimmen = [
   {

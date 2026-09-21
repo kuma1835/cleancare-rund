@@ -161,6 +161,12 @@ const bild = leistung.bild ? bilder[`../assets/img/${leistung.bild}`]?.default :
     margin: 0;
     font-size: 1.125rem;
     line-height: 1.25;
+    /* Fünf Karten nebeneinander lassen je Karte nur rund 180px Textbreite.
+       „Treppenhausreinigung" braucht ungetrennt 197px und hat als Kompositum
+       keine Umbruchstelle. Die Silbentrennung greift hier statt der bisherigen
+       Vergrößerung der Karte; die Seite ist auf de-DE gestellt, der Browser
+       trennt also nach deutschen Regeln. */
+    hyphens: auto;
   }
 
   .symbol {
