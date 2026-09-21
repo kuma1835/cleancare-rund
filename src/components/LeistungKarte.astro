@@ -183,6 +183,10 @@ const bild = leistung.bild ? bilder[`../assets/img/${leistung.bild}`]?.default :
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
+    /* Eine volle leere Textzeile über dem Verweis, zusätzlich zum Rasterabstand
+       von 12px. Der Wert ist die Zeilenhöhe des Kartentextes (15px × 1.55),
+       damit der Abstand mitwächst, wenn die Textgröße einmal geändert wird. */
+    margin-top: calc(0.9375rem * 1.55);
     font-family: var(--font);
     font-size: 0.875rem;
     font-weight: 600;
