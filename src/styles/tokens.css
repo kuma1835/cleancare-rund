@@ -81,7 +81,7 @@
   /* Referenz Revolut: bei 1440 px steht der Inhalt in 1000 px Breite, der Text
      beginnt 220 px vom Rand. Die alte Fassung begann bei 106 px. Dieser Wert
      liegt bewusst dazwischen: 1104 px Inhalt, Textachse bei rund 168 px. */
-  --seite: 78rem;
+  --seite: 72rem;
 
   /* Eine Textachse für die ganze Seite: derselbe Wert dient als Innenabstand der
      Panels und als Einzug für Text, der direkt auf dem Grund liegt. Dadurch
@@ -117,7 +117,7 @@
      Zusammen mit --einzug ergibt sich die Textachse: auf dem Telefon rund 38 px,
      bei 1440 px rund 168 px. Der negative Sockel im clamp hält den Rand auf
      kleinen Geräten klein, damit der Text dort nicht in einer Rinne steht. */
-  --rand: clamp(0.75rem, -1.5rem + 9.5vw, 4.5rem);
+  --rand: clamp(0.75rem, -1.5rem + 9.5vw, 8rem);
 
   /* Tiefe — weich, mit Versatz, aus dem Navy gefärbt */
   --schwebe-1: 0 1px 2px oklch(28.5% 0.045 253 / 0.06), 0 4px 14px oklch(28.5% 0.045 253 / 0.07);
