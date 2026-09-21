@@ -140,8 +140,17 @@ const bild = leistung.bild ? bilder[`../assets/img/${leistung.bild}`]?.default :
     justify-items: start;
     gap: var(--s-3);
     padding: var(--s-5);
+    /* Hochkant statt quadratisch. Die zusätzliche Höhe fällt in die dehnbare
+       Textreihe: Text bleibt oben, „Mehr" unten. */
+    min-height: 21rem;
   }
   .v-kompakt h3 { margin: 0; }
+
+  /* Einspaltig wäre eine hohe Karte mit zwei Zeilen Text nur leere Fläche.
+     Die Grenze entspricht der, ab der die Startseite auf eine Spalte geht. */
+  @media (max-width: 34rem) {
+    .v-kompakt { min-height: 0; }
+  }
 
   .symbol {
     display: inline-flex;

@@ -15,7 +15,9 @@ import haus from '../assets/img/redd-f-ptrzqc_h1r4-unsplash.webp';
 const beschreibung =
   'Unterhaltsreinigung für Büros, Praxen und Gewerbeobjekte in Seevetal, Landkreis Harburg und Hamburg. Familienbetrieb seit 2009, Angebot nach Besichtigung.';
 
-const gezeigt = leistungen.slice(0, 6);
+/* Alle acht, nicht mehr die ersten sechs: Dachreinigung und
+   Solaranlagenreinigung fehlten sonst auf der Startseite. */
+const gezeigt = leistungen;
 
 const ld = [
   {
@@ -301,18 +303,23 @@ const ld = [
   .leistungs-kopf h2 { margin-bottom: var(--s-5); max-width: 20ch; margin-inline: auto; }
   .leistungs-kopf .lead { max-width: var(--mass-mitte); margin-inline: auto; }
 
+  /* Acht Karten in vier Spalten, zwei Reihen. Schmaler als bei drei Spalten —
+     dadurch stehen die Karten hochkant statt breit. */
   .leistungsraster {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--s-4);
     margin: 0;
     padding: 0;
   }
-  @media (max-width: 62rem) {
+  @media (max-width: 74rem) {
+    .leistungsraster { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 56rem) {
     .leistungsraster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-  @media (max-width: 40rem) {
+  @media (max-width: 34rem) {
     .leistungsraster { grid-template-columns: 1fr; }
   }
 
