@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ContactBand from '../../components/ContactBand.astro';
-import LeistungKarte from '../../components/LeistungKarte.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { site, nutzungen } from '../../data/site';
 import { leistungen } from '../../data/leistungen';
@@ -17,7 +16,6 @@ const bilder = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/*.
 });
 const bild = leistung.bild ? bilder[`../../assets/img/${leistung.bild}`]?.default : undefined;
 const nutzung = nutzungen.find((n) => n.id === leistung.nutzung)!;
-const andere = leistungen.filter((l) => l.slug !== leistung.slug).slice(0, 3);
 
 /* Kurz genug, dass auch der längste Leistungsname („Solaranlagenreinigung")
    unter der Anzeigegrenze von rund 160 Zeichen bleibt. */
@@ -141,21 +139,6 @@ const ld = [
     </div>
   </section>
 
-  <section class="abschnitt">
-    <div class="wrap">
-      <div class="panel weitere">
-        <div class="panel-kopf">
-          <p class="label">Weitere Leistungen</p>
-          <h2>Was wir sonst noch übernehmen</h2>
-        </div>
-        <ul class="leistungsraster">
-          {andere.map((l) => (
-            <LeistungKarte leistung={l} sizes="(max-width: 34rem) 90vw, (max-width: 52rem) 40vw, 15rem" />
-          ))}
-        </ul>
-      </div>
-    </div>
-  </section>
   <ContactBand />
 </Base>
 
@@ -267,30 +250,12 @@ const ld = [
   }
   .panel-kopf .label { margin-bottom: var(--s-3); }
   .panel-kopf h2 { max-width: 24ch; }
-  .panel-kopf .label { display: block; margin-bottom: var(--s-3); }
-  .panel-kopf h2 { margin: 0; }
-  .panel-kopf .btn { flex: none; }
 
-  /* Zwei Spalten wie überall — die Karte ist zweigeteilt und braucht Breite.
-     Drei Karten ergeben hier eineinhalb Reihen; die letzte steht allein. */
-  .leistungsraster {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--s-4);
-  }
-
-  @media (max-width: 52rem) {
-    .leistungsraster { grid-template-columns: 1fr; }
-  }
   @media (max-width: 62rem) {
     .umfang-panel { grid-template-columns: 1fr; }
     .doppel-panel { grid-template-columns: 1fr; }
   }
   @media (max-width: 48rem) {
     .panel-kopf { flex-direction: column; align-items: start; }
-  }
-  @media (max-width: 40rem) {
-    .leistungsraster { grid-template-columns: 1fr; }
   }
 </style>

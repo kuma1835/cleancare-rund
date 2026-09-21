@@ -5,9 +5,10 @@ import Ablauf from '../components/Ablauf.astro';
 import Stimmen from '../components/Stimmen.astro';
 import ContactBand from '../components/ContactBand.astro';
 import LeistungKarte from '../components/LeistungKarte.astro';
+import SonderKarte from '../components/SonderKarte.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { site } from '../data/site';
-import { leistungen } from '../data/leistungen';
+import { leistungen, hauptleistungen } from '../data/leistungen';
 import { standorte } from '../data/standorte';
 import held from '../assets/img/cleancare-header-glass.webp';
 import haus from '../assets/img/redd-f-ptrzqc_h1r4-unsplash.webp';
@@ -15,9 +16,9 @@ import haus from '../assets/img/redd-f-ptrzqc_h1r4-unsplash.webp';
 const beschreibung =
   'Unterhaltsreinigung für Büros, Praxen und Gewerbeobjekte in Seevetal, Landkreis Harburg und Hamburg. Familienbetrieb seit 2009, Angebot nach Besichtigung.';
 
-/* Alle acht, nicht mehr die ersten sechs: Dachreinigung und
-   Solaranlagenreinigung fehlten sonst auf der Startseite. */
-const gezeigt = leistungen;
+/* Die fünf Hauptleistungen einzeln; Fassade, Dach und Solar stehen gesammelt
+   im sechsten Feld, so wie der bestehende Auftritt sie führt. */
+const gezeigt = hauptleistungen;
 
 const ld = [
   {
@@ -130,6 +131,7 @@ const ld = [
         {gezeigt.map((l) => (
           <LeistungKarte leistung={l} variante="kompakt" />
         ))}
+        <SonderKarte variante="kompakt" />
       </ul>
     </div>
   </section>
@@ -317,7 +319,9 @@ const ld = [
   .leistungsraster {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(15.5rem, 100%), 1fr));
+    /* 17rem statt 15.5rem: Bei sechs Feldern gehen drei Spalten in zwei volle
+       Reihen auf, vier Spalten ließen die zweite Reihe halb leer. */
+    grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
     /* Karten sind innerhalb einer Reihe von Haus aus gleich hoch, zwischen den
        Reihen aber nicht: Die erste Reihe stand auf 290px, die zweite auf 267px,
        weil „Glas- und Fensterreinigung" als einzige Überschrift zweizeilig ist.

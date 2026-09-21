@@ -160,5 +160,16 @@ export const leistungen: Leistung[] = [
   },
 ];
 
+/**
+ * Die Aufteilung folgt dem bestehenden Auftritt: Dort haben fünf Leistungen
+ * eine eigene Beschreibung, während Fassade, Dach und Solar auf der Startseite
+ * als „Sonderreinigungen … für den langfristigen Werterhalt Ihrer Immobilie"
+ * mit je einem Satz geführt werden. Übersicht und Startseite zeigen deshalb die
+ * fünf einzeln und die drei gesammelt in einem Feld; eigene Detailseiten haben
+ * sie weiterhin, sie werden aus diesem Feld heraus verlinkt.
+ */
+export const hauptleistungen = leistungen.filter((l) => l.original);
+export const sonderleistungen = leistungen.filter((l) => !l.original);
+
 export const byNutzung = (n: string) => leistungen.filter((l) => l.nutzung === n);
 export const findLeistung = (slug: string) => leistungen.find((l) => l.slug === slug);
