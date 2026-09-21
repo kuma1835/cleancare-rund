@@ -318,6 +318,11 @@ const ld = [
     list-style: none;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(15.5rem, 100%), 1fr));
+    /* Karten sind innerhalb einer Reihe von Haus aus gleich hoch, zwischen den
+       Reihen aber nicht: Die erste Reihe stand auf 290px, die zweite auf 267px,
+       weil „Glas- und Fensterreinigung" als einzige Überschrift zweizeilig ist.
+       `1fr` gibt allen Reihen dieselbe Höhe. */
+    grid-auto-rows: 1fr;
     gap: var(--s-4);
     margin: 0;
     padding: 0;

@@ -61,7 +61,7 @@ export const leistungen: Leistung[] = [
   {
     slug: 'glas-und-fensterreinigung',
     name: 'Glas- und Fensterreinigung',
-    kurz: 'Rahmen und Falz gehören dazu — sonst ist es keine Glasreinigung.',
+    kurz: 'Rahmen und Falz gehören dazu, nicht nur die Scheibe.',
     nutzung: 'glas',
     takt: 'monatlich bis halbjährlich',
     text: 'Wir lieben glasklare Ergebnisse. Deshalb wissen unsere Glasreiniger ganz genau, was sie tun – und geben Ihren Fenstern mitsamt Rahmen und Falz wieder ihren Glanz zurück. Damit haben Sie wieder den kompletten Durchblick, denn selbst hartnäckige Verschmutzungen beseitigen wir mit Links.',
