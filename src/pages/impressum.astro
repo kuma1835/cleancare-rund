@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Impressum"
+  description="Impressum der CleanCare Gebäudeservice GmbH, Eddelsener Str. 48, 21218 Seevetal."
+  noindex={true}
+>
+  <section class="rechtstext">
+    <div class="wrap">
+      <h1>Impressum</h1>
+
+      <div class="entwurf">
+        <p class="feld">Redaktionshinweis</p>
+        <p>
+          Alle Angaben stammen aus dem Impressum des bestehenden Auftritts (Stand 04.08.2026) und
+          sind vor Livegang einmal vom Betrieb zu bestätigen. Offen ist allein die Zugehörigkeit
+          zur Handwerkskammer: Gebäudereinigung ist ein zulassungspflichtiges Handwerk, damit
+          gehören Kammer, Berufsbezeichnung und Verleihungsstaat nach § 5 DDG ins Impressum.
+        </p>
+      </div>
+
+      <h2>Angaben gemäß § 5 DDG</h2>
+      <p>
+        {site.name}<br />
+        {site.strasse}<br />
+        {site.plz} {site.ort}
+      </p>
+
+      <h2>Vertreten durch</h2>
+      <p>{site.vertretung}</p>
+
+      <h2>Kontakt</h2>
+      <p>
+        Telefon: <a href={`tel:${site.telefonLink}`}>{site.telefon}</a><br />
+        E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+
+      <h2>Registereintrag</h2>
+      <p>
+        Registergericht: {site.registergericht}<br />
+        Registernummer: {site.handelsregister}
+      </p>
+
+      <h2>Umsatzsteuer-Identifikationsnummer</h2>
+      <p>USt-IdNr. gemäß § 27 a UStG: {site.ustId}</p>
+
+      <h2>Berufsrechtliche Angaben</h2>
+      <p class="offen">
+        Zuständige Handwerkskammer, gesetzliche Berufsbezeichnung und Verleihungsstaat:
+        zu ergänzen
+      </p>
+
+      <h2>Verantwortlich für den Inhalt</h2>
+      <p>{site.vertretung}, Anschrift wie oben</p>
+
+      <h2>Streitschlichtung</h2>
+      <p>
+        Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+        Verbraucherschlichtungsstelle teilzunehmen.
+      </p>
+
+      <h2>Bildnachweis</h2>
+      <p>
+        Fotografien: Unsplash (nastuh abootalebi, redd f, ron mcclenny, brooke cagle, dan farrell,
+        garin chadwick, priscilla du preez, ridwan d esk, microsoft 365). Diese Aufnahmen stammen
+        aus dem bestehenden Auftritt und sind vor Livegang durch eigene Objektfotos zu ersetzen.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rechtstext { padding-block: 0; }
+  .rechtstext h1 { margin-bottom: var(--s-6); }
+  .rechtstext h2 {
+    font-size: 1.125rem;
+    font-variation-settings: 'wght' 640;
+    margin: var(--s-6) 0 var(--s-3);
+  }
+  .rechtstext p { color: var(--ink-2); line-height: 1.65; }
+  .rechtstext a { color: var(--blau); }
+  .offen { color: var(--warn); font-family: var(--font); font-size: 0.875rem; }
+
+  .entwurf {
+    padding: var(--s-4) var(--s-5);
+    background: var(--panel-2);
+    border: 1px dashed var(--linie-2);
+    border-radius: var(--r-karte);
+    margin-bottom: var(--s-6);
+  }
+  .entwurf .feld { margin-bottom: 0.5rem; color: var(--warn); }
+  .entwurf p { margin: 0; font-size: 0.9375rem; }
+</style>

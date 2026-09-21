@@ -1,0 +1,584 @@
+---
+import Base from '../layouts/Base.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { site } from '../data/site';
+
+const beschreibung =
+  'Jobs bei CleanCare in Seevetal: Glasreiniger (m/w/d) als Minijob, Teilzeit oder Vollzeit. 18 €/Std., unbefristet, 30 Tage Urlaub. Initiativbewerbung willkommen.';
+
+const stelle = {
+  titel: 'GlasreinigerIn / FensterputzerIn (m/w/d)',
+  lohn: 18,
+  arten: ['Minijob', 'Teilzeit', 'Vollzeit'],
+  einleitung:
+    'Du bist Gebäudereiniger oder Glasreiniger und suchst deinen Traumjob? Perfekt! Wir suchen Glasreiniger (m/w/d) in Teilzeit, Vollzeit oder als Minijob für unterschiedliche Objekte in Seevetal, Landkreis Harburg und Umgebung.',
+  bieten: [
+    'Unbefristeter Arbeitsvertrag',
+    'Übertarifliche Bezahlung (Stundenlohn: 18 €/Std.)',
+    '30 Tage Urlaub im Jahr',
+    'Ein junges Team mit flachen Hierarchien',
+    'Aufstiegsmöglichkeiten (z. B. zum Vorarbeiter oder Teamleiter)',
+  ],
+  aufgaben: [
+    'Du sorgst für Sauberkeit und reinigst Glasflächen und -rahmen im Innen- und Außenbereich',
+  ],
+  profil: [
+    'Du bist idealerweise Gebäudereiniger (m/w/d) oder hast Berufserfahrung in der Gebäudereinigung',
+    'Führerschein Klasse B',
+  ],
+};
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'JobPosting',
+  title: stelle.titel,
+  description: `${stelle.einleitung} Wir bieten: ${stelle.bieten.join('; ')}. Aufgaben: ${stelle.aufgaben.join('; ')}. Profil: ${stelle.profil.join('; ')}.`,
+  employmentType: ['FULL_TIME', 'PART_TIME'],
+  hiringOrganization: { '@id': `${site.url}/#unternehmen` },
+  jobLocation: {
+    '@type': 'Place',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: site.strasse,
+      postalCode: site.plz,
+      addressLocality: site.ort,
+      addressCountry: site.land,
+    },
+  },
+  baseSalary: {
+    '@type': 'MonetaryAmount',
+    currency: 'EUR',
+    value: { '@type': 'QuantitativeValue', value: stelle.lohn, unitText: 'HOUR' },
+  },
+  directApply: true,
+  url: `${site.url}/jobs`,
+};
+---
+
+<Base title="Jobs in der Gebäudereinigung Seevetal" description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <section class="kopfteil">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="label">Karriere</p>
+        <h1>Arbeiten bei CleanCare</h1>
+        <p class="lead">
+          Wir suchen immer wieder motivierte Reinigungskräfte in der Unterhaltsreinigung (m/w/d).
+          Eröffne dir und uns neue Möglichkeiten und arbeite gemeinsam mit uns an unserer Vision.
+          Gerne nehmen wir deine Initiativbewerbung an.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    Links der Kasten mit den harten Eckdaten, rechts die Beschreibung. Der
+    Kasten führt: man sieht Lohn, Umfang und Vertrag zuerst und liest erst
+    danach, worum es geht.
+  -->
+  <section class="abschnitt">
+    <div class="wrap">
+      <div class="panel stellenraster">
+        <article class="stelle">
+          <header class="stelle-kopf">
+            <p class="label">Offene Stelle</p>
+            <h2>{stelle.titel}</h2>
+            <p class="stelle-ort">Seevetal · Landkreis Harburg · Umgebung</p>
+          </header>
+
+          <dl class="konditionen">
+            <div>
+              <dt class="feld">Stundenlohn</dt>
+              <dd class="mass gross">{stelle.lohn},00 €</dd>
+            </div>
+            <div>
+              <dt class="feld">Umfang</dt>
+              <dd class="mass">{stelle.arten.join(' · ')}</dd>
+            </div>
+            <div>
+              <dt class="feld">Vertrag</dt>
+              <dd class="mass">Unbefristet</dd>
+            </div>
+          </dl>
+
+          <a class="btn" href="#bewerbung">
+            Auf diese Stelle bewerben <span class="pfeil" aria-hidden="true">→</span>
+          </a>
+        </article>
+
+        <!--
+          `stelle.einleitung` steht bewusst nicht mehr sichtbar hier: derselbe
+          Inhalt steht schon als Vorspann im Seitenkopf. In den Strukturdaten der
+          Stellenanzeige (JobPosting) bleibt der Text erhalten — Google zeigt ihn
+          dort als Beschreibung.
+        -->
+        <div class="bloecke">
+          <section class="block erste">
+            <h3>Was wir dir bieten</h3>
+            <ul class="haken">{stelle.bieten.map((b) => <li>{b}</li>)}</ul>
+          </section>
+          <section class="block">
+            <h3>Deine Aufgaben</h3>
+            <ul class="haken">{stelle.aufgaben.map((a) => <li>{a}</li>)}</ul>
+          </section>
+          <section class="block">
+            <h3>Was dich ausmacht</h3>
+            <ul class="haken">{stelle.profil.map((p) => <li>{p}</li>)}</ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    Bewerbung: links die Ansprache und der direkte Weg, rechts das Formular in
+    fester, schmaler Breite. Die Felder stehen darin einspaltig untereinander —
+    ein Eingabefeld über 1100 px zu ziehen macht es nicht besser bedienbar.
+  -->
+  <section class="abschnitt bewerbung" id="bewerbung">
+    <div class="wrap">
+      <div class="panel bewerbraster">
+        <div class="ansprache">
+          <p class="label">Bewerbung</p>
+          <h2>Bewirb dich direkt</h2>
+          <p class="ansprache-text">
+            Kurz reicht: Name, wie wir dich erreichen, und worum es geht. Zeugnisse kannst du
+            später nachreichen — oder du rufst einfach an.
+          </p>
+
+          <ul class="wege">
+            <li>
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z" />
+              </svg>
+              <a class="mass" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2.5" />
+                <path d="m3.5 7 8.5 6 8.5-6" />
+              </svg>
+              <a class="mass" href={`mailto:${site.email}?subject=Bewerbung`}>{site.email}</a>
+            </li>
+          </ul>
+
+          <div class="chat-hinweis">
+            <!--
+              Bewusst so formuliert, dass der Assistent nur aufnimmt und nicht bewertet.
+              Eine automatisierte Vorauswahl von Bewerbern wäre nach Art. 22 DSGVO
+              heikel und gilt unter dem EU-KI-Gesetz als Hochrisiko-Anwendung. Der
+              Satz „von uns persönlich" ist deshalb keine Floskel, sondern die Zusage,
+              dass ein Mensch entscheidet. Vor dem Livegang zu ergänzen: Hinweis zum
+              Datenschutz beim Chatstart, Offenlegung als KI-System (Art. 50 KI-VO),
+              AV-Vertrag mit dem Anbieter und Löschfrist in der Datenschutzerklärung.
+            -->
+            <p class="chat-titel">Lieber im Gespräch als im Formular?</p>
+            <p>
+              Unser Bewerbungs-Assistent nimmt deine Angaben im Chat auf — ohne Anschreiben,
+              ohne Lebenslauf, rund um die Uhr. Gelesen und beantwortet wird deine Bewerbung
+              anschließend von uns persönlich.
+            </p>
+            <button class="btn btn-hell" type="button" disabled>
+              Im Chat bewerben
+              <span class="bald">bald verfügbar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="formfeld">
+          <form id="bewerben" novalidate>
+            <div class="paar">
+              <label class="eingabe">
+                <span class="etikett">Name</span>
+                <input type="text" name="name" autocomplete="name" required />
+              </label>
+
+              <label class="eingabe">
+                <span class="etikett">Telefon</span>
+                <input type="tel" name="telefon" autocomplete="tel" required />
+              </label>
+            </div>
+
+            <label class="eingabe">
+              <span class="etikett">E-Mail</span>
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+
+            <label class="eingabe">
+              <span class="etikett">Worauf bewirbst du dich?</span>
+              <select name="stelle" required>
+                <option value="Glasreiniger (m/w/d)">Glasreiniger / Fensterputzer</option>
+                <option value="Unterhaltsreinigung">Unterhaltsreinigung</option>
+                <option value="Initiativbewerbung">Initiativbewerbung</option>
+              </select>
+            </label>
+
+            <label class="eingabe">
+              <span class="etikett">Deine Nachricht <span class="zusatz">optional</span></span>
+              <textarea name="nachricht" rows="4" placeholder="Erfahrung, gewünschter Umfang, ab wann du kannst"></textarea>
+            </label>
+
+            <label class="zustimmung">
+              <input type="checkbox" name="einwilligung" required />
+              <span>
+                Ich bin damit einverstanden, dass CleanCare mich zu meiner Bewerbung per E-Mail
+                oder Telefon kontaktiert. Näheres in der
+                <a href="/datenschutz">Datenschutzerklärung</a>.
+              </span>
+            </label>
+
+            <div class="honig" aria-hidden="true">
+              <label>Bitte frei lassen<input type="text" name="webseite" tabindex="-1" autocomplete="off" /></label>
+            </div>
+
+            <button class="btn" type="submit">
+              <span class="text">Bewerbung senden</span>
+              <span class="pfeil" aria-hidden="true">→</span>
+            </button>
+            <p class="fehler" id="bewerbfehler" role="alert" hidden></p>
+          </form>
+
+          <div class="quittung" id="bewerbquittung" hidden tabindex="-1">
+            <h3>Danke für deine Bewerbung.</h3>
+            <p>Wir melden uns schnellstmöglich bei dir.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kopfteil { padding-block: 0; }
+  .kopf .label { display: block; margin-bottom: var(--s-3); }
+
+  /* ---------- Die Ausschreibung ---------- */
+  /* Beides in einem Kasten: links die harten Eckdaten, rechts die Beschreibung.
+     Die Eckdaten sind darin durch eine feine Linie abgesetzt statt durch eine
+     zweite Fläche — ein Kasten im Kasten wirkt sonst gestapelt. */
+  .stellenraster {
+    display: grid;
+    grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+    gap: clamp(2rem, 1.25rem + 3.5vw, 4.5rem);
+    align-items: start;
+  }
+
+  /* Eigene Fläche innerhalb des großen Kastens: die Eckdaten sollen sich als
+     Anzeige abheben, nicht als abgeteilte Spalte lesen. Etwas heller Grund und
+     eine feine Kante genügen dafür — ohne Schatten, der im Panel doppelt läge. */
+  .stelle {
+    padding: clamp(1.25rem, 1rem + 1.4vw, 2rem);
+    background: var(--panel-2);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+  }
+
+  .stelle-kopf { margin-bottom: var(--s-5); }
+  .stelle-kopf .label { display: block; margin-bottom: var(--s-3); }
+  .stelle-kopf h2 { font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.75rem); }
+  .stelle-ort { margin: var(--s-3) 0 0; color: var(--ink-3); font-size: 0.9375rem; }
+
+  .ansprache .label { display: block; margin-bottom: var(--s-3); }
+  .ansprache h2 { margin-bottom: var(--s-4); font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.125rem); }
+  .ansprache-text { color: var(--ink-2); margin-bottom: var(--s-6); }
+
+  /* Telefon und E-Mail als schlichte Zeilen mit Symbol — der frühere dunkle
+     Kasten stahl dem Formular daneben die Aufmerksamkeit. */
+  .wege { list-style: none; display: grid; gap: var(--s-3); }
+  .wege li { display: flex; align-items: center; gap: 0.625rem; }
+  .wege svg { color: oklch(85% 0.06 250); flex: none; }
+  .wege a { color: #fff; text-decoration: none; }
+  .wege a:hover { text-decoration: underline; }
+
+  /* Hinweis auf den Bewerbungs-Assistenten. Der Knopf ist noch ohne Ziel —
+     die Anbindung folgt, deshalb `disabled` mit sichtbarem Vermerk. */
+  .chat-hinweis {
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 1px solid oklch(100% 0 0 / 0.22);
+  }
+  .chat-titel {
+    font-family: var(--font);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: #fff;
+    margin-bottom: var(--s-3);
+  }
+  .chat-hinweis p { color: oklch(90% 0.025 250); font-size: 0.9375rem; }
+  .chat-hinweis .btn { margin-top: var(--s-5); }
+
+  /* Helle Aktion auf blauem Grund. */
+  .btn-hell {
+    background: #fff;
+    color: var(--blau-tief);
+    box-shadow: none;
+  }
+  .btn-hell:hover { background: #fff; }
+  .btn-hell[disabled] {
+    background: oklch(100% 0 0 / 0.18);
+    color: oklch(92% 0.02 250);
+    border-color: oklch(100% 0 0 / 0.3);
+  }
+  .bald {
+    font-size: 0.6875rem;
+    font-weight: 560;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  /* Die drei Eckdaten als Reihe mit feinen Trennlinien — dieselbe Machart wie
+     der Kennzahlen-Streifen, damit die Seite eine Sprache spricht. */
+  /* Im schmalen Kasten stehen die Eckdaten untereinander, Beschriftung links
+     und Wert rechts — drei Spalten hätten hier keinen Platz. */
+  .konditionen {
+    display: grid;
+    gap: var(--s-3);
+    margin: 0 0 var(--s-5);
+    padding-block: var(--s-4);
+    border-block: 1px solid var(--linie);
+  }
+  .konditionen > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-4);
+  }
+  .konditionen dt { margin: 0; }
+  .konditionen dd { margin: 0; color: var(--ink); text-align: right; }
+  .gross { font-size: 1.125rem; font-variation-settings: 'wght' 600; }
+
+  .stelle .btn { width: 100%; justify-content: center; }
+
+  /* Die Einzelheiten links, ohne eigene Fläche. Beschriftungsspalte links,
+     Inhalt rechts — untereinander statt als ausgefranste Dreierreihe. */
+  .bloecke {
+    display: grid;
+    gap: var(--s-6);
+  }
+  .block {
+    display: grid;
+    gap: var(--s-4);
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--linie);
+  }
+  .block.erste { padding-top: 0; border-top: 0; }
+  /* Kräftige Zwischenüberschriften statt kleiner gesperrter Marken — das passt
+     zum Rest der Seite, wo Überschriften ebenfalls fett und dunkel stehen. */
+  .block h3 {
+    font-size: 1.125rem;
+    font-weight: 620;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .haken { list-style: none; display: grid; gap: 0.625rem; }
+  .haken li {
+    display: grid;
+    grid-template-columns: 1.125rem 1fr;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .haken li::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.42rem;
+    border: 1.5px solid var(--blau);
+    border-radius: 1px;
+  }
+
+  /* ---------- Bewerbung ---------- */
+  /* Anker unter der schwebenden Kopfleiste freihalten. */
+  .bewerbung { scroll-margin-top: 6.5rem; }
+
+  /*
+    Der Bewerbungsblock liegt in der Aktionsfarbe — dasselbe Blau wie „Angebot
+    anfordern". Er ist der Abschluss der Seite und soll sich vom weißen Rest
+    absetzen. Text darauf wird hell, das Formular bleibt eine weiße Fläche.
+    Der Innenabstand ist größer als beim gewöhnlichen Panel, damit das Formular
+    ringsum denselben Rand zur Kastenkante hat.
+  */
+  .bewerbraster {
+    display: grid;
+    /* 1fr, nicht 0.85fr: ist der flexible Track der einzige, verteilt ein Anteil
+       unter 1 nur diesen Bruchteil des freien Platzes — der Rest blieb als
+       Lücke rechts stehen und das Formular hing 139 px von der Kante ab. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+    gap: clamp(2rem, 1.25rem + 3.5vw, 4.5rem);
+    align-items: start;
+    background: var(--blau);
+    color: oklch(93% 0.02 250);
+    padding: clamp(1.75rem, 1.25rem + 2.4vw, 3.25rem);
+    box-shadow: var(--schwebe-2);
+  }
+  .bewerbraster .label { color: oklch(88% 0.045 250); }
+
+  .bewerbraster h2 { color: #fff; }
+  .ansprache-text { color: oklch(91% 0.025 250); }
+
+  /* Das Formular in eigener Fläche, damit es als abgegrenzter Baustein
+     dasteht und nicht als Rest des Panels. */
+  /* Weiße Fläche mit großzügigem Innenabstand — in der Referenz ist das
+     Formular der hellste Baustein und trägt den Abschnitt. */
+  /* Eigene Textfarbe: der blaue Kasten ringsum vererbt sonst sein Hellgrau in
+     die weiße Fläche und die Feldbeschriftungen verschwinden. */
+  .formfeld {
+    color: var(--ink);
+    padding: clamp(1.5rem, 1.25rem + 1.8vw, 2.5rem);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    box-shadow: var(--schwebe-1);
+  }
+
+  /* Name und Telefon nebeneinander, wie in der Referenz. */
+  .paar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+  @media (max-width: 30rem) {
+    .paar { grid-template-columns: 1fr; }
+  }
+
+  form { display: grid; gap: var(--s-4); }
+
+  .eingabe { display: grid; gap: 0.3125rem; }
+
+  .etikett { font-size: 0.875rem; font-variation-settings: 'wght' 580; }
+  .zusatz { font-variation-settings: 'wght' 420; color: var(--ink-3); font-size: 0.8125rem; }
+
+  input[type='text'], input[type='email'], input[type='tel'], select, textarea {
+    width: 100%;
+    padding: 0.6875rem 0.75rem;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--grund);
+    border: 1px solid var(--linie-2);
+    border-radius: 10px;
+    transition: border-color 0.15s var(--ease), background 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  }
+  textarea { resize: vertical; }
+  input:hover, select:hover, textarea:hover { border-color: var(--ink-3); }
+  input:focus, select:focus, textarea:focus {
+    background: var(--panel);
+    border-color: var(--blau);
+    box-shadow: 0 0 0 3px var(--blau-sanft);
+    outline: none;
+  }
+  [aria-invalid='true'] { border-color: var(--fehler); background: var(--fehler-sanft); }
+
+  .zustimmung {
+    display: grid;
+    grid-template-columns: 1.125rem 1fr;
+    gap: 0.625rem;
+    align-items: start;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .zustimmung input { margin-top: 0.2rem; width: 1.125rem; height: 1.125rem; accent-color: var(--blau); }
+  .zustimmung a { color: var(--blau); }
+
+  form .btn { justify-self: stretch; justify-content: center; }
+
+  .honig { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .fehler {
+    margin: 0;
+    padding: 0.6875rem 0.8125rem;
+    background: var(--fehler-sanft);
+    color: var(--fehler);
+    border-radius: 10px;
+    font-size: 0.875rem;
+  }
+  .fehler[hidden] { display: none; }
+
+  .quittung { display: grid; gap: var(--s-3); }
+  .quittung[hidden] { display: none; }
+  .quittung p { margin: 0; color: var(--ink-2); }
+
+  @media (max-width: 60rem) {
+    .stellenraster { grid-template-columns: 1fr; gap: var(--s-7); }
+
+    .bewerbraster { grid-template-columns: 1fr; gap: var(--s-7); }
+    .direktweg { max-width: none; }
+  }
+
+  /* Unter dieser Breite steht die Beschriftungsspalte nicht mehr sinnvoll
+     neben dem Inhalt — sie rückt darüber. */
+
+</style>
+
+<script>
+  const form = document.getElementById('bewerben') as HTMLFormElement | null;
+  if (form) {
+    const fehler = document.getElementById('bewerbfehler') as HTMLParagraphElement;
+    const quittung = document.getElementById('bewerbquittung') as HTMLElement;
+    const knopf = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const endpoint = import.meta.env.PUBLIC_BEWERBUNG_ENDPOINT ?? '';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      fehler.hidden = true;
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+
+      const fehlend = Array.from(form.querySelectorAll<HTMLInputElement>('[required]')).filter(
+        (el) => !el.checkValidity(),
+      );
+      if (fehlend.length) {
+        fehlend.forEach((el) => el.setAttribute('aria-invalid', 'true'));
+        fehler.textContent = 'Bitte fülle die markierten Felder aus.';
+        fehler.hidden = false;
+        fehlend[0].focus();
+        return;
+      }
+
+      if ((form.elements.namedItem('webseite') as HTMLInputElement)?.value) return;
+
+      const daten = Object.fromEntries(new FormData(form).entries());
+      knopf.disabled = true;
+      knopf.querySelector('.text')!.textContent = 'Wird gesendet';
+
+      try {
+        if (endpoint) {
+          const antwort = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(daten),
+          });
+          if (!antwort.ok) throw new Error(String(antwort.status));
+        } else {
+          const zeilen = [
+            `Name: ${daten.name}`,
+            `Telefon: ${daten.telefon}`,
+            `E-Mail: ${daten.email}`,
+            `Stelle: ${daten.stelle}`,
+            '',
+            String(daten.nachricht || ''),
+          ].join('\n');
+          window.location.href = `mailto:hallo@cleancare-service.de?subject=${encodeURIComponent(
+            `Bewerbung: ${daten.stelle}`,
+          )}&body=${encodeURIComponent(zeilen)}`;
+        }
+        form.hidden = true;
+        quittung.hidden = false;
+        quittung.focus();
+      } catch {
+        fehler.textContent =
+          'Das Senden hat nicht geklappt. Bitte ruf uns an: +49 1575 329 63 53.';
+        fehler.hidden = false;
+      } finally {
+        knopf.disabled = false;
+        knopf.querySelector('.text')!.textContent = 'Bewerbung senden';
+      }
+    });
+  }
+</script>

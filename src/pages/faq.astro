@@ -1,0 +1,189 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactBand from '../components/ContactBand.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { site } from '../data/site';
+import { faq } from '../data/faq';
+
+const beschreibung =
+  'Häufige Fragen zur Gebäudereinigung bei CleanCare: Kosten, Ablauf, Besichtigung, Einsatzgebiet, Objektarten und Hygieneartikelservice.';
+
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.frage,
+      acceptedAnswer: { '@type': 'Answer', text: f.antwort },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Startseite', item: site.url },
+      { '@type': 'ListItem', position: 2, name: 'Fragen', item: `${site.url}/faq` },
+    ],
+  },
+];
+---
+
+<Base title="Häufige Fragen zur Gebäudereinigung" description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <section class="abschnitt">
+    <div class="wrap">
+      <div class="fragen-kopf">
+        <p class="label">Häufige Fragen</p>
+        <h1>Fragen, die vor jedem Angebot kommen</h1>
+        <p class="lead">
+          Wir beantworten sie hier, damit im Gespräch Zeit für Ihr Objekt bleibt.
+        </p>
+      </div>
+
+      <div class="panel fragen-panel">
+        <div class="fragen">
+          {faq.map((f, i) => (
+            <details name="faq" open={i === 0}>
+              <summary>
+                <span class="mass nr">{String(i + 1).padStart(2, '0')}</span>
+                <span class="frage">{f.frage}</span>
+                <span class="kreuz" aria-hidden="true"></span>
+              </summary>
+              <div class="antwort">
+                <p>{f.antwort}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+
+        <div class="offen">
+          <h2>Etwas anderes im Kopf?</h2>
+          <p>
+            Rufen Sie an unter <a href={`tel:${site.telefonLink}`} class="mass">{site.telefon}</a>
+            — oder schreiben Sie an <a href={`mailto:${site.email}`} class="mass">{site.email}</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ContactBand
+    titel="Die letzte Frage klärt sich vor Ort."
+    text="Bei der Besichtigung sehen wir, was ein Angebot wirklich braucht. Das Angebot selbst ist kostenlos und unverbindlich."
+  />
+</Base>
+
+<style>
+  /*
+    Eine mittige Spalte statt kurzer Text links und lange Liste rechts. Bei
+    zehn Fragen lief die rechte Spalte weit über den linken Text hinaus und ließ
+    dort eine leere Fläche stehen — genau das Muster, das die zentrale AGENTS.md
+    beschreibt. Der Kontaktkasten steht jetzt unter den Fragen, wo er als
+    Abschluss gelesen wird statt als Beiwerk neben der Überschrift.
+  */
+  .fragen-panel {
+    display: grid;
+    justify-items: center;
+  }
+
+  /* Keine Begrenzung auf dem Kasten selbst — `--mass-mitte` rechnet in ch der
+     Fließtextgröße und schnürte die H1 auf drei Zeilen ein. Das Maß gehört an
+     Überschrift und Vorspann einzeln. */
+  .fragen-kopf {
+    text-align: center;
+    margin-bottom: clamp(2.25rem, 1.75rem + 2vw, 3.5rem);
+  }
+  .fragen-kopf .lead { max-width: var(--mass-mitte); margin-inline: auto; }
+  .fragen-kopf .label { display: block; margin-bottom: var(--s-3); }
+  .fragen-kopf h1 {
+    font-size: clamp(1.9rem, 1.35rem + 2.1vw, 3.1rem);
+    margin-bottom: var(--s-5);
+    max-width: 26ch;
+    margin-inline: auto;
+  }
+  .fragen-kopf .lead { margin-inline: auto; }
+
+  .fragen {
+    display: grid;
+    gap: 0;
+    width: 100%;
+    max-width: 46rem;
+  }
+
+  /* Kein Kasten je Frage mehr: zehn gerahmte Flächen untereinander machen die
+     Liste unruhig. Getrennt wird nur noch durch eine feine Linie; das Aufklappen
+     bleibt unverändert ein <details>. */
+  details {
+    border-bottom: 1px solid var(--linie);
+  }
+  details:first-child { border-top: 1px solid var(--linie); }
+
+  summary {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr 1.25rem;
+    align-items: baseline;
+    gap: var(--s-3);
+    padding: 1.125rem 0.25rem;
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.15s var(--ease);
+  }
+  summary:hover { color: var(--blau); }
+  summary::-webkit-details-marker { display: none; }
+  summary:focus-visible { outline: 3px solid var(--blau); outline-offset: -3px; }
+
+  .nr { color: var(--ink-3); }
+  .frage {
+    font-size: 1.0625rem;
+    font-variation-settings: 'wght' 600;
+    letter-spacing: -0.015em;
+    line-height: 1.35;
+  }
+
+  .kreuz {
+    position: relative;
+    width: 0.875rem;
+    height: 0.875rem;
+    align-self: center;
+    justify-self: end;
+  }
+  .kreuz::before, .kreuz::after {
+    content: '';
+    position: absolute;
+    background: var(--ink-2);
+    transition: transform 0.22s var(--ease), opacity 0.22s var(--ease);
+  }
+  .kreuz::before { inset: 45% 0 45% 0; }
+  .kreuz::after { inset: 0 45% 0 45%; }
+  details[open] .kreuz::after { transform: scaleY(0); opacity: 0; }
+
+  /* Die Antwort steht unter der Frage eingerückt auf Höhe des Fragetextes. */
+  .antwort {
+    padding: 0 0.25rem 1.375rem calc(2.25rem + var(--s-3) + 0.25rem);
+  }
+  .antwort p { margin: 0; color: var(--ink-2); }
+
+  /* Abschluss unter den Fragen, auf derselben Spaltenbreite und mittig. */
+  .offen {
+    width: 100%;
+    max-width: 46rem;
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--linie);
+    text-align: center;
+  }
+  .offen h2 { font-size: 1.125rem; margin-bottom: var(--s-2); }
+  .offen p { font-size: 0.9375rem; color: var(--ink-2); }
+  .offen a { color: var(--blau); }
+
+  @media (max-width: 56rem) {
+    .fragen-panel { grid-template-columns: 1fr; gap: var(--s-6); }
+  }
+
+  @media (max-width: 40rem) {
+    summary { grid-template-columns: 1.75rem 1fr 1rem; padding: 0.9375rem 1rem; }
+    .antwort { padding-left: calc(1.75rem + var(--s-3) + 0.25rem); }
+  }
+</style>

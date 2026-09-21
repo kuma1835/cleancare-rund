@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import Raumbuch from '../components/Raumbuch.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { site, ablauf } from '../data/site';
+
+const beschreibung =
+  'Anfrage für Gebäudereinigung: Objektart, Ort, Fläche und Rhythmus angeben — CleanCare meldet sich für den Besichtigungstermin. Kostenlos und unverbindlich.';
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Startseite', item: site.url },
+    { '@type': 'ListItem', position: 2, name: 'Anfrage', item: `${site.url}/anfrage` },
+  ],
+};
+---
+
+<Base title="Angebot anfordern, kostenlos" description={beschreibung}>
+  <JsonLd slot="head" daten={ld} />
+
+  <!--
+    Text links, Formular rechts — die Aufteilung aus der vom Nutzer gesetzten
+    Referenz. Das Raumbuch klappt in der schmaleren rechten Spalte über seine
+    eigene Container-Abfrage von selbst einspaltig; die Zusammenfassung rutscht
+    dabei unter die Felder.
+  -->
+  <section class="abschnitt-eng">
+    <div class="wrap">
+      <div class="anfrage-raster">
+        <div class="ansprache">
+          <p class="label">Bereit für weniger Aufwand?</p>
+          <h1>Lassen Sie uns über Ihre Räume sprechen.</h1>
+          <p class="lead">
+            Beschreiben Sie uns kurz, was Sie brauchen. Wir melden uns persönlich und finden
+            gemeinsam die Lösung, die zu Ihrem Alltag passt.
+          </p>
+
+          <ul class="wege">
+            <li>
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z" />
+              </svg>
+              <a class="mass" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2.5" />
+                <path d="m3.5 7 8.5 6 8.5-6" />
+              </svg>
+              <a class="mass" href={`mailto:${site.email}`}>{site.email}</a>
+            </li>
+          </ul>
+
+          <ol class="minischritte">
+            {ablauf.map((s, i) => (
+              <li>
+                <span class="mass nr">{String(i + 1).padStart(2, '0')}</span>
+                <span>{s.titel}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div class="formular">
+          <Raumbuch />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt-eng verlaesslich">
+    <div class="wrap zusagen">
+      <div>
+        <h2>Kein Preis ohne Besichtigung</h2>
+        <p>
+          Wer ohne Objektkenntnis kalkuliert, korrigiert später nach oben. Wir sehen uns die Flächen
+          an und legen den Preis dann fest — nachvollziehbar und ohne Überraschung.
+        </p>
+      </div>
+      <div>
+        <h2>Ihre Daten bleiben hier</h2>
+        <p>
+          Die Angaben aus diesem Formular nutzen wir ausschließlich, um Ihre Anfrage zu bearbeiten.
+          Details stehen in der <a href="/datenschutz">Datenschutzerklärung</a>.
+        </p>
+      </div>
+      <div>
+        <h2>Lieber sprechen?</h2>
+        <p>
+          Rufen Sie an: <a href={`tel:${site.telefonLink}`} class="mass">{site.telefon}</a>. Oder
+          schreiben Sie an <a href={`mailto:${site.email}`} class="mass">{site.email}</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Text links, Formular rechts. Der Text bleibt schmal genug zum Lesen, das
+     Formular bekommt den größeren Anteil — dort wird gearbeitet. */
+  .anfrage-raster {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.25fr);
+    gap: clamp(2rem, 1.25rem + 3.5vw, 4.5rem);
+    align-items: start;
+  }
+
+  .ansprache .label { display: block; margin-bottom: var(--s-3); }
+  .ansprache h1 { margin-bottom: var(--s-5); }
+  .ansprache .lead { margin-bottom: var(--s-6); }
+
+  .wege { list-style: none; display: grid; gap: var(--s-3); }
+  .wege li { display: flex; align-items: center; gap: 0.625rem; color: var(--ink-2); }
+  .wege svg { color: var(--blau); flex: none; }
+  .wege a { color: var(--ink); text-decoration: none; }
+  .wege a:hover { color: var(--blau); text-decoration: underline; }
+
+  .minischritte {
+    list-style: none;
+    display: grid;
+    gap: var(--s-2);
+    margin-top: var(--s-6);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--linie);
+  }
+  .minischritte li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .nr { color: var(--blau); }
+
+  @media (max-width: 62rem) {
+    .anfrage-raster { grid-template-columns: 1fr; gap: var(--s-7); }
+  }
+
+  .verlaesslich { background: var(--panel-2); }
+  .zusagen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--s-5);
+  }
+  .zusagen h2 {
+    font-size: 1.0625rem;
+    font-variation-settings: 'wght' 640;
+    letter-spacing: -0.015em;
+    margin-bottom: var(--s-2);
+  }
+  .zusagen p { font-size: 0.9375rem; color: var(--ink-2); line-height: 1.6; }
+  .zusagen a { color: var(--blau); }
+</style>

@@ -1,0 +1,96 @@
+---
+import { ablauf } from '../data/site';
+---
+
+<section class="abschnitt">
+  <div class="wrap">
+    <div class="panel ablauf-panel">
+      <div class="ablauf-kopf">
+        <p class="label">So läuft es</p>
+        <h2>In drei Schritten zum Angebot</h2>
+        <p class="lead">
+          Kein Formularmarathon, keine Warteschleife. Der Besichtigungstermin ist der Punkt, an dem
+          aus Flächen ein belastbarer Preis wird.
+        </p>
+      </div>
+
+      <ol class="schritte">
+        {ablauf.map((s, i) => (
+          <li>
+            <span class="nummer">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.titel}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Marke oben mittig, die drei Schritte darunter nebeneinander — sie sind ein
+     Ablauf und werden von links nach rechts gelesen. Vorher standen sie als
+     schmale Spalte rechts neben dem Text untereinander. */
+  .ablauf-panel {
+    display: block;
+  }
+
+  .ablauf-kopf {
+    text-align: center;
+    margin-bottom: clamp(2.25rem, 1.75rem + 2vw, 3.5rem);
+  }
+  /* `p` bringt aus base.css eine Höchstbreite von 68ch mit. Ohne
+     `margin-inline: auto` steht diese Box links im Container und nur ihr
+     Text ist darin zentriert — die Marke wirkte dadurch nach links gerückt. */
+  .ablauf-kopf .label { display: block; margin: 0 auto var(--s-3); max-width: none; }
+  .ablauf-kopf h2 { margin-bottom: var(--s-5); max-width: 24ch; margin-inline: auto; }
+  .ablauf-kopf .lead { max-width: var(--mass-mitte); margin-inline: auto; }
+
+  .schritte {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-4);
+    /* Kein `align-items: start`: die drei Karten sollen gleich hoch sein,
+       auch wenn der dritte Text kürzer ist. Der Inhalt bleibt oben. */
+  }
+
+  .schritte li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--s-3);
+    padding: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+    background: var(--panel-2);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+  }
+  .schritte li:hover { background: var(--panel); border-color: var(--linie-2); }
+
+  .nummer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--r-klein);
+    background: var(--blau-sanft);
+    color: var(--blau);
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .schritte h3 { margin: 0; }
+  .schritte p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); line-height: 1.55; }
+
+  /* Drei nebeneinander brauchen Platz. Darunter zwei, dann eine. */
+  @media (max-width: 60rem) {
+    .schritte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 40rem) {
+    .schritte { grid-template-columns: 1fr; }
+  }
+</style>

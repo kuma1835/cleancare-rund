@@ -1,0 +1,159 @@
+---
+/**
+ * Die Leistungskarte, wie sie auf der Startseite eingeführt wurde. Sie liegt
+ * hier zentral, damit Startseite, Leistungsübersicht und die Detailseite
+ * dieselbe Karte zeigen — vorher gab es drei Fassungen, die auseinandergelaufen
+ * sind (die Übersicht hatte 6px Radius statt --r-karte und gar keine Bilder).
+ *
+ * Erwartet ein <ul> als Elternteil; das Raster bringt die jeweilige Seite mit.
+ */
+import { Image } from 'astro:assets';
+import type { Leistung } from '../data/leistungen';
+import { nutzungen } from '../data/site';
+
+interface Props {
+  leistung: Leistung;
+  /** Wie breit die Karte im jeweiligen Raster wird — steuert die Bildauswahl. */
+  sizes?: string;
+  /**
+   * Blendet die Flächenart als Farbmarke ein. Auf der Übersicht ersetzt das die
+   * frühere Gruppierung: die Sortierung bleibt sichtbar, ohne dass Gruppen mit
+   * nur einer Leistung halbe Reihen leer stehen lassen.
+   */
+  flaeche?: boolean;
+}
+
+const { leistung, sizes = '(max-width: 40rem) 45vw, 15rem', flaeche = false } = Astro.props;
+const nutzung = nutzungen.find((n) => n.id === leistung.nutzung);
+
+const bilder = import.meta.glob<{ default: ImageMetadata }>('../assets/img/*.{webp,png,jpg}', {
+  eager: true,
+});
+const bild = leistung.bild ? bilder[`../assets/img/${leistung.bild}`]?.default : undefined;
+---
+
+<li>
+  <a href={`/leistungen/${leistung.slug}`} class={flaeche ? `n-${leistung.nutzung}` : undefined}>
+    <div class="karte-wort">
+      {flaeche && nutzung && (
+        <p class="feld flaeche">
+          <span class="marke-farbe" aria-hidden="true"></span>
+          {nutzung.kurz}
+        </p>
+      )}
+      <h3>{leistung.name}</h3>
+      <p>{leistung.kurz}</p>
+    </div>
+
+    <div class="karte-medium">
+      {bild ? (
+        <Image
+          src={bild}
+          alt={leistung.bildAlt ?? ''}
+          widths={[240, 400, 640]}
+          sizes={sizes}
+          loading="lazy"
+        />
+      ) : (
+        <span class="ersatz">
+          <span class="label">Üblicher Takt</span>
+          <span class="takt">{leistung.takt}</span>
+        </span>
+      )}
+    </div>
+  </a>
+</li>
+
+<style>
+  /*
+    Zweigeteilte Karte: Text links, Bild rechts. Das Bild füllt seine Hälfte
+    vollständig aus und läuft bis an die Kartenkante — deshalb trägt die Karte
+    selbst keinen Innenabstand mehr, sondern nur noch der Textteil, und
+    `overflow: hidden` schneidet das Bild auf den Kartenradius.
+  */
+  a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 42%);
+    align-items: stretch;
+    height: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+    overflow: hidden;
+    text-decoration: none;
+    transition: background 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+  a:hover {
+    background: var(--panel);
+    border-color: var(--linie-2);
+    box-shadow: var(--schwebe-2);
+    transform: translateY(-3px);
+  }
+
+  .flaeche {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  .marke-farbe {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 2px;
+    background: var(--linie-2);
+    flex: none;
+  }
+  .n-buero .marke-farbe { background: var(--nutz-buero); }
+  .n-verkehr .marke-farbe { background: var(--nutz-verkehr); }
+  .n-sanitaer .marke-farbe { background: var(--nutz-sanitaer); }
+  .n-glas .marke-farbe { background: var(--nutz-glas); }
+  .n-technik .marke-farbe { background: var(--nutz-technik); }
+
+  .karte-wort {
+    display: grid;
+    align-content: start;
+    gap: var(--s-3);
+    padding: var(--s-5);
+  }
+  .karte-wort h3 { margin: 0; }
+
+  p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
+
+  /* Randbündig: das Bild liegt absolut in seiner Hälfte und füllt sie ganz aus.
+     Die Mindesthöhe trägt die Fläche, nicht das Bild — sonst fällt es in einer
+     Rasterzeile ohne feste Höhe auf null zusammen. */
+  .karte-medium {
+    position: relative;
+    min-height: 11.5rem;
+    background: var(--blau-nebel);
+  }
+  .karte-medium :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Zwei der acht Leistungen haben kein Foto — dort steht der übliche Takt. */
+  .ersatz {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: center;
+    gap: 0.375rem;
+    padding: var(--s-4);
+  }
+  .ersatz .takt {
+    font-family: var(--font);
+    font-size: 1.0625rem;
+    font-weight: 560;
+    color: var(--blau);
+  }
+
+  /* Auf schmalen Geräten steht das Bild wieder unter dem Text — nebeneinander
+     bliebe für beides zu wenig Breite. */
+  @media (max-width: 34rem) {
+    a { grid-template-columns: 1fr; }
+    .karte-medium { min-height: 9rem; }
+  }
+</style>

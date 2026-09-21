@@ -1,0 +1,128 @@
+/*
+  CleanCare — Panelfläche in Markenblau
+
+  Übernommen als Bauweise: heller Grund, große weiße Panels mit weitem Radius,
+  Pill-Aktionen, Fotos in gerundeten Karten, kleine gesperrte Labels, viel Luft.
+  Nicht übernommen: die monochrome Schwarz-Weiß-Welt. Farbe kommt aus dem
+  CleanCare-Logo — Navy #16283f und Mittelblau #2f6fb2.
+*/
+
+:root {
+  /* Grund und Flächen — kühles Papier, leicht blau unterlegt */
+  --grund: oklch(97.2% 0.006 245);
+  --panel: oklch(100% 0 0);
+  --panel-2: oklch(98.4% 0.005 245);
+  --feld: oklch(95.8% 0.008 245);
+  --feld-2: oklch(93% 0.012 245);
+
+  /* Tinte — Navy aus dem Logo (#16283f) */
+  --ink: oklch(28.5% 0.045 253);
+  --ink-2: oklch(46% 0.03 253);
+  --ink-3: oklch(60% 0.022 253);
+  /* Zwischenton für die Wortmarke in der Fußzeile: heller als --ink-2,
+     aber nicht so zurückgenommen wie --ink-3. */
+  --ink-2-5: oklch(53% 0.026 253);
+  --ink-4: oklch(72% 0.016 253);
+
+  /* Marke — Mittelblau aus dem Logo (#2f6fb2) */
+  --blau: oklch(53% 0.115 254);
+  --blau-tief: oklch(45% 0.115 254);
+  --blau-hell: oklch(72% 0.085 250);
+  --blau-sanft: oklch(94.5% 0.025 250);
+  --blau-nebel: oklch(97% 0.014 250);
+
+  /* Linien */
+  --linie: oklch(92.5% 0.008 245);
+  --linie-2: oklch(86% 0.012 245);
+
+  /* Flächenarten — die fünf Nutzungsarten aus data/site.ts. Sie werden in
+     LeistungKarte, Raumbuch, Leistungen und Einsatzgebiet als kleine Farbmarke
+     gezeigt; bis hierher fehlten sie und alle Marken blieben durchsichtig.
+     Bewusst gedämpft und auf gleicher Helligkeit gehalten, damit fünf Punkte
+     nebeneinander nicht bunt wirken. Hängt an der Logofarbwelt. */
+  --nutz-buero: oklch(53% 0.115 254);
+  --nutz-verkehr: oklch(56% 0.095 205);
+  --nutz-sanitaer: oklch(58% 0.095 175);
+  --nutz-glas: oklch(60% 0.1 145);
+  --nutz-technik: oklch(58% 0.075 285);
+
+  /* Zustände */
+  --ok: oklch(58% 0.13 158);
+  --warn: oklch(60% 0.14 62);
+  --fehler: oklch(52% 0.19 25);
+  --fehler-sanft: oklch(96% 0.025 25);
+
+  /* Schrift */
+  --font: 'Geist Variable', system-ui, -apple-system, sans-serif;
+  --font-text: 'Inter Variable', system-ui, -apple-system, sans-serif;
+
+  /* Radien */
+  --r-panel: 30px;
+  --r-karte: 20px;
+  --r-klein: 12px;
+  --r-pill: 999px;
+
+  /* Abstände */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 8rem;
+
+  --mass: 68ch;
+  /* Maß für zentrierten Text: Überschrift und Vorspann einer Abschnittsmarke.
+     Enger als --mass, weil zentrierter Text mit langen Zeilen schwer zu lesen ist. */
+  --mass-mitte: 46ch;
+  /* Referenz Revolut: bei 1440 px steht der Inhalt in 1000 px Breite, der Text
+     beginnt 220 px vom Rand. Die alte Fassung begann bei 106 px. Dieser Wert
+     liegt bewusst dazwischen: 1104 px Inhalt, Textachse bei rund 168 px. */
+  --seite: 72rem;
+
+  /* Eine Textachse für die ganze Seite: derselbe Wert dient als Innenabstand der
+     Panels und als Einzug für Text, der direkt auf dem Grund liegt. Dadurch
+     beginnt jeder Text auf derselben Linie wie der Text in der Fußzeile. */
+  --einzug: clamp(1.5rem, 1rem + 2.6vw, 3.5rem);
+
+  /* Der eine Abstand zwischen zwei Blöcken — vom Seitenkopf bis zur Fußzeile.
+     Großzügiger als in der Vorfassung: Revolut lässt zwischen zwei Abschnitten
+     rund 110 px stehen, die alte Fassung nur 80 px. */
+  --reihe: clamp(3.5rem, 2rem + 5.5vw, 7.5rem);
+
+  /* Der Abstand zwischen Kopfleiste und erstem Block — auf **allen** Seiten
+     derselbe. Der Wert stammt von der Startseite: dort standen 85 px zwischen
+     Leiste und H1, auf den Unterseiten nur 45 px. Damit die H1 der Startseite
+     dabei an Ort und Stelle bleibt, steht ihr Auftaktraster jetzt oben bündig
+     statt mittig — vorher kamen die fehlenden 40 px aus der Zentrierung. */
+  --reihe-oben: clamp(2.5rem, 1.75rem + 3.9vw, 6rem);
+
+  /* Höhe der Kopfleiste. Sie steht `sticky` im Fluss, nimmt also oben Platz weg.
+     Der Auftakt der Startseite zieht den Wert ab, um genau eine Bildschirmseite
+     hoch zu sein. Die Leiste ist auf allen Breiten gleich hoch (gemessen: 65 px);
+     ändert sich ihr Innenabstand, muss dieser Wert mitwandern. */
+  --kopf-h: 65px;
+
+  /* Der Abstand zwischen Seitenkopf (Überschrift plus Vorspann) und dem ersten
+     Kasten darunter. Deutlich kleiner als --reihe: der Kopf gehört zum Inhalt,
+     der darunter folgt, und nicht als eigener Block dazwischen. Maßgeblich ist
+     der Wert, den die Fragen-Seite schon hatte. */
+  --kopf-abstand: clamp(2.25rem, 1.75rem + 2vw, 3.5rem);
+
+  /* Der Luftraum links und rechts vom Inhaltsrahmen. Gilt für alles, was in
+     .wrap liegt — Kopfleiste, Panels, Fußzeile.
+     Zusammen mit --einzug ergibt sich die Textachse: auf dem Telefon rund 38 px,
+     bei 1440 px rund 168 px. Der negative Sockel im clamp hält den Rand auf
+     kleinen Geräten klein, damit der Text dort nicht in einer Rinne steht. */
+  --rand: clamp(0.75rem, -1.5rem + 9.5vw, 8rem);
+
+  /* Tiefe — weich, mit Versatz, aus dem Navy gefärbt */
+  --schwebe-1: 0 1px 2px oklch(28.5% 0.045 253 / 0.06), 0 4px 14px oklch(28.5% 0.045 253 / 0.07);
+  --schwebe-2: 0 2px 6px oklch(28.5% 0.045 253 / 0.06), 0 14px 34px oklch(28.5% 0.045 253 / 0.10);
+  --schwebe-3: 0 8px 18px oklch(28.5% 0.045 253 / 0.08), 0 30px 64px oklch(28.5% 0.045 253 / 0.13);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
