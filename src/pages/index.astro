@@ -113,21 +113,22 @@ const ld = [
 
   <section class="abschnitt">
     <div class="wrap">
-      <div class="panel leistungspanel">
-        <div class="panel-kopf">
-          <h2>Was wir übernehmen</h2>
-          <p class="lead">
-            Von der täglichen Unterhaltsreinigung bis zur Fassade. Alles aus einer Hand, mit
-            festen Teams und einem Rhythmus, der zu Ihrem Betrieb passt.
-          </p>
-        </div>
-
-        <ul class="leistungsraster">
-          {gezeigt.map((l) => (
-            <LeistungKarte leistung={l} sizes="(max-width: 34rem) 90vw, (max-width: 52rem) 40vw, 15rem" />
-          ))}
-        </ul>
+      {/* Die Überschrift steht frei über den Karten, nicht mit ihnen in einem
+          gemeinsamen Panel: die Karten sind hier selbst die Kästen. */}
+      <div class="leistungs-kopf">
+        <p class="label">Leistungen</p>
+        <h2>Was wir übernehmen</h2>
+        <p class="lead">
+          Von der täglichen Unterhaltsreinigung bis zur Fassade. Alles aus einer Hand, mit
+          festen Teams und einem Rhythmus, der zu Ihrem Betrieb passt.
+        </p>
       </div>
+
+      <ul class="leistungsraster">
+        {gezeigt.map((l) => (
+          <LeistungKarte leistung={l} variante="kompakt" />
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -290,13 +291,28 @@ const ld = [
 
   /* Zwei Spalten: die Karten sind jetzt zweigeteilt (Text links, Bild rechts)
      und brauchen dafür Breite. Sechs Karten ergeben drei volle Reihen. */
+  .leistungs-kopf {
+    text-align: center;
+    margin-bottom: clamp(2.25rem, 1.75rem + 2vw, 3.5rem);
+  }
+  /* `p` bringt aus base.css eine Höchstbreite mit; ohne `margin-inline: auto`
+     steht die Box links und nur ihr Text ist darin zentriert. */
+  .leistungs-kopf .label { display: block; margin: 0 auto var(--s-3); max-width: none; }
+  .leistungs-kopf h2 { margin-bottom: var(--s-5); max-width: 20ch; margin-inline: auto; }
+  .leistungs-kopf .lead { max-width: var(--mass-mitte); margin-inline: auto; }
+
   .leistungsraster {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--s-4);
+    margin: 0;
+    padding: 0;
   }
-  @media (max-width: 52rem) {
+  @media (max-width: 62rem) {
+    .leistungsraster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 40rem) {
     .leistungsraster { grid-template-columns: 1fr; }
   }
 
