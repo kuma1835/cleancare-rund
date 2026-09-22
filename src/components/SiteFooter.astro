@@ -100,7 +100,10 @@ const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
      damit auf beiden Seiten Luft. */
   .fuss {
     padding-top: var(--reihe);
-    padding-bottom: var(--reihe);
+    /* Unten nur so viel Luft, wie zwischen Trennlinie und Schlusszeile steht
+       (--s-5). Der volle Reihenabstand liess darunter eine leere Flaeche
+       stehen, durch die man scrollen musste, ohne dass noch etwas kam. */
+    padding-bottom: var(--s-5);
   }
 
   /* Keine eigene Fläche mehr: die Fußzeile liegt direkt auf dem Seitengrund und
