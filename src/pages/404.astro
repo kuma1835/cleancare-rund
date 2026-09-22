@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
-import { leistungen } from '../data/leistungen';
+import { leistungen, trennbar } from '../data/leistungen';
 ---
 
 <Base
@@ -28,7 +28,7 @@ import { leistungen } from '../data/leistungen';
           <h2 class="feld">Leistungen</h2>
           <ul>
             {leistungen.slice(0, 5).map((l) => (
-              <li><a href={`/leistungen/${l.slug}`}>{l.name}</a></li>
+              <li><a href={`/leistungen/${l.slug}`}>{trennbar(l.name)}</a></li>
             ))}
           </ul>
         </div>

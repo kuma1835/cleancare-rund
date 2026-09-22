@@ -3,13 +3,19 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 // Vorschau-Build für GitHub Pages: die Seite liegt dort unter
-// /cleancare-v2/ statt auf einer eigenen Domain. Wird über PAGES=1
+// /cleancare-rund/ statt auf einer eigenen Domain. Wird über PAGES=1
 // eingeschaltet, damit der normale Build für die echte Domain gilt.
+//
+// `basis` muss exakt dem Namen des GitHub-Repositorys entsprechen, sonst
+// zeigen alle Pfade ins Leere. Stand hier bis zum 22.09.2026 auf
+// `/cleancare-v2` — der Name aus der Zeit vor der Umbenennung, der zur
+// veröffentlichten Fassung nicht mehr passte.
 const pages = process.env.PAGES === '1';
+const basis = '/cleancare-rund';
 
 export default defineConfig({
   site: pages ? 'https://kuma1835.github.io' : 'https://www.cleancare-service.de',
-  ...(pages ? { base: '/cleancare-v2' } : {}),
+  ...(pages ? { base: basis } : {}),
   // Rechtsseiten stehen auf noindex — dann haben sie in der Sitemap nichts verloren.
   integrations: [
     sitemap({

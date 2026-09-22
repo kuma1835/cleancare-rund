@@ -4,7 +4,7 @@ import ContactBand from '../../components/ContactBand.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { site } from '../../data/site';
 import { standorte } from '../../data/standorte';
-import { leistungen } from '../../data/leistungen';
+import { leistungen, trennbar } from '../../data/leistungen';
 
 export function getStaticPaths() {
   return standorte.map((s) => ({ params: { slug: s.slug }, props: { standort: s } }));
@@ -86,7 +86,7 @@ const ld = [
             <li class={`n-${l.nutzung}`}>
               <a href={`/leistungen/${l.slug}`}>
                 <span class="marke-farbe" aria-hidden="true"></span>
-                <span class="benennung">{l.name}</span>
+                <span class="benennung">{trennbar(l.name)}</span>
                 <span class="mass takt">{l.takt}</span>
               </a>
             </li>

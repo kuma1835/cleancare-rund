@@ -19,6 +19,18 @@ export type Leistung = {
   original: boolean;
 };
 
+/**
+ * Weiche Trennstelle (U+00AD) für lange Komposita. Der Name selbst bleibt
+ * ungetrennt: er steht unverändert in Seitentiteln, Formularwerten und den
+ * strukturierten Daten. Nur sichtbare Überschriften und Verweise laufen durch
+ * diese Funktion, damit sie in schmalen Spalten an der richtigen Stelle brechen.
+ */
+const trennstellen: Record<string, string> = {
+  Hygieneartikelservice: 'Hygiene\u00ADartikelservice',
+};
+
+export const trennbar = (name: string): string => trennstellen[name] ?? name;
+
 export const leistungen: Leistung[] = [
   {
     slug: 'unterhaltsreinigung',

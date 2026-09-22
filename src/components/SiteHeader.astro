@@ -93,6 +93,8 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
   .haupt a {
     display: block;
     padding: 0.5rem 0.875rem;
+    /* Zweiwortige Punkte wie „Über uns“ bleiben auch bei knapper Breite einzeilig. */
+    white-space: nowrap;
     border-radius: var(--r-pill);
     font-size: 0.9375rem;
     font-weight: 480;
@@ -202,6 +204,14 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
     color: var(--ink);
   }
   .rufleiste .haupt-aktion { background: var(--blau); color: #fff; }
+
+  /* Unterhalb von 1200px reicht der Balken nicht mehr für Bildmarke, Navigation,
+     Telefonnummer und Knopf nebeneinander — gemessen braucht die Zeile dort
+     1172px. Statt dass die Navigation umbricht oder die Seite quer scrollt,
+     weicht zuerst die Nummer; erreichbar bleibt sie über Fußzeile und Kontakt. */
+  @media (max-width: 75rem) {
+    .ruf { display: none; }
+  }
 
   @media (max-width: 64rem) {
     .haupt, .ruf, .rechts .btn { display: none; }

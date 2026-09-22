@@ -8,7 +8,7 @@
  * Formular als Rückfallebene eine vorbereitete E-Mail. Siehe REDAKTION.md.
  */
 import { site } from '../data/site';
-import { leistungen } from '../data/leistungen';
+import { leistungen, trennbar } from '../data/leistungen';
 
 const objektarten = [
   'Büro- oder Verwaltungsgebäude',
@@ -88,7 +88,7 @@ const takte = [
         <legend><span class="pos">03</span> Leistungen</legend>
         <div class="marken">
           {leistungen.map((l) => (
-            <label class="marke"><input type="checkbox" name="leistung" value={l.name} /><span>{l.name}</span></label>
+            <label class="marke"><input type="checkbox" name="leistung" value={l.name} /><span>{trennbar(l.name)}</span></label>
           ))}
         </div>
       </fieldset>

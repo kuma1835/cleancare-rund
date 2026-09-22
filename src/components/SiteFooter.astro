@@ -1,7 +1,7 @@
 ---
 import { readFileSync } from 'node:fs';
 import { site } from '../data/site';
-import { leistungen } from '../data/leistungen';
+import { leistungen, trennbar } from '../data/leistungen';
 import { standorte } from '../data/standorte';
 
 const jahr = new Date().getFullYear();
@@ -55,7 +55,7 @@ const schrift = svgEinfaerben('cc-schrift.svg');
           <h2 class="label">Leistungen</h2>
           <ul>
             {leistungen.map((l) => (
-              <li><a href={`/leistungen/${l.slug}`}>{l.name}</a></li>
+              <li><a href={`/leistungen/${l.slug}`}>{trennbar(l.name)}</a></li>
             ))}
           </ul>
         </nav>

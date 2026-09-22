@@ -8,7 +8,7 @@
  * Erwartet ein <ul> als Elternteil; das Raster bringt die jeweilige Seite mit.
  */
 import { Image } from 'astro:assets';
-import type { Leistung } from '../data/leistungen';
+import { trennbar, type Leistung } from '../data/leistungen';
 import { nutzungen } from '../data/site';
 
 interface Props {
@@ -55,7 +55,7 @@ const bild = leistung.bild ? bilder[`../assets/img/${leistung.bild}`]?.default :
             <path d="m5 12.5 4.5 4.5L19 7.5" />
           </svg>
         </span>
-        <h3>{leistung.name}</h3>
+        <h3>{trennbar(leistung.name)}</h3>
         <p>{leistung.kurz}</p>
         {/* Kein <a> im <a>: der Verweis ist eine Schaltfläche fürs Auge, die
             ganze Karte ist der Link. */}
@@ -75,7 +75,7 @@ const bild = leistung.bild ? bilder[`../assets/img/${leistung.bild}`]?.default :
               {nutzung.kurz}
             </p>
           )}
-          <h3>{leistung.name}</h3>
+          <h3>{trennbar(leistung.name)}</h3>
           <p>{leistung.kurz}</p>
         </div>
 
