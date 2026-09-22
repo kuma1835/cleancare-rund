@@ -80,43 +80,37 @@ export const ablauf: readonly AblaufSchritt[] = [
  * NICHT nachweislich aus dem ProvenExpert-Profil — diese Zuschreibung stand
  * hier früher und war eine Annahme.
  *
- * `sterne`: Die tatsächlichen Notenwerte liegen nicht vor, 5 ist gesetzt.
- * Vor Livegang klären, ob die Sterne bleiben dürfen. Siehe REDAKTION.md.
+ * Ohne Notenwerte: Am 22.09.2026 entfernt. Die fünf Sterne je Stimme waren
+ * gesetzt, nicht vergeben — das ist seit § 5b Abs. 3 UWG angreifbar. Die
+ * Texte stehen jetzt für sich.
  */
 export const stimmen = [
   {
     text: 'Zuverlässig und kompetent. Wir arbeiten seit einigen Jahren mit CleanCare zusammen und können unsere höchsten Empfehlungen aussprechen. Vielen Dank für die gute Zusammenarbeit.',
-    sterne: 5,
     name: 'Patrick Hausherr',
   },
   {
     text: 'Sehr freundliche Ansprache, kurzfristige und unkomplizierte Terminfindung und sehr zufriedenstellendes Arbeitsergebnis! Absolut zu empfehlen.',
-    sterne: 5,
     name: 'Ina Eskelsen',
   },
   {
     text: 'Wir haben CleanCare seit einigen Jahren mit der Unterhaltsreinigung unserer Geschäftsräume betraut und sind nach wie vor sehr zufrieden. Der Kontakt ist ebenfalls immer unkompliziert und kompetent.',
-    sterne: 5,
     name: 'Nils Puk',
   },
   {
     text: 'Absolut zuverlässiger Partner in der Unterhaltsreinigung, der es schafft flexibel auf Bedürfnisse seiner KundInnen einzugehen und einen einzigartigen Service zu fairen Preisen bietet.',
-    sterne: 5,
     name: 'Sarah Martens',
   },
   {
     text: 'Pünktlich, sauber, zuverlässig. Gutes Preis-Leistungsverhältnis. Empfehlenswert.',
-    sterne: 5,
     name: 'Michael Kiehn',
   },
   {
     text: 'Ich bin sehr zufrieden! Schnelle professionelle Abwicklung und super Endergebnis.',
-    sterne: 5,
     name: 'Anna-Lena Fünfstück',
   },
   {
     text: 'Professionell, sehr gründlich und durchweg freundliche Mitarbeiter.',
-    sterne: 5,
     name: 'Martina Lange',
   },
 ] as const;

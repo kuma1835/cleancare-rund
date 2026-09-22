@@ -38,7 +38,20 @@ function kuerzen(text: string, grenze = 158) {
 }
 const beschreibungKurz = kuerzen(description);
 const canonical = new URL(Astro.url.pathname, Astro.site).href.replace(/(.+)\/$/, '$1');
-const ogUrl = new URL(ogImage, Astro.site).href;
+
+/*
+  Beim Vorschau-Build auf GitHub Pages liegt die Seite in einem Unterordner.
+  Absolute Pfade wie `/favicon.svg` zeigen dort an der Seite vorbei — deshalb
+  laufen alle eigenen Dateien über `basis`. Genau daran hing das fehlende Logo
+  in der Kopfleiste: zwei kaputte Bilder statt der Marke.
+*/
+/*
+  BASE_URL liefert je nach Konfiguration `/name` oder `/name/`. Ohne diese
+  Normalisierung entstand daraus `/cleancare-rundcc-logo-neu.png` — genau der
+  fehlende Schrägstrich, an dem die Marke im Vorschau-Build erneut hing.
+*/
+const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+const ogUrl = new URL(basis + ogImage.replace(/^\//, ''), Astro.site).href;
 ---
 
 <!doctype html>
@@ -68,9 +81,9 @@ const ogUrl = new URL(ogImage, Astro.site).href;
 
     <!-- Logo-Navy. Stand vorher auf #101c5e — ein Rest aus einer früheren Farbwelt. -->
     <meta name="theme-color" content="#16283f" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href={`${basis}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${basis}apple-touch-icon.png`} />
+    <link rel="sitemap" href={`${basis}sitemap-index.xml`} />
     <slot name="head" />
   </head>
   <body>

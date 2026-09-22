@@ -1,5 +1,4 @@
 ---
-import { readFileSync } from 'node:fs';
 import { site } from '../data/site';
 import { leistungen, trennbar } from '../data/leistungen';
 import { standorte } from '../data/standorte';
@@ -7,18 +6,12 @@ import { standorte } from '../data/standorte';
 const jahr = new Date().getFullYear();
 
 /*
-  Bildmarke und Wortmarke tragen ihre Farbe fest im `fill` des SVG (#2f6fb2 und
-  #16283f). Als <img> eingebunden ließen sie sich nicht umfärben. Hier werden
-  sie beim Bauen eingelesen und auf `currentColor` gestellt — die Farbe kommt
-  dann aus dem CSS und ist in der Fußzeile dunkelgrau statt blau.
+  Dasselbe Logo wie oben, hier aber entsättigt: in der Fußzeile steht die Marke
+  zurück, sie muss dort nicht mehr werben. Als PNG lässt es sich nicht mehr wie
+  das frühere SVG umfärben — `grayscale` nimmt ihm die Farbe, das Blau wird
+  zum hellen, das Navy zum dunklen Grau.
 */
-const svgEinfaerben = (pfad: string) =>
-  readFileSync(new URL(`../../public/${pfad}`, import.meta.url), 'utf-8')
-    .replace(/<\?xml.*?\?>\s*/s, '')
-    .replace(/fill="#[0-9a-fA-F]{3,6}"/g, 'fill="currentColor"');
-
-const zeichen = svgEinfaerben('cc-zeichen.svg');
-const schrift = svgEinfaerben('cc-schrift.svg');
+const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 ---
 
 <footer class="fuss">
@@ -27,8 +20,7 @@ const schrift = svgEinfaerben('cc-schrift.svg');
       <div class="spalten">
         <div class="marke-block">
           <a href="/" class="marke" aria-label={`${site.name} — zur Startseite`}>
-            <span class="zeichen" aria-hidden="true" set:html={zeichen} />
-            <span class="schrift" aria-hidden="true" set:html={schrift} />
+            <img class="bildmarke" src={`${basis}cc-logo-neu.png`} alt="" width="2070" height="384" />
           </a>
           <p class="satz">
             Ganzheitliche Unterhaltsreinigung für gewerblich genutzte Immobilien in Seevetal, im
@@ -126,14 +118,15 @@ const schrift = svgEinfaerben('cc-schrift.svg');
   .marke {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     line-height: 0;
-    color: var(--ink-2-5);
   }
-  .marke .zeichen,
-  .marke .schrift { display: inline-flex; }
-  .marke .zeichen :global(svg) { width: auto; height: 36px; display: block; }
-  .marke .schrift :global(svg) { width: auto; height: 21px; display: block; }
+  .marke .bildmarke {
+    width: auto;
+    height: 32px;
+    display: block;
+    filter: grayscale(1);
+    opacity: 0.75;
+  }
   .satz {
     margin-top: var(--s-5);
     font-size: 0.9375rem;

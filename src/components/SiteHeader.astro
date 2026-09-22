@@ -4,13 +4,15 @@ import IconTelefon from './IconTelefon.astro';
 
 const pfad = Astro.url.pathname;
 const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
+
+/* Siehe Base.astro: im Vorschau-Build liegt die Seite in einem Unterordner. */
+const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 ---
 
 <header class="kopfleiste">
   <div class="wrap balken">
     <a href="/" class="marke" aria-label={`${site.name} — zur Startseite`}>
-      <img class="zeichen" src="/cc-zeichen.svg" alt="" width="107" height="85" />
-      <img class="schrift" src="/cc-schrift.svg" alt="" width="507" height="70" />
+      <img class="bildmarke" src={`${basis}cc-logo-neu.png`} alt="" width="2070" height="384" />
     </a>
 
     <nav class="haupt" aria-label="Hauptnavigation">
@@ -80,9 +82,10 @@ const aktiv = (href: string) => pfad === href || pfad.startsWith(href + '/');
 
   /* Lockup: plastisches Zeichen, daneben der Schriftzug. Beide über die Höhe
      skaliert, damit sie bei jeder Breite zueinander passen. */
-  .marke { display: flex; align-items: center; gap: 0.9375rem; flex: none; line-height: 0; }
-  .marke .zeichen { width: auto; height: 38px; }
-  .marke .schrift { width: auto; height: 18px; }
+  /* Ein geschlossenes Logo statt Zeichen und Schriftzug einzeln: Abstand und
+     Groessenverhaeltnis stecken jetzt in der Datei, nicht im CSS. */
+  .marke { display: flex; align-items: center; flex: none; line-height: 0; }
+  .marke .bildmarke { width: auto; height: 34px; }
 
   /* Zentriert sich im Platz zwischen Bildmarke und Aktionen. Das ist nicht
      exakt die Seitenmitte — die rechte Gruppe ist breiter als die Bildmarke.
