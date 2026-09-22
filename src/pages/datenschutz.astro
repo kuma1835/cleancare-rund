@@ -10,59 +10,156 @@ import { site } from '../data/site';
 >
   <section class="rechtstext">
     <div class="wrap">
-      <h1>Datenschutz</h1>
+      <h1>Datenschutzerklärung</h1>
 
       <div class="entwurf">
         <p class="feld">Redaktionshinweis</p>
         <p>
-          Der verbindliche Text gehört in juristische Hand und wird aus der bestehenden
-          Datenschutzerklärung übernommen beziehungsweise vom Datenschutzbeauftragten angepasst.
-          Was diese Seite hier beschreibt, ist ausschließlich das, was diese Fassung technisch
-          tatsächlich tut — als Grundlage für die Prüfung.
+          Aufbau und Wortlaut folgen der bestehenden Erklärung auf cleancare-service.de
+          (abgerufen am 22.09.2026). Angepasst ist alles, was dort die alte Seite beschreibt:
+          Squarespace und XING entfallen, Cookies und externe Dienste gibt es hier nicht, dafür
+          sind zwei Formulare statt einem beschrieben. Was von Hosting und Versand abhängt, ist
+          farblich als offen gekennzeichnet und vor Livegang zu ergänzen. Der verbindliche Text
+          gehört abschließend in juristische Hand.
         </p>
       </div>
 
-      <h2>Verantwortlich</h2>
+      <h2>1. Verantwortlicher</h2>
+      <p>
+        Verantwortlich für die Datenverarbeitung auf dieser Website ist:
+      </p>
       <p>
         {site.name}<br />
-        {site.strasse}, {site.plz} {site.ort}<br />
-        <a href={`mailto:${site.email}`}>{site.email}</a>
+        {site.strasse}<br />
+        {site.plz} {site.ort}<br />
+        Telefon: <a href={`tel:${site.telefonLink}`}>{site.telefon}</a><br />
+        E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a>
       </p>
 
-      <h2>Was diese Website technisch tut</h2>
-      <ul>
-        <li>Sie lädt keine Schriften, Karten, Videos oder Skripte von fremden Servern.</li>
-        <li>Sie setzt von sich aus keine Cookies und verwendet keine Analyse- oder Trackingdienste.</li>
-        <li>Bilder, Stile und Schriften werden vom eigenen Server ausgeliefert.</li>
-      </ul>
-
-      <h2>Formulare</h2>
+      <h2>2. Allgemeine Hinweise</h2>
       <p>
-        Anfrage- und Bewerbungsformular übertragen die eingegebenen Angaben an CleanCare, um die
-        Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b und lit. a DSGVO. Ohne
-        Einwilligung wird nichts gesendet; die Einwilligung lässt sich jederzeit für die Zukunft
-        widerrufen.
+        Der Schutz Ihrer personenbezogenen Daten ist uns ein wichtiges Anliegen. Wir behandeln Ihre
+        personenbezogenen Daten vertraulich und entsprechend den gesetzlichen
+        Datenschutzvorschriften sowie dieser Datenschutzerklärung. Personenbezogene Daten sind alle
+        Daten, mit denen Sie persönlich identifiziert werden können.
+      </p>
+
+      <h2>3. Hosting und Server-Logfiles</h2>
+      <p>
+        Beim Besuch dieser Website erhebt der Hostinganbieter automatisch sogenannte
+        Server-Logfiles. Dazu gehören IP-Adresse, Datum und Uhrzeit des Zugriffs, Browsertyp und
+        Browserversion, das verwendete Betriebssystem, die Referrer-URL und der Hostname des
+        zugreifenden Rechners. Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f
+        DSGVO. Unser berechtigtes Interesse besteht in der sicheren, stabilen und fehlerfreien
+        Bereitstellung der Website.
       </p>
       <p class="offen">
-        Zu ergänzen: eingesetzter Versanddienst, Serverstandort, Auftragsverarbeitungsvertrag,
-        Speicherdauer und Löschfristen. Für Bewerbungen üblich sind sechs Monate nach Abschluss
-        des Verfahrens (Klagefrist nach § 15 Abs. 4 AGG).
+        Zu ergänzen: Name und Anschrift des Hostinganbieters, Serverstandort,
+        Auftragsverarbeitungsvertrag und die Speicherdauer der Logfiles.
       </p>
 
-      <h2>Bewerbungs-Assistent</h2>
+      <h2>4. Keine Cookies, keine fremden Dienste</h2>
+      <p>
+        Diese Website setzt von sich aus keine Cookies und verwendet keine Analyse- oder
+        Trackingdienste. Sie lädt keine Schriften, Karten, Videos oder Skripte von fremden Servern;
+        Bilder, Stile und Schriften werden vom eigenen Server ausgeliefert. Eine
+        Einwilligungsabfrage nach § 25 Abs. 1 TDDDG ist deshalb nicht erforderlich.
+      </p>
+
+      <h2>5. Anfrageformular</h2>
+      <p>
+        Wenn Sie uns über das Anfrageformular kontaktieren, verarbeiten wir die von Ihnen
+        eingegebenen Angaben: Name, Firmenname, E-Mail-Adresse, Telefonnummer, Ort, Objektart,
+        Fläche, Flächenarten, gewünschte Leistungen, gewünschter Takt und Ihre Nachricht. Diese
+        Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet.
+      </p>
+      <p>
+        Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage der Vertragsanbahnung
+        dient, sowie Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO. Ohne Einwilligung wird
+        nichts gesendet; die Einwilligung lässt sich jederzeit mit Wirkung für die Zukunft
+        widerrufen. Die Daten werden gelöscht, sobald sie für den Zweck nicht mehr erforderlich
+        sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
+      </p>
+
+      <h2>6. Bewerbungsformular</h2>
+      <p>
+        Für Bewerbungen verarbeiten wir die von Ihnen eingegebenen Angaben: Name, E-Mail-Adresse,
+        Telefonnummer, die gewählte Stelle und Ihre Nachricht. Die Verarbeitung erfolgt zur
+        Durchführung des Bewerbungsverfahrens nach Art. 6 Abs. 1 lit. b DSGVO in Verbindung mit
+        § 26 BDSG sowie auf Grundlage Ihrer Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO.
+      </p>
+      <p class="offen">
+        Zu ergänzen: Speicherdauer und Löschfristen für Bewerbungsunterlagen. Üblich sind sechs
+        Monate nach Abschluss des Verfahrens (Klagefrist nach § 15 Abs. 4 AGG).
+      </p>
+
+      <h2>7. Versand der Formulare</h2>
+      <p class="offen">
+        Zu ergänzen: der eingesetzte Versanddienst, dessen Serverstandort und der
+        Auftragsverarbeitungsvertrag. Ist kein Versanddienst eingerichtet, öffnen die Formulare
+        stattdessen Ihr eigenes E-Mail-Programm mit einer vorbereiteten Nachricht — in diesem Fall
+        verlassen die Angaben Ihr Gerät erst, wenn Sie die E-Mail selbst absenden.
+      </p>
+
+      <h2>8. Kontakt per E-Mail oder Telefon</h2>
+      <p>
+        Wenn Sie uns per E-Mail oder telefonisch kontaktieren, werden Ihre Angaben ausschließlich
+        zur Bearbeitung Ihres Anliegens verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO
+        oder Art. 6 Abs. 1 lit. f DSGVO.
+      </p>
+
+      <h2>9. Bewerbungs-Assistent</h2>
       <p class="offen">
         Noch nicht aktiv. Sobald der Chat freigeschaltet wird, gehört hierher: Anbieter und
         Serverstandort, Auftragsverarbeitungsvertrag, welche Angaben im Chatverlauf gespeichert
         werden und wie lange. Der Assistent nimmt Angaben nur auf — über Bewerbungen entscheiden
-        ausschließlich Menschen, eine automatisierte Vorauswahl findet nicht statt
-        (Art. 22 DSGVO). Beim Start des Chats wird darauf hingewiesen, dass es sich um ein
-        KI-System handelt (Art. 50 KI-Verordnung).
+        ausschließlich Menschen, eine automatisierte Vorauswahl findet nicht statt (Art. 22 DSGVO).
+        Beim Start des Chats wird darauf hingewiesen, dass es sich um ein KI-System handelt
+        (Art. 50 KI-Verordnung).
       </p>
 
-      <h2>Ihre Rechte</h2>
+      <h2>10. Speicherdauer</h2>
       <p>
-        Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und
-        Widerspruch. Außerdem besteht ein Beschwerderecht bei einer Aufsichtsbehörde.
+        Wir speichern personenbezogene Daten nur so lange, wie dies zur Erfüllung der jeweiligen
+        Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen.
+      </p>
+
+      <h2>11. Ihre Rechte</h2>
+      <p>Sie haben jederzeit das Recht:</p>
+      <ul>
+        <li>Auskunft über Ihre gespeicherten Daten zu erhalten (Art. 15 DSGVO),</li>
+        <li>Berichtigung unrichtiger Daten zu verlangen (Art. 16 DSGVO),</li>
+        <li>Löschung Ihrer Daten zu verlangen (Art. 17 DSGVO),</li>
+        <li>Einschränkung der Verarbeitung zu verlangen (Art. 18 DSGVO),</li>
+        <li>Widerspruch gegen die Verarbeitung einzulegen (Art. 21 DSGVO),</li>
+        <li>Datenübertragbarkeit zu verlangen (Art. 20 DSGVO),</li>
+        <li>eine erteilte Einwilligung jederzeit mit Wirkung für die Zukunft zu widerrufen.</li>
+      </ul>
+      <p>
+        Darüber hinaus haben Sie das Recht, sich bei einer Datenschutzaufsichtsbehörde zu
+        beschweren.
+      </p>
+
+      <h2>12. SSL- bzw. TLS-Verschlüsselung</h2>
+      <p>
+        Diese Website nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher
+        Inhalte eine SSL- bzw. TLS-Verschlüsselung.
+      </p>
+
+      <h2>13. Externe Links</h2>
+      <p>
+        Diese Website enthält Links zu externen Seiten, insbesondere zu unseren Profilen auf
+        LinkedIn und ProvenExpert. Beim Anklicken dieser Links verlassen Sie unsere Website. Für
+        die Verarbeitung personenbezogener Daten auf den verlinkten Seiten sind ausschließlich die
+        jeweiligen Betreiber verantwortlich. Die Profile werden erst beim Anklicken geladen, nicht
+        beim Aufruf dieser Seite.
+      </p>
+
+      <h2>14. Änderungen dieser Datenschutzerklärung</h2>
+      <p>
+        Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn dies aufgrund
+        gesetzlicher Änderungen oder technischer Weiterentwicklungen unserer Website erforderlich
+        wird. Es gilt jeweils die zum Zeitpunkt Ihres Besuchs veröffentlichte Fassung.
       </p>
     </div>
   </section>
@@ -71,10 +168,21 @@ import { site } from '../data/site';
 <style>
   .rechtstext { padding-block: 0; }
   .rechtstext h1 { margin-bottom: var(--s-6); }
-  .rechtstext h2 { font-size: 1.125rem; font-variation-settings: 'wght' 640; margin: var(--s-6) 0 var(--s-3); }
-  .rechtstext p, .rechtstext li { color: var(--ink-2); line-height: 1.65; }
-  .rechtstext ul { padding-left: 1.25rem; display: grid; gap: 0.5rem; }
+  .rechtstext h2 {
+    font-size: 1.125rem;
+    font-variation-settings: 'wght' 640;
+    margin: var(--s-6) 0 var(--s-3);
+  }
+  .rechtstext p { color: var(--ink-2); line-height: 1.65; }
+  .rechtstext p + p { margin-top: var(--s-3); }
   .rechtstext a { color: var(--blau); }
+  .rechtstext ul {
+    margin-top: var(--s-3);
+    padding-left: 1.25rem;
+    color: var(--ink-2);
+    line-height: 1.65;
+  }
+  .rechtstext li + li { margin-top: 0.375rem; }
   .offen { color: var(--warn); font-family: var(--font); font-size: 0.875rem; }
 
   .entwurf {

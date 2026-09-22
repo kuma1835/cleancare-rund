@@ -15,10 +15,12 @@ import { site } from '../data/site';
       <div class="entwurf">
         <p class="feld">Redaktionshinweis</p>
         <p>
-          Alle Angaben stammen aus dem Impressum des bestehenden Auftritts (Stand 04.08.2026) und
-          sind vor Livegang einmal vom Betrieb zu bestätigen. Offen ist allein die Zugehörigkeit
-          zur Handwerkskammer: Gebäudereinigung ist ein zulassungspflichtiges Handwerk, damit
-          gehören Kammer, Berufsbezeichnung und Verleihungsstaat nach § 5 DDG ins Impressum.
+          Alle Angaben stammen aus dem Impressum des bestehenden Auftritts, zuletzt abgeglichen am
+          22.09.2026, und sind vor Livegang einmal vom Betrieb zu bestätigen. Offen ist allein die
+          Zugehörigkeit zur Handwerkskammer: Gebäudereinigung ist ein zulassungspflichtiges
+          Handwerk, damit gehören Kammer, Berufsbezeichnung und Verleihungsstaat nach § 5 DDG ins
+          Impressum. Der Altauftritt nennt sie nirgends — er beruft sich noch auf das TMG, das im
+          Mai 2024 vom DDG abgelöst wurde.
         </p>
       </div>
 
@@ -47,10 +49,16 @@ import { site } from '../data/site';
       <h2>Umsatzsteuer-Identifikationsnummer</h2>
       <p>USt-IdNr. gemäß § 27 a UStG: {site.ustId}</p>
 
+      <h2>Wirtschaftsidentifikationsnummer</h2>
+      <p>{site.wirtschaftsId}</p>
+
       <h2>Berufsrechtliche Angaben</h2>
       <p class="offen">
         Zuständige Handwerkskammer, gesetzliche Berufsbezeichnung und Verleihungsstaat:
-        zu ergänzen
+        zu ergänzen. Zu klären ist dabei ein Widerspruch: die AGB nennen als Vermittlungsstelle
+        die Handwerkskammer Hamburg, der Betriebssitz Seevetal liegt aber im Bezirk der
+        Handwerkskammer Braunschweig-Lüneburg-Stade. Nur eine der beiden ist die zuständige
+        Kammer — und nur die gehört hierher.
       </p>
 
       <h2>Verantwortlich für den Inhalt</h2>

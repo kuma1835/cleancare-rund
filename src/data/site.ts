@@ -22,6 +22,8 @@ export const site = {
   handelsregister: 'HRB 201772',
   registergericht: 'Amtsgericht Lüneburg',
   ustId: 'DE263944902',
+  /** Steht im Impressum des Altauftritts, fehlte hier bis zum 22.09.2026. */
+  wirtschaftsId: '50/202/00243',
   linkedin: 'https://www.linkedin.com/company/cleancare-gebaeudeservice-gmbh',
   provenexpert: 'https://www.provenexpert.com/cleancare-gebaeudeservice-gmbh/',
   gebiet: ['Seevetal', 'Landkreis Harburg', 'Hamburg', 'Niedersachsen', 'Schleswig-Holstein'],
