@@ -43,21 +43,17 @@ const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
         {nav.map((n) => <li><a href={n.href}>{n.text}</a></li>)}
         <li><a href="/kontakt">Kontakt</a></li>
       </ul>
-      <div class="mobilaktion">
-        <a class="btn" href="/anfrage">Angebot anfordern</a>
-        <a class="btn btn-2" href={`tel:${site.telefonLink}`}>{site.telefon}</a>
-      </div>
     </div>
   </div>
 </header>
 
-<div class="rufleiste">
-  <a href={`tel:${site.telefonLink}`}>
-    <IconTelefon />
-    Anrufen
-  </a>
-  <a href="/anfrage" class="haupt-aktion">Angebot anfordern</a>
-</div>
+{/* Schwebender Anrufknopf, nur mobil. Er ersetzt die frühere Rufleiste mit
+    „Anrufen“ und „Angebot anfordern“: Auf der Startseite taucht er erst auf,
+    wenn die beiden Knöpfe im Auftakt (data-ruf-anker) aus dem Bild gescrollt
+    sind; auf Seiten ohne solchen Anker steht er von Anfang an da. */}
+<a class="rufknopf" href={`tel:${site.telefonLink}`} aria-label={`Anrufen: ${site.telefon}`} data-sichtbar="false">
+  <IconTelefon groesse={26} />
+</a>
 
 <style>
   /* Durchgehender Balken über die volle Seitenbreite. Die Fläche sitzt auf der
@@ -177,36 +173,33 @@ const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
     font-weight: 520;
     text-decoration: none;
   }
-  .mobilaktion { display: grid; gap: var(--s-2); margin-top: var(--s-4); }
-  .mobilaktion .btn { justify-content: center; }
-
-  .rufleiste {
+  .rufknopf {
     display: none;
     position: fixed;
-    inset: auto 0 0 0;
+    right: calc(1rem + env(safe-area-inset-right));
+    bottom: calc(1rem + env(safe-area-inset-bottom));
     z-index: 60;
-    padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom));
-    gap: 0.5rem;
-    background: oklch(100% 0 0 / 0.93);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--linie);
-  }
-  .rufleiste a {
-    flex: 1;
-    display: inline-flex;
+    width: 3.5rem;
+    height: 3.5rem;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.8125rem;
-    border-radius: var(--r-pill);
-    background: var(--feld);
-    font-family: var(--font);
-    font-size: 0.9375rem;
-    font-weight: 560;
-    text-decoration: none;
-    color: var(--ink);
+    border-radius: 50%;
+    background: var(--blau);
+    color: #fff;
+    box-shadow: var(--schwebe-2);
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
   }
-  .rufleiste .haupt-aktion { background: var(--blau); color: #fff; }
+  /* Hörer gespiegelt: die Muschel zeigt nach rechts oben statt nach links. */
+  .rufknopf :global(svg) { transform: scaleX(-1); }
+  .rufknopf:active { background: var(--blau-tief); }
+  .rufknopf[data-sichtbar='false'] {
+    opacity: 0;
+    transform: scale(0.85);
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rufknopf { transition: none; }
+  }
 
   /* Unterhalb von 1200px reicht der Balken nicht mehr für Bildmarke, Navigation,
      Telefonnummer und Knopf nebeneinander — gemessen braucht die Zeile dort
@@ -220,8 +213,7 @@ const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
     .haupt, .ruf, .rechts .btn { display: none; }
     .schalter { display: flex; }
     .rechts { margin-inline-start: auto; }
-    .rufleiste { display: flex; }
-    body { padding-bottom: 4.5rem; }
+    .rufknopf { display: flex; }
   }
 </style>
 
@@ -252,4 +244,16 @@ const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
     schalter.setAttribute('aria-label', offen ? 'Menü öffnen' : 'Menü schließen');
     if (menue) menue.hidden = offen;
   });
+
+  const rufknopf = document.querySelector<HTMLElement>('.rufknopf');
+  const anker = document.querySelector('[data-ruf-anker]');
+  if (rufknopf && anker) {
+    // Sichtbar erst, wenn die Knöpfe oben aus dem Bild gerutscht sind.
+    new IntersectionObserver(([e]) => {
+      const vorbei = !e.isIntersecting && e.boundingClientRect.top < 0;
+      rufknopf.dataset.sichtbar = String(vorbei);
+    }).observe(anker);
+  } else if (rufknopf) {
+    rufknopf.dataset.sichtbar = 'true';
+  }
 </script>

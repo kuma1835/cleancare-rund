@@ -100,7 +100,7 @@ import IconTelefon from '../components/IconTelefon.astro';
             Qualität, die auch im dritten Jahr noch stimmt.
           </p>
 
-          <div class="aktionen">
+          <div class="aktionen" data-ruf-anker>
             <a class="btn" href="/anfrage">
               <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
@@ -483,9 +483,7 @@ import IconTelefon from '../components/IconTelefon.astro';
      Hälfte. Ein Verlauf von links würde das Bild nur zudecken. */
   @media (max-width: 52rem) {
     .auftakt { align-items: end; }
-    /* Die Rufleiste liegt fest am unteren Rand. Ohne diesen Abstand verschwindet
-       der letzte Knopf des Auftakts dahinter. */
-    .auftakt-inhalt { padding-bottom: calc(var(--rufleiste-h, 4.125rem) + var(--s-5)); }
+    .auftakt-inhalt { padding-bottom: var(--s-6); }
     /* Hochkant gibt es keine zwei Haelften — das Foto liegt wieder ueber die
        volle Breite hinter dem Text. */
     .auftakt-bild { inset: 0; }
