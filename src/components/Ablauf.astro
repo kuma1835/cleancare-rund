@@ -16,7 +16,7 @@ const nummer = (i: number) => String(i + 1).padStart(2, '0');
         </p>
       </div>
 
-      <ol class="schritte">
+      <ol class="schritte" data-einblenden-gruppe>
         {ablauf.map((s, i) => (
           <li>
             <span class="kreis"><span class="nummer">{nummer(i)}</span></span>

@@ -12,7 +12,7 @@ const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 <header class="kopfleiste">
   <div class="wrap balken">
     <a href="/" class="marke" aria-label={`${site.name} — zur Startseite`}>
-      <img class="bildmarke" src={`${basis}cc-logo-neu.png`} alt="" width="2070" height="384" />
+      <img class="bildmarke" src={`${basis}cc-logo.png`} alt="" width="2070" height="384" />
     </a>
 
     <nav class="haupt" aria-label="Hauptnavigation">
@@ -27,7 +27,7 @@ const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 
     <div class="rechts">
       <a class="ruf" href={`tel:${site.telefonLink}`}>
-        <IconTelefon groesse={16} />
+        <IconTelefon groesse={18} />
         {site.telefon}
       </a>
       <a class="btn" href="/anfrage">Angebot anfordern</a>
@@ -226,6 +226,24 @@ const basis = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 </style>
 
 <script>
+  /*
+    Die Hoehe der Kopfleiste steht als --kopf-h in den Tokens, damit der Auftakt
+    auf der Startseite genau den Rest des Bildschirms fuellen kann. Fest
+    eingetragene 65px stimmen aber nur zufaellig: Schriftgroesse, Symbolgroesse
+    und Geraeteaufloesung verschieben die tatsaechliche Hoehe um Bruchteile
+    eines Punktes — und genau dieser Rest blieb unten als heller Streifen
+    stehen. Deshalb wird der Wert hier gemessen und nachgetragen.
+  */
+  const kopfleiste = document.querySelector('.kopfleiste');
+  if (kopfleiste) {
+    const hoeheSetzen = () => {
+      const h = kopfleiste.getBoundingClientRect().height;
+      document.documentElement.style.setProperty('--kopf-h', `${h}px`);
+    };
+    hoeheSetzen();
+    new ResizeObserver(hoeheSetzen).observe(kopfleiste);
+  }
+
   const schalter = document.querySelector<HTMLButtonElement>('.schalter');
   const menue = document.getElementById('mobilmenue');
   schalter?.addEventListener('click', () => {

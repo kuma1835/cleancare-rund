@@ -1,0 +1,125 @@
+---
+/*
+  SCHRIFT-PROBE 23.09.2026 — reine Testseite, zum Wegwerfen.
+  Zeigt genau die Stellen, an denen sich die Kandidaten unterscheiden:
+  das Komma, der i-Punkt und die Ecken der Buchstaben.
+  Entfernen: diese Datei löschen.
+*/
+import Base from '../../layouts/Base.astro';
+
+/*
+  Nur im Entwicklungsbetrieb erreichbar. Im Produktions-Build gibt
+  getStaticPaths keine Pfade zurueck, die Seite entsteht also gar nicht erst
+  und kann auf der veroeffentlichten Website nicht auftauchen.
+*/
+export const getStaticPaths = () =>
+  import.meta.env.DEV ? [{ params: { rest: undefined } }] : [];
+
+/*
+  Die Kandidaten haengen nur an dieser Seite, nicht am Grundgeruest — sonst
+  laedt jede Seite der Website acht Schriften mit.
+
+  Eingebunden ueber <link> direkt aus node_modules statt ueber `import`:
+  Der Bundler bricht sonst beim Produktions-Build ab, weil er die CSS der
+  Schriften einer Seite zuordnen will, die es dort gar nicht gibt
+  (getStaticPaths liefert leer). Der Entwicklungsserver liefert node_modules
+  ohnehin aus, und in den Build geraet nichts davon.
+*/
+const pakete = [
+  'rubik', 'schibsted-grotesk', 'manrope', 'figtree',
+  'instrument-sans', 'hanken-grotesk', 'golos-text', 'onest',
+];
+
+const kandidaten = [
+  { name: 'Rubik', css: "'Rubik Variable'", notiz: 'aktuell auf der ganzen Website' },
+  { name: 'Schibsted Grotesk', css: "'Schibsted Grotesk Variable'", notiz: 'i-Punkte zu fett (1,52)' },
+  { name: 'Manrope', css: "'Manrope Variable'", notiz: 'halbrunde Endungen, kleine Punkte' },
+  { name: 'Figtree', css: "'Figtree Variable'", notiz: 'weiche Ecken, geschwungenes Komma' },
+  { name: 'Instrument Sans', css: "'Instrument Sans Variable'", notiz: 'Kanten und Komma hart' },
+  { name: 'Hanken Grotesk', css: "'Hanken Grotesk Variable'", notiz: 'freundliche Grotesk, zurückhaltende Punkte' },
+  { name: 'Golos Text', css: "'Golos Text Variable'", notiz: 'nüchtern, sehr kleine Punkte' },
+  { name: 'Onest', css: "'Onest Variable'", notiz: 'i-Punkte 1,32' },
+];
+---
+
+<Base title="Schriftprobe" description="Interne Testseite" noindex={true} bare={true}>
+  <Fragment slot="head">
+    {pakete.map((paket) => (
+      <link rel="stylesheet" href={`/node_modules/@fontsource-variable/${paket}/index.css`} />
+    ))}
+  </Fragment>
+
+  <section class="probe">
+    <div class="wrap">
+      <h1 style="font-family: var(--font)">Schriftprobe</h1>
+      <p class="hinweis">
+        Interne Testseite. Achte auf das <strong>Komma</strong>, den <strong>i-Punkt</strong>
+        und die Ecken. Die Zeile „Leistungen, Hygiene" enthält beides mehrfach.
+      </p>
+
+      {kandidaten.map((k) => (
+        <div class="karte" style={`font-family: ${k.css}, sans-serif`}>
+          <div class="kopfzeile">
+            <span class="name" style="font-family: var(--font)">{k.name}</span>
+            <span class="notiz" style="font-family: var(--font)">{k.notiz}</span>
+          </div>
+
+          <p class="riesig">Leistungen, Hygiene</p>
+          <p class="gross">Fragen, die vor jedem Angebot kommen</p>
+          <p class="lauf">
+            Wir reinigen Büros, Praxen und Treppenhäuser in Seevetal, im Landkreis Harburg
+            und in Hamburg. Feste Teams, ein fester Rhythmus, eine Ansprechperson.
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .probe { padding-block: var(--s-6) var(--reihe); }
+  .hinweis { color: var(--ink-2); margin-bottom: var(--s-6); }
+
+  .karte {
+    padding: var(--s-5);
+    margin-bottom: var(--s-5);
+    background: var(--panel);
+    border: 1px solid var(--linie);
+    border-radius: var(--r-karte);
+  }
+  .kopfzeile {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: var(--s-4);
+    padding-bottom: var(--s-3);
+    border-bottom: 1px solid var(--linie);
+  }
+  .name { font-size: 0.875rem; font-weight: 600; color: var(--blau); }
+  .notiz { font-size: 0.8125rem; color: var(--ink-3); }
+
+  /* Sehr groß, damit Komma und i-Punkt beurteilbar sind. */
+  .riesig {
+    margin: 0 0 0.5rem;
+    font-size: clamp(2.5rem, 1rem + 6vw, 5.5rem);
+    font-weight: 560;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    max-width: none;
+  }
+  .gross {
+    margin: 0 0 var(--s-4);
+    font-size: clamp(1.375rem, 1rem + 1.4vw, 2rem);
+    font-weight: 560;
+    letter-spacing: -0.02em;
+    max-width: none;
+  }
+  .lauf {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: 62ch;
+  }
+</style>

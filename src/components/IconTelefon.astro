@@ -1,7 +1,10 @@
 ---
 /**
- * Hörersymbol für Telefonlinks. Erbt Farbe und Strichstärke vom Umfeld,
- * damit es sich in Kopfleiste, Rufleiste und Kontaktband gleich verhält.
+ * Hörersymbol für Telefonlinks — ausgefüllt, nicht als Kontur.
+ * Dieselbe Silhouette wie bisher, nur als Fläche statt als Linie: Der Pfad war
+ * schon geschlossen, er wird jetzt gefüllt statt umrandet. Die Farbe kommt
+ * über `currentColor` aus dem Umfeld, damit sich das Symbol in Kopfleiste,
+ * Rufleiste, Kontaktband und Fußzeile gleich verhält.
  */
 interface Props {
   groesse?: number;
@@ -13,11 +16,7 @@ const { groesse = 17 } = Astro.props;
   viewBox="0 0 24 24"
   width={groesse}
   height={groesse}
-  fill="none"
-  stroke="currentColor"
-  stroke-width="1.75"
-  stroke-linecap="round"
-  stroke-linejoin="round"
+  fill="currentColor"
   aria-hidden="true"
 >
   <path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z" />

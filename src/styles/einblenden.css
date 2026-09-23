@@ -1,0 +1,119 @@
+/*
+  Sanftes Einblenden beim Scrollen.
+
+  Grundsatz: Ohne JavaScript ist alles sofort sichtbar. Der verborgene
+  Ausgangszustand haengt deshalb an `[data-js]`, das ein winziges Skript im
+  Kopf der Seite setzt — schlaegt es fehl, greift die Regel nie und die Seite
+  bleibt vollstaendig lesbar. Inhalte hinter einer Animation zu verstecken, die
+  vielleicht nicht laeuft, waere der schlimmste Fall.
+
+  Verwendung: `data-einblenden` an das Element. Fuer eine Staffelung
+  `style="--verzug: 90ms"` je Element, oder `data-einblenden-gruppe` am
+  Elternteil — dann staffelt das Skript die Kinder selbst.
+*/
+
+[data-js] [data-einblenden] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+/* Von rechts statt von unten. Bewusst knapp: 28px sind gerade genug, dass man
+   die letzte Bewegung sieht, ohne dass etwas durchs Bild faehrt. */
+[data-js] [data-einblenden='rechts'] {
+  transform: translateX(28px);
+}
+
+[data-js] [data-einblenden].ist-da {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.55s var(--ease) var(--verzug, 0ms),
+    transform 0.55s var(--ease) var(--verzug, 0ms);
+}
+
+/*
+  Auf dem Telefon kommt auch das von unten.
+
+  Grund ist nicht Geschmack, sondern Arithmetik: Kaesten laufen dort von Kante
+  zu Kante. Ein Element, das vor dem Einblenden 28px nach rechts versetzt ist,
+  ragt damit aus dem Bildschirm und macht die Seite quer scrollbar — auf der
+  Startseite gemessen, bevor es auffiel. Senkrecht kann das nicht passieren.
+*/
+@media (max-width: 40rem) {
+  [data-js] [data-einblenden='rechts'] {
+    transform: translateY(18px);
+  }
+}
+
+/*
+  An den Scrollfortschritt gebunden, wo der Browser es kann.
+
+  Die Fassung darueber ist ein Schalter: Sobald das Element den Ausloesepunkt
+  erreicht, laeuft die Bewegung in eigener Zeit ab — unabhaengig davon, ob man
+  weiterscrollt oder stehen bleibt. Hier laeuft sie stattdessen *mit* dem
+  Scrollen: Haelt man an, haelt die Bewegung an; scrollt man zurueck, geht sie
+  zurueck. Das ist der Unterschied zwischen „erscheint" und „kommt herein".
+
+  `view()` bindet die Animation an den Weg des Elements durch das Bild.
+  `animation-range` legt fest, welcher Teil dieses Wegs die Bewegung traegt:
+  Sie beginnt, sobald das Element zu einem Fuenftel hereingekommen ist, und ist
+  fertig, wenn es zu 45 Prozent im Bild steht. Danach passiert nichts mehr.
+
+  Die Staffelung laeuft hier nicht ueber Verzoegerung in Millisekunden — das
+  ergibt ohne Zeitachse keinen Sinn —, sondern ueber einen Versatz im Weg:
+  Jede weitere Karte beginnt ein Stueck spaeter auf derselben Strecke.
+
+  Traegt der Browser das nicht (derzeit Firefox und aeltere Safari), greift die
+  Fassung darueber. Gleicher Eindruck, nur eben ohne Kopplung ans Scrollen.
+*/
+@supports (animation-timeline: view()) {
+  [data-js] [data-einblenden] {
+    opacity: 1;
+    transform: none;
+    animation: einblenden-hoch linear both;
+    animation-timeline: view();
+    animation-range: entry calc(20% + var(--versatz, 0%)) cover calc(45% + var(--versatz, 0%));
+  }
+
+  [data-js] [data-einblenden='rechts'] {
+    animation-name: einblenden-rechts;
+  }
+
+  /* Der Ausloeser von oben darf hier nicht dazwischenfunken. */
+  [data-js] [data-einblenden].ist-da {
+    transition: none;
+  }
+}
+
+@keyframes einblenden-hoch {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@keyframes einblenden-rechts {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+
+@media (max-width: 40rem) {
+  @supports (animation-timeline: view()) {
+    [data-js] [data-einblenden='rechts'] {
+      animation-name: einblenden-hoch;
+    }
+  }
+}
+
+/* Wer Bewegung abbestellt hat, bekommt den Inhalt ohne Umweg. */
+@media (prefers-reduced-motion: reduce) {
+  [data-js] [data-einblenden],
+  [data-js] [data-einblenden].ist-da {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+}

@@ -9,7 +9,11 @@ import JsonLd from '../components/JsonLd.astro';
 import { site } from '../data/site';
 import { leistungen, hauptleistungen } from '../data/leistungen';
 import { standorte } from '../data/standorte';
-import held from '../assets/img/cleancare-header-glass.webp';
+/* Vorerst der Bueroflur statt des KI-Bildes: ein echtes Foto (Unsplash, im
+   Bildnachweis gefuehrt) braucht keine Kennzeichnung und behauptet kein Team,
+   das es nicht gibt. Das KI-Bild liegt weiter unter
+   assets/img/cleancare-header-glass.webp, falls wir zurueck wollen. */
+import held from '../assets/img/nastuh-abootalebi-rspmla5rita-unsplash.webp';
 import haus from '../assets/img/redd-f-ptrzqc_h1r4-unsplash.webp';
 
 const beschreibung =
@@ -65,6 +69,7 @@ const ld = [
     publisher: { '@id': `${site.url}/#unternehmen` },
   },
 ];
+import IconTelefon from '../components/IconTelefon.astro';
 ---
 
 <Base
@@ -78,7 +83,7 @@ const ld = [
     <div class="auftakt-bild">
       <Image
         src={held}
-        alt="Mitarbeiterin reinigt mit einem Abzieher die raumhohe Glasfront einer hellen Bürolobby"
+        alt="Büroflur mit Glastrennwänden und Sichtbeton, dahinter ein Besprechungsbereich"
         widths={[900, 1400, 1920]}
         sizes="100vw"
         loading="eager"
@@ -104,9 +109,7 @@ const ld = [
               Angebot anfordern
             </a>
             <a class="btn btn-2" href={`tel:${site.telefonLink}`}>
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z" />
-              </svg>
+              <IconTelefon groesse={17} />
               {site.telefon}
             </a>
           </div>
@@ -127,7 +130,9 @@ const ld = [
         </p>
       </div>
 
-      <ul class="leistungsraster">
+      {/* 60ms Schrittweite: fuenf Karten, die sich zu lange Zeit lassen,
+          wirken zaeh statt lebendig. */}
+      <ul class="leistungsraster" data-einblenden-gruppe="60">
         {gezeigt.map((l) => (
           <LeistungKarte leistung={l} variante="kompakt" />
         ))}
@@ -146,9 +151,14 @@ const ld = [
 
   <Ablauf />
 
+  {/* Gedaempfter Streifen: Ueber CleanCare und die Kundenstimmen gehoeren
+      zusammen — beides sind Vertrauensfragen, keine Leistungsangaben. Der
+      dunklere Grund und die beiden feinen Linien trennen sie vom Angebot
+      darueber und vom Einsatzgebiet darunter. */}
+  <div class="streifen-ruhig">
   <section class="abschnitt">
     <div class="wrap">
-      <div class="panel haus-panel">
+      <div class="panel haus-panel" data-einblenden="rechts">
         <figure class="haus-bild">
           <Image
             src={haus}
@@ -179,6 +189,7 @@ const ld = [
   </section>
 
   <Stimmen />
+  </div>
 
   <section class="abschnitt">
     <div class="wrap">
@@ -190,7 +201,7 @@ const ld = [
           darüber hinaus in Niedersachsen und Schleswig-Holstein.
         </p>
       </div>
-      <ul class="orte">
+      <ul class="orte" data-einblenden-gruppe="80">
         {standorte.map((s) => (
           <li>
             <a href={`/einsatzgebiet/${s.slug}`}>
@@ -222,19 +233,37 @@ const ld = [
     position: relative;
     padding-top: 0;
     padding-bottom: 0;
+    /* Dieselbe dunkle Flaeche wie in der Fusszeile. Sie traegt die linke Haelfte
+       und laeuft hinter dem Foto weiter, damit an der Nahtstelle nichts
+       durchscheint. */
+    background: var(--ink);
+    color: oklch(90% 0.02 250);
+    /* Feine graue Linie an der Kante, an der Dunkel in Hell uebergeht —
+       dieselbe wie zwischen den Streifen und ueber der Fusszeile. */
+    border-bottom: 1px solid var(--linie);
     /* `main` hält oben --reihe-oben Abstand für alle Seiten. Der Auftakt ist
        randlos und holt ihn zurück, damit das Foto direkt unter der Kopfleiste
        ansetzt und darüber kein heller Streifen stehen bleibt. */
     margin-top: calc(var(--reihe-oben) * -1);
-    min-height: calc(100svh - var(--kopf-h));
+    /* Vier Punkte mehr als der reine Rest des Bildschirms. Der Grund ist die
+       Trennlinie an der Unterkante: Sitzt der Auftakt millimetergenau auf der
+       Bildschirmkante, liegt sie als letzte Pixelreihe im Bild und wirkt dort
+       wie ein heller Rand statt wie eine Trennung. Mit den vier Punkten rutscht
+       sie knapp unter die Kante — beim Ankommen sieht man durchgehend Blau,
+       beim Scrollen trennt die Linie sauber ab. */
+    min-height: calc(100svh - var(--kopf-h) + 4px);
     display: grid;
     align-items: center;
     overflow: hidden;
   }
 
+  /* Das Foto sitzt auf der rechten Bildschirmhaelfte, links bleibt die Flaeche.
+     Es reicht etwas ueber die Mitte hinaus, weil der Verlauf darauf seinen
+     weichen Uebergang braucht — eine harte Kante in der Mitte wirkte wie ein
+     Fehler im Zuschnitt. */
   .auftakt-bild {
     position: absolute;
-    inset: 0;
+    inset: 0 0 0 50%;
     z-index: 0;
   }
   .auftakt-bild :global(img) {
@@ -244,25 +273,16 @@ const ld = [
     /* Das Foto ist mit 1920×823 sehr breit. Bei hohen Fenstern beschneidet
        `cover` seitlich stark — der Bildausschnitt wird deshalb nach rechts
        gezogen, damit die Person an der Glasfront im Bild bleibt. */
-    object-position: 70% center;
+    /* Rechtsbuendig, plus 20px darueber hinaus: die Person rueckt damit um
+       diesen Betrag nach rechts aus dem Bild, was gewollt ist — sie steht sonst
+       zu weit in der Mitte der rechten Haelfte. Beschnitten wird weiterhin nur
+       links, nie rechts. */
+    object-position: calc(100% + 40px) center;
   }
 
-  /* Der Verlauf von links: er trägt den Text. Ohne ihn steht dunkle Schrift auf
-     einem Foto, dessen Helligkeit je nach Ausschnitt wechselt. Der Verlauf
-     endet vor der Bildmitte, damit die Glasfront rechts frei bleibt. */
-  .auftakt-bild::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to right,
-      var(--grund) 0%,
-      var(--grund) 24%,
-      color-mix(in oklab, var(--grund) 72%, transparent) 44%,
-      color-mix(in oklab, var(--grund) 24%, transparent) 62%,
-      transparent 78%
-    );
-  }
+  /* Kein Verlauf mehr an der Naht: Flaeche und Foto stossen auf einer glatten
+     senkrechten Kante aneinander. Der Schleier bleibt nur in der Hochkantfassung
+     weiter unten, wo das Foto hinter dem Text liegt und ihn sonst schluckt. */
 
   .auftakt-inhalt {
     position: relative;
@@ -270,9 +290,39 @@ const ld = [
     padding-block: var(--reihe-oben);
   }
 
-  .auftakt-marke { display: block; margin-bottom: var(--s-4); max-width: none; }
+  /* Schrift auf dunklem Grund. `.label` traegt sonst --blau-tief, `.lead` die
+     gedaempfte Textfarbe — beide waeren hier nicht mehr lesbar. */
+  .auftakt-marke {
+    display: block;
+    margin-bottom: var(--s-4);
+    max-width: none;
+    color: var(--blau-hell);
+  }
+  .auftakt .wort h1 { color: #fff; }
+  .auftakt .wort .lead { color: oklch(86% 0.02 250); }
+
+  /* Der zweite Knopf ist sonst eine helle Flaeche auf hellem Grund. Hier steht
+     er auf Dunkel und wird deshalb zur durchscheinenden Flaeche mit Kante. */
+  .auftakt .btn-2 {
+    background: oklch(100% 0 0 / 0.1);
+    border-color: oklch(100% 0 0 / 0.28);
+    color: #fff;
+  }
+  .auftakt .btn-2:hover {
+    background: oklch(100% 0 0 / 0.18);
+    box-shadow: none;
+  }
+
+  /* Die Textspalte endet vor der Naht, nie darauf. Ohne diese Grenze lief
+     „Reinigungswechsel," 37px in das Foto hinein — das Wort ist laenger als
+     eine Zeile der uebrigen Ueberschrift und richtet sich nicht nach ihr. */
+  .auftakt .wort { max-width: calc(50vw - var(--rand) - var(--s-6)); }
 
   .wort h1 {
+    /* Eine Spur kleiner als die H1 der uebrigen Seiten (58px): bei voller
+       Groesse passt „Reinigungswechsel," nicht mehr in die blaue Haelfte und
+       muesste an der weichen Trennstelle umbrechen. */
+    font-size: clamp(2.25rem, 1.45rem + 2.9vw, 3.375rem);
     margin-bottom: var(--s-5);
     /* Keine automatische Silbentrennung: „Objek-te" im Titel liest sich wie ein
        Fehler. `manual` lässt aber die im Text gesetzten &shy; zu — nötig für
@@ -436,6 +486,13 @@ const ld = [
     /* Die Rufleiste liegt fest am unteren Rand. Ohne diesen Abstand verschwindet
        der letzte Knopf des Auftakts dahinter. */
     .auftakt-inhalt { padding-bottom: calc(var(--rufleiste-h, 4.125rem) + var(--s-5)); }
+    /* Hochkant gibt es keine zwei Haelften — das Foto liegt wieder ueber die
+       volle Breite hinter dem Text. */
+    .auftakt-bild { inset: 0; }
+    /* Und damit faellt auch die Begrenzung der Textspalte weg. Sie rechnet mit
+       50vw, weil der Text quer neben dem Foto steht; hochkant waeren das 143px
+       und die Ueberschrift zerbrach mitten im Wort. */
+    .auftakt .wort { max-width: none; }
     .auftakt-bild :global(img) { object-position: 74% center; }
     /* Hochkant bleibt vom 1920×823-Bild nur ein schmaler Ausschnitt übrig; das
        Motiv steht dann zwangsläufig hinter dem Text. Statt den Ausschnitt zu
@@ -443,13 +500,18 @@ const ld = [
        liegt das Foto hier als ruhiger Schleier hinter der Seite und wird nach
        oben hin frei. Lesbarkeit geht vor Motiv. */
     .auftakt-bild::after {
+      /* Der Schleier entsteht erst hier: In der Breitfassung stossen Flaeche
+         und Foto auf einer glatten Kante aneinander, dort gibt es ihn nicht. */
+      content: '';
+      position: absolute;
+      inset: 0;
       background: linear-gradient(
         to top,
-        var(--grund) 0%,
-        color-mix(in oklab, var(--grund) 92%, transparent) 46%,
-        color-mix(in oklab, var(--grund) 78%, transparent) 68%,
-        color-mix(in oklab, var(--grund) 55%, transparent) 88%,
-        color-mix(in oklab, var(--grund) 40%, transparent) 100%
+        var(--ink) 0%,
+        color-mix(in oklab, var(--ink) 92%, transparent) 46%,
+        color-mix(in oklab, var(--ink) 78%, transparent) 68%,
+        color-mix(in oklab, var(--ink) 58%, transparent) 88%,
+        color-mix(in oklab, var(--ink) 45%, transparent) 100%
       );
     }
   }

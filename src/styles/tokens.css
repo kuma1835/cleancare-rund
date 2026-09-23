@@ -12,6 +12,10 @@
   --grund: oklch(97.2% 0.006 245);
   --panel: oklch(100% 0 0);
   --panel-2: oklch(98.4% 0.005 245);
+  /* Eine Spur dunkler als --grund. Traegt den mittleren Streifen der
+     Startseite, damit sich die Bereiche voneinander absetzen, ohne dass eine
+     zweite Farbe ins Spiel kommt. */
+  --grund-2: oklch(95.2% 0.008 245);
   --feld: oklch(95.8% 0.008 245);
   --feld-2: oklch(93% 0.012 245);
 
@@ -53,8 +57,17 @@
   --fehler-sanft: oklch(96% 0.025 25);
 
   /* Schrift */
-  --font: 'Geist Variable', system-ui, -apple-system, sans-serif;
-  --font-text: 'Inter Variable', system-ui, -apple-system, sans-serif;
+  /* Rubik, seit 23.09.2026 fuer die ganze Website im Test. Abgerundete Ecken
+     sind Teil der Zeichnung; der i-Punkt bleibt schlank (1,06 der Stammbreite),
+     das Komma laeuft stumpf aus. Zum Wechseln genuegen diese zwei Zeilen und
+     der Import in Base.astro — Vergleich unter /schrift-probe.
+
+     ZWEITWAHL: Golos Text ('Golos Text Variable', Paket
+     @fontsource-variable/golos-text). Stand im Test auf der Fragen-Seite und
+     lag sehr dicht dahinter — nuechterner als Rubik, i-Punkt 1,19, Komma
+     stumpf. Wenn gewechselt wird, dann dorthin. */
+  --font: 'Rubik Variable', system-ui, -apple-system, sans-serif;
+  --font-text: 'Rubik Variable', system-ui, -apple-system, sans-serif;
 
   /* Radien */
   --r-panel: 30px;
@@ -98,7 +111,10 @@
      Leiste und H1, auf den Unterseiten nur 45 px. Damit die H1 der Startseite
      dabei an Ort und Stelle bleibt, steht ihr Auftaktraster jetzt oben bündig
      statt mittig — vorher kamen die fehlenden 40 px aus der Zentrierung. */
-  --reihe-oben: clamp(2.5rem, 1.75rem + 3.9vw, 6rem);
+  /* Am 23.09.2026 um rund ein Drittel zurueckgenommen (war 2.5–6rem): der
+     Inhalt stand unter der Kopfleiste zu tief. Gilt fuer jede Seite, weil
+     `main` diesen Abstand oben traegt. */
+  --reihe-oben: clamp(1.75rem, 1.15rem + 2.6vw, 4rem);
 
   /* Höhe der Kopfleiste. Sie steht `sticky` im Fluss, nimmt also oben Platz weg.
      Der Auftakt der Startseite zieht den Wert ab, um genau eine Bildschirmseite

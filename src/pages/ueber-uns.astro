@@ -42,8 +42,8 @@ const ld = {
       <div class="panel raster umgekehrt">
         <figure class="bild">
           <Image
-            src={buero}
-            alt="Ruhige Büroecke mit Schreibtischstuhl, Pflanzen und Tageslicht"
+            src={team}
+            alt="Besprechung an einem langen Tisch, gesehen durch eine Glaswand"
             widths={[420, 700, 1000]}
             sizes="(max-width: 62rem) 100vw, 24rem"
             loading="lazy"
@@ -127,8 +127,8 @@ const ld = {
       <div class="panel raster umgekehrt">
         <figure class="bild">
           <Image
-            src={team}
-            alt="Besprechung an einem langen Tisch, gesehen durch eine Glaswand"
+            src={buero}
+            alt="Ruhige Büroecke mit Schreibtischstuhl, Pflanzen und Tageslicht"
             widths={[420, 700, 1000]}
             sizes="(max-width: 62rem) 100vw, 24rem"
             loading="lazy"
@@ -136,7 +136,7 @@ const ld = {
         </figure>
         <div class="text">
           <p class="label">Nähe</p>
-          <h2>Ein Betrieb, den man erreicht</h2>
+          <h2>Kurze Wege, feste Ansprechpartner</h2>
           <p>
             CleanCare sitzt in {site.ort}, südlich von Hamburg. Von dort betreuen wir Objekte im
             Landkreis Harburg, in Hamburg und darüber hinaus in Niedersachsen und
@@ -161,6 +161,7 @@ const ld = {
 </Base>
 
 <style>
+
   /* Abschnittsmarke über der Überschrift. `.mitte` zentriert seine Kinder
      bereits; die Höchstbreite aus `p` wird hier aufgehoben, damit die Box die
      volle Breite hat und ihr Text wirklich in der Mitte steht. */
@@ -189,7 +190,7 @@ const ld = {
      ebenfalls ein <p> und soll dunkelblau bleiben. */
   .text p:not(.label) { color: var(--ink-2); }
   /* Die Aussage über dem Fließtext ist eine echte Überschrift — dieselbe
-     Formatierung wie im Block „Ein Betrieb, den man erreicht". */
+     Formatierung wie im Block „Kurze Wege, feste Ansprechpartner". */
   .text h2 { margin-bottom: var(--s-5); }
   .signatur { color: var(--ink); margin-top: var(--s-5); }
   .signatur::before { content: '— '; }

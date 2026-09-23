@@ -1,7 +1,7 @@
 ---
-import '@fontsource-variable/geist';
-import '@fontsource-variable/inter';
+import '@fontsource-variable/rubik';
 import '../styles/base.css';
+import '../styles/einblenden.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { site } from '../data/site';
@@ -81,17 +81,65 @@ const ogUrl = new URL(basis + ogImage.replace(/^\//, ''), Astro.site).href;
 
     <!-- Logo-Navy. Stand vorher auf #101c5e — ein Rest aus einer früheren Farbwelt. -->
     <meta name="theme-color" content="#16283f" />
-    <link rel="icon" href={`${basis}favicon.svg`} type="image/svg+xml" />
+    {/* Browser-Miniatur: die neue Bildmarke. Zwei Groessen, damit der Browser
+        die passende nimmt und nicht eine grosse herunterrechnet. */}
+    <link rel="icon" href={`${basis}favicon-32.png`} type="image/png" sizes="32x32" />
+    <link rel="icon" href={`${basis}icon-192.png`} type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href={`${basis}apple-touch-icon.png`} />
     <link rel="sitemap" href={`${basis}sitemap-index.xml`} />
     <slot name="head" />
   </head>
   <body>
+    <script is:inline>
+      /* Muss vor dem ersten Zeichnen laufen: erst dieses Kennzeichen schaltet
+         den verborgenen Ausgangszustand des Einblendens ueberhaupt ein. */
+      document.documentElement.dataset.js = 'an';
+    </script>
     <a class="skip" href="#inhalt">Zum Inhalt springen</a>
     <SiteHeader />
     <main id="inhalt">
       <slot />
     </main>
     <SiteFooter />
+    <script>
+      /*
+        Blendet Elemente mit `data-einblenden` ein, sobald sie ins Bild kommen.
+        Ein Beobachter fuer die ganze Seite statt einer je Baustein.
+
+        `data-einblenden-gruppe` am Elternteil staffelt dessen Kinder: Jedes
+        bekommt 90ms mehr Verzoegerung als das vorige, damit sie nacheinander
+        hereinkommen statt gleichzeitig.
+      */
+      for (const gruppe of document.querySelectorAll('[data-einblenden-gruppe]')) {
+        /* Schrittweite je Gruppe: viele kleine Karten vertragen weniger als
+           drei grosse Schritte, sonst wartet man auf die letzte. */
+        const schritt = Number(gruppe.dataset.einblendenGruppe) || 90;
+        [...gruppe.children].forEach((kind, i) => {
+          kind.setAttribute('data-einblenden', '');
+          /* Zwei Staffelungen fuer zwei Verfahren: Millisekunden fuer die
+             Fassung mit Ausloeser, Wegversatz fuer die scrollgebundene. Welche
+             greift, entscheidet der Browser ueber @supports. */
+          kind.style.setProperty('--verzug', `${i * schritt}ms`);
+          kind.style.setProperty('--versatz', `${i * (schritt / 12)}%`);
+        });
+      }
+
+      const beobachter = new IntersectionObserver(
+        (eintraege) => {
+          for (const e of eintraege) {
+            if (!e.isIntersecting) continue;
+            e.target.classList.add('ist-da');
+            beobachter.unobserve(e.target);
+          }
+        },
+        /* Erst ausloesen, wenn das Element ein Stueck weit im Bild steht —
+           sonst ist die Bewegung vorbei, bevor man sie sehen kann. */
+        { rootMargin: '0px 0px -12% 0px', threshold: 0.1 },
+      );
+
+      for (const el of document.querySelectorAll('[data-einblenden]')) {
+        beobachter.observe(el);
+      }
+    </script>
   </body>
 </html>

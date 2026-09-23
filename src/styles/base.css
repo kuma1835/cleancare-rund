@@ -126,6 +126,53 @@ ul, ol { margin: 0; padding: 0; }
   border-radius: var(--r-karte);
 }
 
+/*
+  Telefon: Kaesten laufen von Kante zu Kante.
+
+  Auf 375px kosteten Rahmenrand und Kastenpolster zusammen 76 der 375 Punkte —
+  ein Fuenftel der Breite ging fuer Raender drauf, waehrend der Text in einer
+  schmalen Spalte stand. Die Kaesten ragen ohnehin schon ueber den Textrahmen
+  hinaus; hier kommt nur der Seitenrand dazu, dann stehen sie auf der Kante.
+
+  Radius und Schatten fallen weg: Ein abgerundeter Kasten, dessen Ecken am
+  Bildschirmrand abgeschnitten werden, sieht nach Fehler aus. Ohne sie wird aus
+  dem Kasten ein Band — und das ist auf dem Telefon die ehrlichere Form, weil
+  ohnehin alles untereinander steht und nichts mehr gruppiert werden muss.
+
+  Dazu groessere Schrift: 16/1.55 ist am Bildschirm in Ordnung, auf einem
+  Telefon in der Hand aber knapp. 18/1.7 liest sich deutlich ruhiger.
+*/
+@media (max-width: 40rem) {
+  body {
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+
+  /* 44px waren zu viel: „Reinigungsexperten" passte nicht mehr in 375px und
+     schob die Seite quer. Deutsche Komposita setzen die Grenze, nicht der
+     Geschmack — 40px ist der groesste Grad, der noch haelt.
+
+     `overflow-wrap` ist die Notbremse fuer den Fall, dass spaeter ein noch
+     laengeres Wort dazukommt: Lieber ein hart getrenntes Wort als eine Seite,
+     die sich seitlich schieben laesst. Automatische Silbentrennung bleibt
+     bewusst aus, siehe die Begruendung beim Auftakt. */
+  h1,
+  h2 {
+    overflow-wrap: break-word;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  .panel {
+    margin-inline: calc((var(--einzug) + var(--rand)) * -1);
+    padding-inline: 1.25rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
 /* Kleines gesperrtes Label */
 .label,
 .feld {
@@ -273,6 +320,25 @@ main {
 
 .abschnitt,
 .abschnitt-eng { padding-block: 0; }
+
+/*
+  Gedaempfter Streifen ueber die volle Breite. Fasst mehrere Abschnitte zu einem
+  Bereich zusammen und setzt ihn durch eine Spur dunkleren Grund vom Rest ab.
+
+  Die feinen Linien oben und unten sitzen genau in der Mitte des vergroesserten
+  Abstands: Ueber der Linie steht der Reihenabstand aus dem Fluss von `main`,
+  unter ihr derselbe Wert noch einmal als Innenabstand. Der Uebergang bekommt
+  damit doppelt so viel Luft wie ein gewoehnlicher Abschnittswechsel, und die
+  Linie steht mittig darin statt an einer Kante zu kleben.
+*/
+.streifen-ruhig {
+  display: flex;
+  flex-direction: column;
+  gap: var(--reihe);
+  padding-block: var(--reihe);
+  background: var(--grund-2);
+  border-block: 1px solid var(--linie);
+}
 
 /*
   Der Seitenkopf ist ein eigenes Kind von `main` und bekäme sonst den vollen
