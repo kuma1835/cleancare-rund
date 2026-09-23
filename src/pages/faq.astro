@@ -175,7 +175,15 @@ const ld = [
     text-align: center;
   }
   .offen h2 { font-size: 1.125rem; margin-bottom: var(--s-2); }
-  .offen p { font-size: 0.9375rem; color: var(--ink-2); }
+  /* `margin-inline: auto` ist hier Pflicht, nicht Kosmetik: Absätze erben aus
+     base.css eine Höchstbreite von --mass (68ch). Die ist schmaler als dieser
+     Kasten, also stand die Absatzbox links und der mittig gesetzte Text lief
+     46 px an der Überschrift vorbei. */
+  .offen p {
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    margin-inline: auto;
+  }
   .offen a { color: var(--blau); }
 
   @media (max-width: 56rem) {
